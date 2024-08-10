@@ -172,10 +172,71 @@ Action:
     - SQS Queue : Auto Scaling
     - Lambda
 - *OUT OF SCOPE*
-  1. [Kinesis Data Firehose]() + DynamoDB: cannot directly write into a DynamoDB table
+  1. [Kinesis Data Firehose](aws-ass-solution-architect.md#kinesis-firehose) + DynamoDB: cannot directly write into a DynamoDB table
   2. 
   
 - *WRONG ANSWER*
+
+## 24 ASW IAM
+- Recommend
+- *SOLUTION*:
+  - Configure AWS CloudTrail to log all AWS IAM Action
+  - Enable MFA
+- [Link](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+**Wrong Answer**
+
+## 25 EC2 Scaling at last day of the month
+- Payroll App need 10 instance for peak usage hour and 2 EC2 for not.
+- *Solution*:
+  - Create [scheduled action](aws-ass-solution-architect.md#asg---schedule-action) kicks-off at the designated hour on the last day of the month
+
+## 26 EC2 CPU uilization
+- ASG + ALB
+- *Solution*:
+  - Configure the Auto Scaling group to use [Target tracking policy](aws-ass-solution-architect.md#asg---target-tracking-policy) and set the CPU utilization as the target metric with a target value of 50%
+- *Wrong Anaswer:*
+  - Simple and Step: not have target mectric for *CPU utilization*
+  - Cloudwatch Alarm: ASG Could not use directly
+## 27 S3 Policy
+- Requires permissions to list an Amazon S3 bucket and delete objects from that bucket
+- Create  IAM policy for this.
+- The group is not able delete object now
+- *SOLUTION*:
+  - Correct
+  
+  {
+    "Action": [
+        "s3:DeleteObject"
+    ],
+    "Resource": [
+        "arn:aws:s3:::example-bucket/*"
+    ],
+    "Effect": "Allow"
+}
+- API actions are unique to each service 
+
+## 28 Aurora
+
+- 5 multi-az read replica -> failover target
+- tier-1(16 tera), tier-1(32 tera), tier-10(16), tier-15(16), tier-15(32)
+- Failover
+- *Solution* :
+  + Tier-1(32 terra): In the event of a failover, Amazon Aurora will promote the Read Replica that has the highest priority (the lowest numbered tier). If two or more Aurora Replicas share the same priority, then Amazon RDS promotes the replica that is largest in size
+
+## 29 Rest API with ASG + ALB + Dynamot
+- static content in S3. On analyzing the usage trends, it is found that 90% of the read requests are for commonly accessed data across all users.
+- Improve application Performace
+- *Solution*:
+  - Dynamo DB with DAX + CloudFron for Amazone S3
+- *Wrong Answer*:
+  - Resdis: Although you can integrate Redis with DynamoDB, it's much more involved than using DAX which is a much better fit.
+  - Amazon ElastiCache Memcached cannot be used as a cache to serve static content from Amazon S3
+
+## 30 Ec2 + ALB
+- Path for specify a micro service
+- *Solution*:
+  - Path base routing
+
 
 ## 40
 - AWS Steps Function
