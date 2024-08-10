@@ -2,14 +2,16 @@
 
 ## Link
 
+
 open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions-Architect-Slides-v37.pdf"
+
 
 ## 11. IAM Introduction: Users, Groups, Policies
 
-* Global service
-* Root account use
-* Policies is define permission of user
-* Apply least previledge principle
+- Global service
+- Root account use
+- Policies is define permission of user
+- Apply least previledge principle
 
 
 ## 13. IAM Role
@@ -65,7 +67,13 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 * Run instances for the same application across multi AZ
 * Auto Scaling Group multi AZ
 
-## 70. Elastic Load Balancing (ELB) Overview 
+## 70. Elastic Load Balancing (ELB) 
+- ELB and Global Accelerator solve the challenge of routing user requests to healthy application endpoints.
+-  AWS Global Accelerator relies on ELB to provide the traditional load balancing features such as support for internal and non-AWS endpoints, pre-warming, and Layer 7 routing. 
+- Provides load balancing within one Region, AWS Global Accelerator provides traffic management across multiple Regions.
+- Include
+  - ALB
+  - NLB
 ### Application Load Balancer (ALB)
 
 
@@ -197,8 +205,8 @@ Auto
 * Alias: Point hostname to aws resource
 * CName not for apex record
 
-## Route 53 - Health Check
-
+## Route 53 
+- Amazon Route 53 is a highly available and scalable cloud Domain Name System (DNS) web service. It is designed to give developers and businesses an extremely reliable and cost-effective way to route end users to Internet applications by translating names like www.example.com into the numeric IP addresses like 192.0.2.1 that computers use to connect to each other. Route 53 is ruled out as the company wants to continue using its own custom DNS service.
 
 ## 127 S3
 
@@ -227,11 +235,11 @@ Auto
 
 * Use tool to generate policy
 
-## Amazon S3 Transfer Acceleration**
+## Amazon S3 Transfer Acceleration(S3TA)
 - enables fast, easy, and secure transfers of files over long distances between your client and an S3 bucket. 
 - Takes advantage of *Amazon CloudFront’s globally distributed edge locations*.
 - As the data arrives at an edge location, data is routed to Amazon S3 over an optimized network path.
-
+- Pay only for transfer that are accelerated
 ## S3 – Requester Pays
 
 * With Requester Pays buckets, the requester instead of the bucket owner pays the cost of the request and the data download from the bucket
@@ -252,6 +260,7 @@ Auto
 - has regional edge caches that bring more of your content closer to your viewers, even when the content is not popular enough to stay at a POP, to help improve performance for that content.
 
 ### Origin failover feature
+
 - support your data resiliency needs.
 - If your content is not already cached in an edge location, 
     -> CloudFront retrieves it from an origin that you've identified as the source for the definitive version of the content.
@@ -261,10 +270,14 @@ Auto
 * Distribution
 
 ## 170. Global Accelator
-- Improves the availability and performance of your applications with local or global users. 
+- Utilizes the Amazon global network, allowing you to improve the performance of your applications by:
+    1. lowering first-byte latency(the round trip time for a packet to go from a client to your endpoint and back again)
+    2. jitter (the variation of latency)
+    3. increasing throughput (the amount of time it takes to transfer data) as compared to the public internet
 - Provides static IP addresses that act as a fixed entry point to your application endpoints in a single or multiple AWS Regions such as ALB, NLB, EC2 instances. 
-- Good fit for non-HTTP: UDP, MQTT, Voice Over IP, HTTP specifically IP
-
+- Improve wide range of app(TCP, UDP) by proxying packets at the edge to applications running in one or more AWS Regions.
+- Global Accelerator is a good fit for non-HTTP use cases, such as gaming (UDP), IoT (MQTT), or Voice over IP, as well as for HTTP use cases that specifically require static IP addresses or deterministic, fast regional failover.
+- AWS Global Accelerator and Amazon CloudFront are separate services that use the AWS global network and its edge locations around the world. CloudFront improves performance for both cacheable content (such as images and videos) and dynamic content (such as API acceleration and dynamic site delivery), while Global Accelerator improves performance for a wide range of applications over TCP or UDP.
 - not help in accelerating the file transfer speeds into S3 for the given use-case.
 - When go public internet - A lot of latency because there many hops
 - Unicast IP: 1 server 1 IP

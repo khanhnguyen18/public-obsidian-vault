@@ -1,13 +1,30 @@
 # Practice Test 1
 
-## 1
+## 1 Mainternance EC2 -> Auto Scaling
+- Auto Scaling group to provision another replacement instance immediately.
+- *Solution*
+  1. Put intance in standby state: 
+  2. Suspend ReplaceUnhealthy: EC2 Auto Scaling stop replaces intances
+- *Out Of Scope*
+  - Take Snapshot on AMI: is not time/resource optimal
+  - Delete the Auto Scaling group: It's not recommended
+## 2. UDP Protocal -> Fast Reginal Failover
+- Continue use DNS service
+- *Solution*
+  - [AWS Global Accelator](aws-ass-solution-architect.md#170-global-accelator)
+- *Out of scope*: 
+  - *ELB* : [ELB](aws-ass-solution-architect.md#70-elastic-load-balancing-elb) Single Region
+  - *Route 53*: 
+
+## 3. RDS Multi-AZ vs Read-Replica
+**Solution**:
+- Multi-az atleast 2 AZs: Sync + Read-Replica winthin an AZ, Cross AZ, Or Cross-Region: Async
 
 ## 4 RDS Customize
 - Specialized *customizations* to the underlying Oracle database as well as its host operating system (OS)
 - Improve the *availability* of the Oracle database layer
-*⭐ Solution*:
+- *Solution* :
   + multi-AZ configuration of Amazon RDS Custom for Oracle that allows DBA to access and customize the database environment and the underlying operating system
-![alt text](image-64.png)
 
 ## 5
 - Enforce compliance and regulatory guidelines for objects stored in Amazon S3
@@ -139,6 +156,26 @@ Action:
   - [AWS Transit Gateway](aws-ass-solution-architect.md#aws-transit-gateway)
   - *AWS Direct Connect for both*: cannot provide an encrypted connection between a data center and AWS Cloud
   - [AWS site-to-site VPN](aws-ass-solution-architect.md#aws-site-to-site-vpn)
+## 21 Big file Image S3
+- 3 GB file -> Using S3TA for faster image upload
+- which of the following is correct regarding the charges for this image transfer
+- *SOLUTION*
+  - Does not need to Pay any transfer charges 
+    - S3: No transfer charge for Data *from the internet* 
+    - *S3TA* did not result in an accelerated transfer[](aws-ass-solution-architect.md#amazon-s3-transfer-accelerations3ta).
+- *WRONG ANSWER*
+## 22 car-as-a-sensor service
+- Serverless component of AWS
+
+- *SOLUTION*
+  - SQS Queue + AWS Lambda + DynamoDB
+    - SQS Queue : Auto Scaling
+    - Lambda
+- *OUT OF SCOPE*
+  1. [Kinesis Data Firehose]() + DynamoDB: cannot directly write into a DynamoDB table
+  2. 
+  
+- *WRONG ANSWER*
 
 ## 40
 - AWS Steps Function
