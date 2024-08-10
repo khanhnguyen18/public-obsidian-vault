@@ -325,3 +325,337 @@ Auto
 * *Volume Gateway*
   * Cached Volume
   * Stored Volumne:
+
+
+### File gateway
+- https://d1.awsstatic.com/cloud-storage/Amazon%20FSx%20File%20Gateway%20How%20It%20Works%20Diagram.edbf58e4917d47d04e5a5c22132d44bd92733bf5.png
+
+- File Gateway does not support file shares in Amazon FSx for Windows File Server, so this option is incorrect.
+
+## 187 SQS Fifo queue
+- Limited throughput : 300 msg/s without batching, max: 10 message per operation = 3000 msg/s
+
+## Kinesis Data Stream
+- Ingest real-time data or streaming data at large scales.
+- KDS can continuously capture gigabytes of data per second from hundreds of thousands of sources. 
+- The data collected is available in milliseconds, enabling real-time analytics. 
+- KDS provides ordering of records, as well as the ability to read and/or replay records in the same order to multiple Amazon Kinesis Applications.
+
+
+## Firehose
+- Ingest data and post to another source
+  - S3
+  - 
+
+!- Delivery Stream:
+
+## Analytics
+
+## 218. Lambda
+- run code without provisioning or managing servers. You pay only for the compute time that you consume—there’s no charge when your code isn’t running.
+- currently supports 1000 concurrent executions per AWS account per region.
+- If your Amazon SNS message deliveries to AWS Lambda contribute to crossing these concurrency quotas, your Amazon SNS message deliveries will be throttled. You need to contact AWS support to raise the account limit
+- Integrates natively with Kinesis Data Streams. The polling, checkpointing, and error handling complexities are abstracted when you use this native integration. The processed data can then be configured to be saved in Amazon DynamoDB.
+### 219. Lambda SnapStart
+
+* For Java
+* Snap start -> Function is preitnitize
+
+## 225. Dynamodb Advanced Features
+
+### DynamoDB Accelerator(DAX)
+
+* *in- memory cache* for *DynamoDB*
+* Help solve read congestion by caching
+* Microseconds latency for cached data
+* Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
+* 5 minutes TTL for cache (default)
+   ![alt text](image-59.png)
+
+
+### DynamoDB - Stream Processing
+
+* Same Kinesis
+
+
+### Global table
+
+* Make a DynamoDB table accessible with low latency in multiple-regions
+* Active-Active replication
+* Applications can READ and WRITE to the table in any region
+* Must enable DynamoDB Streams as a pre-requisite
+
+  \
+
+
+### TimeTolive
+
+* Automatically delete items after an expiry timestamp
+* Use cases: reduce stored data by keeping only current items, adhere to regulatory obligations, web session handling...
+
+
+## API GATEWAY
+- Amazon API Gateway to create, publish, maintain, monitor, and secure APIs at any scale. 
+- APIs act as the front door for applications to access data, business logic, or functionality from your backend services. 
+- Using API Gateway, you can create RESTful APIs and WebSocket APIs that enable real-time two-way communication applications.
+  
+* Endpoint Type:
+  * Edge-Optimize(default): For global clients
+  * Regional:
+  * Private:  
+* *Security*: 
+  * IAM Role
+  * Cognito
+  * Custom Authorize(Lamda)
+* How to API gateway work:
+![alt text](image-73.png)
+
+
+## Choosing right database
+- *RDBMS (SQL/OLTP)* - Great for joins
+  - RDS
+  - Aurora 
+- *NoSQL database* - no joins, no SQL
+  - DynamoDB(~JSON)
+  - ElasticCache(Key/Value Paris)
+  - Neptune(graphs)
+  - DocumentDB(For MogoDB)
+- *Object Store*: 
+  - S3(for big objects)
+  - Glacier(for backups/chive)
+- **Data Warehouse**(SQL Analytics / BI)
+  + Reshift(OLAP)
+  + Athena
+  + EMR
+- *Search*: 
+  - OpenSearch(Json) - free text, unstructured search
+- *Graphs*: Amazone Neptune - displays relationships between data
+- *Ledger*: Amazone Quantum Ledger Database
+- *Time series:* AmazonTimestream
+
+## RDS 
+
+- Managed Postgres / Mysql / Oracle / SQL Server / DB2 / MariaDB
+- Provision
+  - Rds Instace Size and EBS VolumneType & size
+- Auto-scaling for storage
+- Support 
+  - Read Replicas
+  - Multi AZ
+- Security
+  - IAM
+  - Security Group
+  - KMS
+  - SSL in transit
+- Auotmated Backup with Point in time restore feature(35 days)
+- Manual DB Snapshot for longer-term recoverry
+- Support IAM Authentication, integration with Secrets Manager
+
+- ![alt text](image-63.png)
+## 236 - Aurora 
+- 
+- Compatilbe API for Post
+- Store in 6 replica - 3 AZ
+- Cluster: Customer endopint for writer and reader DB instaces
+- Aurora Serverless
+- Aurora Global: 
+- Aurora Machine Learning: Perfrm ML using SageMaker & Comprehend on Aurora
+### Aurora Replica
+- *Purpose*
+  - Scale read operations of your app(reader endpoint) -> Increase avaibility
+  - If the writer instance becomes unavailable, automatically promotes one of the reader instances to take its place as the new write 
+  - Up to 15 Aurora Replicas xacross the Availability Zones (AZs) tha DB cluster spans within an AWS Region.
+## Amazone Elasticache - Summanry
+
+- Managed Redis / Memchaed
+- In-memory datastore, sub-milisecond latency
+- Support for Clustering(Redis) and Multi Az, 
+
+## Dynamo DB - Summary
+- Can replace ElastiCahe as a key/value store
+- Highly Available, Multi Az by default
+- DAX cluster for reading cache 
+- Event Processing: DynamoDB Streaam to integrate with AWS Lamda, or Kinesis Data Streams
+- Global Table feature: active-ative setup
+- Export to S3
+
+## S3 - Lifecycle transtion
+[- ![alt text](image-74.png)](https://docs.aws.amazon.com/images/AmazonS3/latest/userguide/images/lifecycle-transitions-v4.png)
+## S3 - Storage Classes
+### S3 One Zone-IA
+- Amazon S3 One Zone-IA is for 
+  - data that is accessed less frequently, 
+  - requires rapid access when needed. 
+- Other S3 Storage Classes which store data in a minimum of three Availability Zones (AZs), IA stores data in a single Availability Zone (AZ) and costs 20% less than Standard-IA. 
+- One Zone-IA is ideal for customers want a lower-cost option for infrequently accessed and re-creatable data but do not require the availability and resilience of Standard or Standard-IA. 
+- The minimum storage duration is *30 days* before you can transition objects from Standard to One Zone-IA.
+
+## Amazon Simple Notification Service(SNS)
+- A highly available, durable, secure, fully managed pub/sub messaging service.
+- Enables you to decouple 
+  - microservices
+  - distributed systems
+  - serverless applications.
+- Fully dynamically server - dynamically scale with your application
+
+## S3
+
+- A key/value store for objects
+- Great for bigger objects, not so greate for many small object
+- Serverless, scale infinitely, max object size if 5 TB, versioning capacity
+- Tiers: S3 Standard, S3 Infrequent Access, S3 Intelligent, S3 Galcier + Life Cycle Policty
+- Security SSE-S3, SSE-KMS, SSE-C, TLS in trasit, default ecnrtypion
+- Batch Operation on objects using S3 Batch, Listing file using S3 repository
+- Performanace: Moti-part upload, S3 Tranfer Accelator, S3 Seelct
+- Automation: S3 Event Notification(SNS, SQS, Lambda, EventBride)
+
+## DocumentDB
+- Aurora is an "AWS-IMplementation" of PostgreSQL/SQL
+- DocumentDB is the same for MongoDB(No SQL DB)
+
+- MonggoDB is sued to store, query and index  JSON Data
+- Similiar "deployment concepts" as Aurora
+- Fully Managed, hightly available with replication aross 3 AZ
+- Auto grows of 10 GB
+- Automatically scales to workloads 
+
+## Neptune
+- Fully managed graph database
+- Higly available with repliactions across multiple AZs
+- Great for 
+  - knowledge graphs(Wikipedia)
+  - Fraud detection
+  - Recommedation egnines
+  
+## Keyspace 
+- For apache Casandra
+- Using 
+
+## Amazon QLDB
+- Stand for Quantum Ledger Database
+- Ledger is a book recording financial Transactions
+- Review history of all chanages made to your app
+- Immutable system 
+- Difference with Amazone Managed Blockchain: No decentralization component
+
+## 244 Timestream
+- Time series database
+- Automatically Scales up/down 
+- Faster and cheaper
+
+
+## 245 Amazon athena
+- Severless query service to analyze data in S3
+- SQL language(Build in Presto)
+- Support CSV, Json, ORC, AVRO, Parquet
+- 5 USD per TB
+- With Amazone Quicksight
+- Use case
+  - BI
+  - Analytic
+  - Report & Analytic & Query VPC Flow Logs, ELB Logs, CloudTrail trails,
+- Improve performance
+  - Column data for cost saving
+    - Apache Parquet is recomment
+    - Huge Performace Improvement
+    - Use glue to convert to Parquet or ORC
+- Compress data for retrivil
+- Partion datasets in S3
+- Use larger file
+- *Federated query*:
+  - Allow to run query on AWS or on premise
+  - Store result back in S3
+
+## REDSHIFT
+- Is base on PostgresSQL but not use for Online Tracsactio Processing
+- For OLAP(Online Analytic Processing)
+- Should load the data(From Kinesis Firehose)
+- Ingest data to redshiff
+  - Firehose -> Write S3 ->  S3 Copy -> RedShift
+- EC2 -> Redshift by JDBC Driver
+- *Reshift Spectrum*: Query data is already in S3 without loading it.
+
+## 248 Open Search
+- Succesor to Elastic Search
+- On DynamoDB, queries only exist by primary key or indexs
+- Could search any field
+- Two mode: Managed Cluster or Serverless cluster
+- *Security*: Cognito, IAM Role
+- Have OpenSearch Dashboard
+- OpenSearch Patterns DynamoDB
+  - DymamoDB Table -> DynamoDB Stream -> Lambda Function -> OpenSearch -> Search for Item Name -> Retrive ID -> Search Full Item in DynamoDB
+- ![alt text](image-65.png)
+
+- OpenSearch Patterns Clouwatch Logs
+  - ![alt text](image-66.png)
+
+- OpenSearch Pattern Kisesis DataStream and FireHorse
+- ![alt text](image-67.png)
+
+## 249 EMR
+
+- Stand for *Elastic MapReduce*
+- Create Hadoop cluster(Bigdata) -> analyze & process vast amount data
+- The clusters can be made of hundreds of EC2 instances
+- takes care of all the provisioning and configuration
+- Use cases: data processing, machine learning, web indexing, big data...
+- Master Node: Manage the cluster
+- Core Node: Run task and store data
+- Task Note(optional)
+- Purchasing Options
+  - On Demand
+  - Reserverd
+  - Spot Intances
+## 250 Quick Sight
+- Severless machine learning BI Service create interative Dashboar
+- Use cases:
+  - Business analytics
+  - Building visualizations
+  - Perform ad-hoc analysis
+  - Get business insights using data
+- Integrated with RDS, Aurora, Athena, Redshift, S3...
+- In-memory computation using SPICE engine if data is imported into QuickSight
+- Enterprise edition: Possibility to setup Column-Level security (CLS)
+
+## 251 Glue
+- Serverless ETL service
+- Prepare vs Tranform data for analytics
+![alt text](image-68.png)
+- Convert data into Parquet Format
+![alt text](image-69.png)
+- Glue Data Catalog:
+- Glue Job Bookmarks: prevent re-processing old data
+- Glue Elastic Views
+  - Combine and replicate data across lultiple data stores using SQL
+
+- Glue DataBew: Clean and nomalize data using prebuild tranformerm
+- Glue Studio: new GUI to create, run and monitor ETL jobs in Glue
+- Glue Streaming ETL (built on Apache Spark Structured Streaming): compatible with Kinesis Data Streaming, Kafka, MSK (managed Kafka)
+
+## 252 AWS Lake Formation
+- Data lake = central palce to have all your data for analytics purpose
+- Easy to setup data lake in days
+- It automates many complex manual steps(Collecting, cleansing, moveing, catloging data) and de-duplicate
+- Combine Structured and untructured data in datalake
+- S3, Rds, Relation & NoSql DB.
+- Fine-grained access control
+- Build on to of AWS Blue
+- ![alt text](image-70.png)
+- Many place in setup security
+
+## 314 Amazon GuardDuty
+- Intelligent Threat discover y to protect your AWS Account
+- Uses Machine Learning algorithms, anomaly detection, 3rd party data
+- Input data includes:
+  - CloudTrail Events Logs – unusual API calls, unauthorized deployments
+    - CloudTrailManagementEvents - createVPCsubnet,createtrail,... 
+    - CloudTrailS3DataEvents–getobject,listobjects,deleteobject,...
+  - VPC Flow Logs – unusual internal traffic, unusual IP address
+  - DNS Logs – compromised EC2 instances sending encoded data within DNS queries 
+  - Optional Features: EKS Audit Logs, RDS & Aurora, EBS, Lambda, S3 Data Events...
+  - Can setup EventBridge rules to be notified in case of findings
+  - ![alt text](image-71.png)
+  - ![alt text](image-72.png)
+
+  ## Task
+  - Review cloudfront, global accelator
