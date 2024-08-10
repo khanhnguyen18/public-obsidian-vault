@@ -8,72 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "96ebb103deda1413",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AWS Solution Architect - Practice Test 1.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "ae364b67619a7d55",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "aws-ass-solution-architect.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "12978d6eca3177eb",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "aws-ass-solution-architect.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "2e4218ce19efa25b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AWS Solution Architect - Practice Test 1.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "ee6ab760edfeeda9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "aws-ass-solution-architect.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "22e0870567ea1732",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "aws-ass-solution-architect.md",
+                "file": "AWS Solution Architect - Practice Test 1.md",
                 "mode": "source",
                 "source": false
               }
@@ -206,10 +146,17 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "96ebb103deda1413",
+  "active": "1713fccf59e84af0",
   "lastOpenFiles": [
     "aws-ass-solution-architect.md",
     "AWS Solution Architect - Practice Test 1.md",
+    "themes/Minimal/theme.css",
+    "themes/Minimal/manifest.json",
+    "themes/Minimal",
+    "themes/Dracula for Obsidian/theme.css",
+    "themes/Dracula for Obsidian/manifest.json",
+    "themes/Dracula for Obsidian",
+    "themes",
     "AWS Solution Architect.md",
     "README.md"
   ]
