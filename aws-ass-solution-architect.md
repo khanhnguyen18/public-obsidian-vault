@@ -16,7 +16,7 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 
 ## 13. IAM Role
 
- ![alt text](image-40.png)
+![alt text](image-40.png)
 
 * Statment consist of
   * Sid
@@ -30,9 +30,42 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 
 ### 30. AWS Budget setup
 
- ![alt text](image-39.png)o
+![alt text](image-39.png)
 
-## 31. EC2 
+## ECS
+- fully managed container orchestration service. ECS allows you to easily run, scale, and secure Docker container applications on AWS.
+  ![](https://d1.awsstatic.com/Product-Page-Diagram_Amazon-Elastic-Container-Service%20march%202023.6ee17a3146661f893bf1ee674aceb65efdf864bd.png)
+- With the Fargate launch type, you pay for the amount of vCPU and memory resources that your containerized application requests. vCPU and memory resources are calculated from the time your container images are pulled until the Amazon ECS Task terminates, rounded up to the nearest second.
+- With the EC2 launch type, there is no additional charge for the EC2 launch type. You pay for AWS resources (e.g. EC2 instances or EBS volumes) you create to store and run your application.
+
+## Amazon Inspector
+- security assessments help you check for unintended network accessibility of your Amazon EC2 instances and for vulnerabilities on those EC2 instances.
+-  Amazon Inspector assessments are offered to you as pre-defined rules packages mapped to common security best practices and vulnerability definitions.
+
+## AWS Web Application Firewal(WAF)
+- a web application firewall service that lets you monitor web requests and protect your web applications from malicious requests.
+- Use AWS WAF to block or allow requests based on conditions that you specify, such as the IP addresses.
+- You can also use AWS WAF preconfigured protections to block common attacks like SQL injection or cross-site scripting.
+- You can use AWS WAF with your Application Load Balancer to allow or block requests based on the rules in a web access control list (web ACL). Geographic (Geo) Match Conditions in AWS WAF allows you to use AWS WAF to restrict application access based on the geographic location of your viewers. With geo match conditions you can choose the countries from which AWS WAF should allow access.
+- Geo match conditions are important for many customers. For example, legal and licensing requirements restrict some customers from delivering their applications outside certain countries. These customers can configure a whitelist that allows only viewers in those countries. Other customers need to prevent the downloading of their encrypted software by users in certain countries. These customers can configure a blacklist so that end-users from those countries are blocked from downloading their software.
+## 31. EC2
+### EC2 - Placement Group
+- Depending on the type of workload, you can create a placement group using one of the following placement strategies:
+  - Cluster - Packs instances close together inside an Availability Zone. This strategy enables workloads to achieve the low-latency network performance necessary for tightly-coupled node-to-node communication that is typical of high-performance computing (HPC) applications.
+  - Partition:
+    - do not share underlying harware with groups intance(Kafka, Hadoop , Cassandra)
+    - A partition placement group can have a maximum of seven partitions per Availability Zone
+  - Spead: Strictly place small group of intances accross distince underlying harware to reduce correlated failures.
+- More information: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html
+
+### EC2 - Intance store
+- Provides temporary block-level storage for your instance.
+- This storage is located on disks that are physically attached to the host instance.
+- Instance store is ideal for the temporary storage of information that changes frequently such as buffers, caches, scratch data, and other temporary content, or for data that is replicated across a fleet of instances, such as a load-balanced pool of web servers.
+- Instance store volumes are included as part of the instance's usage cost.
+
+As Instance Store based volumes provide high random I/O performance at low cost (as the storage is part of the instance's usage cost) and the resilient architecture can adjust for the loss of any instance, therefore you should use Instance Store based Amazon EC2 instances for this use-case.
+- Instance store is ideal for the temporary storage of information that changes frequently such as buffers, caches, scratch data, and other temporary content, or for data that is replicated across a fleet of instances, such as a load-balanced pool of web servers
 ### EC2 - Pricing
 - https://aws.amazon.com/ec2/pricing/
 
@@ -43,10 +76,15 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 
 * EBS snapshot archive: 75% cheaper
 
+## EBS
+- Amazon EBS volume types fall into two categories:
+  1. Solid state drive (SSD) backed volumes optimized for transactional workloads involving frequent read/write operations with small I/O size, where the dominant performance attribute is IOPS.
+  2. Hard disk drive (HDD) backed volumes optimized for large streaming workloads where throughput (measured in MiB/s) is a better performance measure than IOPS.
+- You can't use st1 or sc1 EBS volumes as root volumes.
 ## EFS
 - Provides a simple, scalable, fully managed elastic NFS file system for use with AWS Cloud services and on-premises resources.
 - Storing data within and across multiple Availability Zones (AZs) for high availability and durability
-- EC2 instances can access your file system across AZs, regions, and VPCs 
+- EC2 instances can access your file system across AZs, regions, and VPCs
 - On-premises servers can access using AWS Direct Connect or AWS VPN.
 
 - #1.13: You can connect to EFS file systems from EC2 instances in other AWS regions using an inter-region VPC peering connection, and from on-premises servers using an AWS VPN connection
@@ -67,15 +105,22 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 * Run instances for the same application across multi AZ
 * Auto Scaling Group multi AZ
 
-## 70. Elastic Load Balancing (ELB) 
+## 70. Elastic Load Balancing (ELB)
 - ELB and Global Accelerator solve the challenge of routing user requests to healthy application endpoints.
--  AWS Global Accelerator relies on ELB to provide the traditional load balancing features such as support for internal and non-AWS endpoints, pre-warming, and Layer 7 routing. 
+-  AWS Global Accelerator relies on ELB to provide the traditional load balancing features such as support for internal and non-AWS endpoints, pre-warming, and Layer 7 routing.
 - Provides load balancing within one Region, AWS Global Accelerator provides traffic management across multiple Regions.
 - Include
   - ALB
   - NLB
 ### Application Load Balancer (ALB)
+- The Application Load Balancer (ALB) is best suited for load balancing HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
+- This is the correct option since the question has a specific requirement for content-based routing which can be configured via the Application Load Balancer. Different Availability Zones (AZs) provide high availability to the overall architecture and Auto Scaling group will help mask any instance failures.
 
+#### Content-Based Routing
+- ALB has access to HTTP headers and allows you to route requests to different backend services accordingly.
+- For example, you might want to send requests that include /api in the URL path to one group of servers (we call these target groups) and requests that include /mobile to another.
+- Routing requests in this fashion allows you to build applications that are composed of multiple microservices that can run and be scaled independently.
+- As you will see in a moment, each Application Load Balancer allows you to define up to 10 URL-based rules to route requests to target groups. Over time, we plan to give you access to other routing methods.
 
 
 ## 72. ALT
@@ -111,7 +156,7 @@ The goal of an Auto Scaling Group (ASG) is to:
 • Automatically register new instances to a load balancer
 • Re-create an EC2 instance in case a previous one is terminated (ex: if unhealthy)
 
- ![alt text](image-41.png)
+![alt text](image-41.png)
 Auto Scaling - CloudWatch Alarms & Scaling
 • It is possible to scale an ASG based on CloudWatch alarms
 • An alarm monitors a metric (such as Average CPU, or a custom metric)
@@ -140,18 +185,18 @@ Features of Aurora
 
 Auto
 
- ![alt tvsext](image-42.png)
+![alt tvsext](image-42.png)
 
 ## 98. Elastic Cache HandOn
 
 * Security
-   ![alt text](image-43.png)
+  ![alt text](image-43.png)
   * Encryption Config
     * Transit
     * At rest
   * Security
 * Cluster detail:
-   ![alt text](image-44.png)
+  ![alt text](image-44.png)
   * Primary Endpoint
   * Reader Endpoint
 
@@ -169,7 +214,7 @@ Auto
 
 
 
-1. What is *DNS* and dd
+1. What is DNS and dd
    \[LINK\](This is a link)
    dns
 
@@ -178,13 +223,13 @@ Auto
 * Subnet: Span all azs
 
 
- ![alt text](image-48.png)
+![alt text](image-48.png)
 
-* *DNS Record Time*:
-   ![alt text](image-49.png)
+* DNS Record Time:
+  ![alt text](image-49.png)
 
-   ![alt text](image-50.png)
-* *Go to AWS Cloudshell*
+  ![alt text](image-50.png)
+* Go to AWS Cloudshell
   * sudo yum install -y bind-utils
   * nslookup  test.steahan...
   * dig
@@ -200,25 +245,25 @@ Auto
 
 ## 107. CNam and Alias
 
- ![alt text](image-51.png)
+![alt text](image-51.png)
 
 * Alias: Point hostname to aws resource
 * CName not for apex record
 
-## Route 53 
+## Route 53
 - Amazon Route 53 is a highly available and scalable cloud Domain Name System (DNS) web service. It is designed to give developers and businesses an extremely reliable and cost-effective way to route end users to Internet applications by translating names like www.example.com into the numeric IP addresses like 192.0.2.1 that computers use to connect to each other. Route 53 is ruled out as the company wants to continue using its own custom DNS service.
 
 ## 127 S3
 
 * So3 looks like a global service but buckets are created in a region
-* *Prefix* = Directory
+* Prefix = Directory
 *  ![alt text](image-52.png)
 * Bucket
 * Object
   * Metadata
   * Tags
   * Version ID(if enable)
-* Default *encrytiokn*
+* Default encrytiokn
   * SSE-S3
   * KMS
 
@@ -227,26 +272,38 @@ Auto
 - User base
   - Which url could use for specific user
 - Resource Base
-  - Bucket Policies: 
+  - Bucket Policies:
   - Object Access Controler LIst - Finer Grant
   - Bucket(ACL)
 
+## KMS
+- AWS Key Management Service (AWS KMS) is a service that combines secure, highly available hardware and software to provide a key management system scaled for the cloud. When you use server-side encryption with AWS KMS (SSE-KMS), you can specify a customer-managed CMK that you have already created. SSE-KMS provides you with an audit trail that shows when your CMK was used and by whom. Therefore SSE-KMS is the correct solution for this use-case.
+-
+- AWS Key Management Service (KMS) makes it easy for you to create and manage cryptographic keys and control their use across a wide range of AWS services and in your applications. AWS KMS is a secure and resilient service that uses hardware security modules that have been validated under FIPS 140-2.
+- Deleting an AWS KMS key in AWS Key Management Service (AWS KMS) is destructive and potentially dangerous. Therefore, AWS KMS enforces a waiting period. To delete a KMS key in AWS KMS you schedule key deletion. You can set the waiting period from a minimum of 7 days up to a maximum of 30 days. The default waiting period is 30 days. During the waiting period, the KMS key status and key state is Pending deletion. To recover the KMS key, you can cancel key deletion before the waiting period ends. After the waiting period ends you cannot cancel key deletion, and AWS KMS deletes the KMS key.
 ## 130 Bucket policy
 
 * Use tool to generate policy
 
-## Amazon S3 Transfer Acceleration(S3TA)
-- enables fast, easy, and secure transfers of files over long distances between your client and an S3 bucket. 
-- Takes advantage of *Amazon CloudFront’s globally distributed edge locations*.
+## S3 Transfer Acceleration(S3TA)
+- enables fast, easy, and secure transfers of files over long distances between your client and an S3 bucket.
+- Takes advantage of Amazon CloudFront’s globally distributed edge locations.
 - As the data arrives at an edge location, data is routed to Amazon S3 over an optimized network path.
 - Pay only for transfer that are accelerated
+## S3 - Multipart Upload
+- Multipart upload allows you to upload a single object as a set of parts.
+- Each part is a contiguous portion of the object's data. You can upload these object parts independently and in any order.
+-  If transmission of any part fails, you can retransmit that part without affecting other parts.
+-  After all parts of your object are uploaded, Amazon S3 assembles these parts and creates the object.
+-   If you're uploading large objects over a stable high-bandwidth network, use multipart uploading to maximize the use of your available bandwidth by uploading object parts in parallel for multi-threaded performance.
+-  If you're uploading over a spotty network, use multipart uploading to increase resiliency to network errors by avoiding upload restarts.
 ## S3 – Requester Pays
 
 * With Requester Pays buckets, the requester instead of the bucket owner pays the cost of the request and the data download from the bucket
 
 ## S3 - Access Point
 
-* VPC Origin - *DNS Name*
+* VPC Origin - DNS Name
 * EC2 could create VPC Enpoint(Gateway or Interface Endpoint)
 
 
@@ -258,23 +315,25 @@ Auto
 - CDN service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment.
 - CloudFront points of presence (POPs) (edge locations) make sure popular content can be served quickly to your viewers.
 - has regional edge caches that bring more of your content closer to your viewers, even when the content is not popular enough to stay at a POP, to help improve performance for that content.
+- You can use different origins for different types of content on a single site – e.g. Amazon S3 for static objects, Amazon EC2 for dynamic content, and custom origins for third-party content.
+
 
 ### Origin failover feature
 
 - support your data resiliency needs.
-- If your content is not already cached in an edge location, 
-    -> CloudFront retrieves it from an origin that you've identified as the source for the definitive version of the content.
+- If your content is not already cached in an edge location,
+  -> CloudFront retrieves it from an origin that you've identified as the source for the definitive version of the content.
 #### 165 Cloudfront with S3
 
 * Origin access
 * Distribution
 
-## 170. Global Accelator
+## 170. Global Accelerator
 - Utilizes the Amazon global network, allowing you to improve the performance of your applications by:
-    1. lowering first-byte latency(the round trip time for a packet to go from a client to your endpoint and back again)
-    2. jitter (the variation of latency)
-    3. increasing throughput (the amount of time it takes to transfer data) as compared to the public internet
-- Provides static IP addresses that act as a fixed entry point to your application endpoints in a single or multiple AWS Regions such as ALB, NLB, EC2 instances. 
+  1. lowering first-byte latency(the round trip time for a packet to go from a client to your endpoint and back again)
+  2. jitter (the variation of latency)
+  3. increasing throughput (the amount of time it takes to transfer data) as compared to the public internet
+- Provides static IP addresses that act as a fixed entry point to your application endpoints in a single or multiple AWS Regions such as ALB, NLB, EC2 instances.
 - Improve wide range of app(TCP, UDP) by proxying packets at the edge to applications running in one or more AWS Regions.
 - Global Accelerator is a good fit for non-HTTP use cases, such as gaming (UDP), IoT (MQTT), or Voice over IP, as well as for HTTP use cases that specifically require static IP addresses or deterministic, fast regional failover.
 - AWS Global Accelerator and Amazon CloudFront are separate services that use the AWS global network and its edge locations around the world. CloudFront improves performance for both cacheable content (such as images and videos) and dynamic content (such as API acceleration and dynamic site delivery), while Global Accelerator improves performance for a wide range of applications over TCP or UDP.
@@ -282,50 +341,57 @@ Auto
 - When go public internet - A lot of latency because there many hops
 - Unicast IP: 1 server 1 IP
 - Any Cast IP: Same Ip, client is routed to near on
-- Global Accelator: Talk to closed Edge location -> Public ALP
+- Global Accelerator: Talk to closed Edge location -> Public ALP
 - Create Private AWS network
 - Perform healcheck for your app
 
-# AWS Direct Connect
-- Establish a dedicated network connection from your premises to AWS. 
+## AWS Direct Connect
+- Establish a dedicated network connection from your premises to AWS.
 - AWS Direct Connect lets you establish a dedicated network connection between your network and one of the AWS Direct Connect locations.
-- With *AWS Direct Connect* plus *VPN*, you can combine one or more AWS Direct Connect dedicated network connections with the *Amazon VPC VPN*. This combination provides an *IPsec-encrypted private connection* that also reduces network costs, increases bandwidth throughput, and provides a more consistent network experience than internet-based VPN connections.
+- With AWS Direct Connect plus VPN, you can combine one or more AWS Direct Connect dedicated network connections with the Amazon VPC VPN. This combination provides an IPsec-encrypted private connection that also reduces network costs, increases bandwidth throughput, and provides a more consistent network experience than internet-based VPN connections.
 - Involves significant monetary investment and takes at least a month to set up, therefore it's not the correct fit for this use-case.
 
 ## AWS Transit Gateway
 -  A network transit hub that you can use to interconnect your virtual private clouds (VPC) and on-premises networks. AWS Transit Gateway by itself cannot establish a low latency and high throughput connection between a data center and AWS Cloud.
 
 ## AWS site-to-site VPN
-- AWS Site-to-Site VPN enables you to securely connect your on-premises network or branch office site to your Amazon Virtual Private Cloud (Amazon VPC). 
-- A VPC VPN Connection utilizes IPSec to establish encrypted network connectivity between your intranet and Amazon VPC over the Internet. 
-- VPN Connections are a good solution if you have an immediate need, have low to modest bandwidth requirements, and can tolerate the inherent variability in Internet-based connectivity. 
+- Enables you to securely connect your ~on-premises~ network or branch office site to your Amazon VPC.
+- Utilizes protocol security(IPSec) to establish encrypted network connectivity between your intranet and Amazon VPC over the Internet.
+- VPN Connections are a good solution if you have an immediate need, have low to modest bandwidth requirements, and can tolerate the inherent variability in Internet-based connectivity.
 - However, Site-to-site VPN cannot provide low latency and high throughput connection, therefore this option is ruled out.
-
-
 ## AWS Snow Family
-
 * Ops Hub
 * Data transfer
 
-- *AWS Snowball Edge Storage Optimized*: It provides up to 80 Terabytes of usable HDD storage, 40 vCPUs, 1 TB of SATA SSD storage, and up to 40 Gigabytes network connectivity to address large scale data transfer and pre-processing use cases.
+- AWS Snowball Edge Storage Optimized: It provides up to 80 Terabytes of usable HDD storage, 40 vCPUs, 1 TB of SATA SSD storage, and up to 40 Gigabytes network connectivity to address large scale data transfer and pre-processing use cases.
 - Snowmobile: 100 petabyte in one location
+## AWS Directory Service for Microsoft Active Directory (AWS Managed Microsoft AD)
+AWS Directory Service for Microsoft Active Directory, also known as AWS Managed Microsoft AD, enables your directory-aware workloads and AWS resources to use managed Active Directory in the AWS Cloud.
+## Amazon FSx for Lustre
+Makes it easy and cost-effective to launch and run the world’s most popular high-performance file system.
+- It is used for workloads such as machine learning, high-performance computing (HPC), video processing, and financial modeling.
+- The open-source Lustre file system is designed for applications that require fast storage – where you want your storage to keep up with your compute.
+- FSx for Lustre integrates with Amazon S3, making it easy to process data sets with the Lustre file system. When linked to an S3 bucket, an FSx for Lustre file system transparently presents S3 objects as files and allows you to write changed data back to S3.
 
 ## Amazon FSx for Windows File Server
+- Amazon FSx for Windows File Server provides fully managed, highly reliable file storage that is accessible over the industry-standard Service Message Block (SMB) protocol. It is built on Windows Server, delivering a wide range of administrative features such as user quotas, end-user file restore, and Microsoft Active Directory (AD) integration. FSx for Windows does not allow you to present S3 objects as files and does not allow you to write changed data back to S3. Therefore you cannot reference the "cold data" with quick access for reads and updates at low cost. Hence this option is not correct.
+-
 - provides all of the benefits of a native Windows SMB environment that is fully managed and secured and scaled like any other AWS service. You get detailed reporting, replication, backup, failover, and support for native Windows tools like DFS and Active Directory.
-;'lopfdpgtikdcxojjgtkfidcncibdcl  support file shares in Amazon FSx for Windows File Server, so this option is incorrect.
+- support file shares in Amazon FSx for Windows File Server, so this option is incorrect.
 - Amazon FSx File Gateway: low-latency, on-premises access to fully managed file shares in Amazon FSx for Windows File Server. For applications deployed on AWS, you may access your file shares directly from Amazon FSx in AWS
+- ![](https://d1.awsstatic.com/r2018/b/FSx-Windows/FSx_Windows_File_Server_How-it-Works.9396055e727c3903de991e7f3052ec295c86f274.png)
 ## 178 Storage gateway
-
-* Block storage
-* Object Storgae
-* File gate
-* NFS
-* Active Story
-* iScis
-* *Volume Gateway*
-  * Cached Volume
-  * Stored Volumne:
-
+- A hybrid cloud storage service that gives you on-premises access to virtually unlimited cloud storage.
+- types of gateways
+  - Tape Gateway
+    - allows moving tape backups to the cloud.
+  - File Gateway
+    - offer ~SMB~ or ~NFs~ in S3 with local catching
+  - Volume Gateway
+    - Present cloud-based iSCSI block storage volumes to your on-premises applications.
+- that seamlessly connect on-premises applications to cloud storage, caching data locally for low-latency access.
+- ~Ref~
+  - [Link](https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html)
 
 ### File gateway
 - https://d1.awsstatic.com/cloud-storage/Amazon%20FSx%20File%20Gateway%20How%20It%20Works%20Diagram.edbf58e4917d47d04e5a5c22132d44bd92733bf5.png
@@ -336,20 +402,40 @@ Auto
 - Limited throughput : 300 msg/s without batching, max: 10 message per operation = 3000 msg/s
 
 ## Kinesis Data Stream
+- Enables real-time processing of streaming big data.
+- It provides ordering of records, as well as the ability to read and/or replay records in the same order to multiple Amazon Kinesis Applications.
+- The Amazon Kinesis Client Library (KCL) delivers all records for a given partition key to the same record processor, making it easier to build multiple applications reading from the same Amazon Kinesis data stream (for example, to perform counting, aggregation, and filtering).
+- ~Recomment~
+  1. *Routing related records to the same record processor* (as in streaming MapReduce). For example, counting and aggregation are simpler when all records for a given key are routed to the same record processor.
+  2. *Ordering of records*. For example, you want to transfer log data from the application host to the processing/archival host while maintaining the order of log statements.
+  3. *Ability for multiple applications to consume the same stream concurrently*. For example, you have one application that updates a real-time dashboard and another that archives data to Amazon Redshift. You want both applications to consume data from the same stream concurrently and independently.
+  4. *Ability to consume records in the same order a few hours later*. For example, you have a billing application and an audit application that runs a few hours behind the billing application. Because Amazon Kinesis Data Streams stores data for up to 365 days, you can run the audit application up to 365 days behind the billing application.
+
+- Kinesis Data Streams cannot directly write the output to Amazon S3. Unlike Amazon Kinesis Data Firehose, KDS does not offer a ready-made integration via an intermediary AWS Lambda function to reliably dump data into Amazon S3
+
 - Ingest real-time data or streaming data at large scales.
-- KDS can continuously capture gigabytes of data per second from hundreds of thousands of sources. 
-- The data collected is available in milliseconds, enabling real-time analytics. 
+- KDS can continuously capture gigabytes of data per second from hundreds of thousands of sources.
+- The data collected is available in milliseconds, enabling real-time analytics.
 - KDS provides ordering of records, as well as the ability to read and/or replay records in the same order to multiple Amazon Kinesis Applications.
 
+- Only Cloudwatch and S3 buck could ingest data(not AWS CloudTrail)
 
 ## Firehose
-- Ingest data and post to another source
-  - S3
-  - 
-
-!- Delivery Stream:
-
+- the easiest way to load streaming data into data stores and analytics tools.
+- It can capture, transform, and load streaming data into Amazon S3, Amazon Redshift, Amazon OpenSearch Service, and Splunk, enabling near real-time analytics with existing business intelligence tools and dashboards you’re already using today.
+- It is a fully managed service that automatically scales to match the throughput of your data and requires no ongoing administration.
+- It can also batch, compress, and encrypt the data before loading it, minimizing the amount of storage used at the destination and increasing security.
+  ![Overview](https://d1.awsstatic.com/pdp-how-it-works-assets/product-page-diagram_Amazon-KDF_HIW-V2-Updated-Diagram@2x.6e531854393eabf782f5a6d6d3b63f2e74de0db4.png)
+  ![S3](image.png)
 ## Analytics
+- Amazon Kinesis Data Analytics is the easiest way to analyze streaming data in real-time. Kinesis Data Analytics enables you to easily and quickly build queries and sophisticated streaming applications in three simple steps:
+- setup your streaming data sources
+- write your queries or streaming applications
+- set up your destination for processed data.
+- Kinesis Data Analytics cannot directly ingest data from the source as it ingests data either from
+  - Kinesis Data Streams
+  - Kinesis Data Firehose
+
 
 ## 218. Lambda
 - run code without provisioning or managing servers. You pay only for the compute time that you consume—there’s no charge when your code isn’t running.
@@ -361,16 +447,23 @@ Auto
 * For Java
 * Snap start -> Function is preitnitize
 
+## Amazon ElastiCache
+Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amazon RDS or Amazon DynamoDB, providing a high-performance middle tier for applications with extremely high request rates and/or low latency requirements
+
+
 ## 225. Dynamodb Advanced Features
 
 ### DynamoDB Accelerator(DAX)
+- Amazon DynamoDB Accelerator (DAX) is a fully managed, highly available, in-memory cache for DynamoDB that delivers up to a 10x performance improvement – from milliseconds to microseconds – even at millions of requests per second.
+- DAX does all the heavy lifting required to add in-memory acceleration to your DynamoDB tables, without requiring developers to manage cache invalidation, data population, or cluster management. Therefore, this is a correct option.
+  ![](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/images/dax_high_level.png)
 
-* *in- memory cache* for *DynamoDB*
+* in- memory cache for DynamoDB
 * Help solve read congestion by caching
 * Microseconds latency for cached data
 * Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
 * 5 minutes TTL for cache (default)
-   ![alt text](image-59.png)
+  ![alt text](image-59.png)
 
 
 ### DynamoDB - Stream Processing
@@ -395,51 +488,51 @@ Auto
 
 
 ## API GATEWAY
-- Amazon API Gateway to create, publish, maintain, monitor, and secure APIs at any scale. 
-- APIs act as the front door for applications to access data, business logic, or functionality from your backend services. 
+- Amazon API Gateway to create, publish, maintain, monitor, and secure APIs at any scale.
+- APIs act as the front door for applications to access data, business logic, or functionality from your backend services.
 - Using API Gateway, you can create RESTful APIs and WebSocket APIs that enable real-time two-way communication applications.
-  
+
 * Endpoint Type:
   * Edge-Optimize(default): For global clients
   * Regional:
-  * Private:  
-* *Security*: 
+  * Private:
+* Security:
   * IAM Role
   * Cognito
   * Custom Authorize(Lamda)
 * How to API gateway work:
-![alt text](image-73.png)
+  ![alt text](image-73.png)
 
 
 ## Choosing right database
-- *RDBMS (SQL/OLTP)* - Great for joins
+- RDBMS (SQL/OLTP) - Great for joins
   - RDS
-  - Aurora 
-- *NoSQL database* - no joins, no SQL
+  - Aurora
+- NoSQL database - no joins, no SQL
   - DynamoDB(~JSON)
   - ElasticCache(Key/Value Paris)
   - Neptune(graphs)
   - DocumentDB(For MogoDB)
-- *Object Store*: 
+- Object Store:
   - S3(for big objects)
   - Glacier(for backups/chive)
 - **Data Warehouse**(SQL Analytics / BI)
   + Reshift(OLAP)
   + Athena
   + EMR
-- *Search*: 
+- Search:
   - OpenSearch(Json) - free text, unstructured search
-- *Graphs*: Amazone Neptune - displays relationships between data
-- *Ledger*: Amazone Quantum Ledger Database
-- *Time series:* AmazonTimestream
+- Graphs: Amazone Neptune - displays relationships between data
+- Ledger: Amazone Quantum Ledger Database
+- Time series: AmazonTimestream
 
-## RDS 
+## RDS
 
 - Managed Postgres / Mysql / Oracle / SQL Server / DB2 / MariaDB
 - Provision
   - Rds Instace Size and EBS VolumneType & size
 - Auto-scaling for storage
-- Support 
+- Support
   - Read Replicas
   - Multi AZ
 - Security
@@ -452,29 +545,32 @@ Auto
 - Support IAM Authentication, integration with Secrets Manager
 
 - ![alt text](image-63.png)
-## 236 - Aurora 
-- 
+## 236 - Aurora
+- Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for the cloud, that combines the performance and availability of traditional enterprise databases with the simplicity and cost-effectiveness of open source databases. Amazon Aurora features a distributed, fault-tolerant, self-healing storage system that auto-scales up to 128TB per database instance. Aurora is not an in-memory database.
+
+Amazon Aurora Global Database is designed for globally distributed applications, allowing a single Amazon Aurora database to span multiple AWS regions. It replicates your data with no impact on database performance, enables fast local reads with low latency in each region, and provides disaster recovery from region-wide outages. Amazon Aurora Global Database is the correct choice for the given use-case.
+
 - Compatilbe API for Post
 - Store in 6 replica - 3 AZ
 - Cluster: Customer endopint for writer and reader DB instaces
 - Aurora Serverless
-- Aurora Global: 
+- Aurora Global:
 - Aurora Machine Learning: Perfrm ML using SageMaker & Comprehend on Aurora
 ### Aurora Replica
-- *Purpose*
+- Purpose
   - Scale read operations of your app(reader endpoint) -> Increase avaibility
-  - If the writer instance becomes unavailable, automatically promotes one of the reader instances to take its place as the new write 
+  - If the writer instance becomes unavailable, automatically promotes one of the reader instances to take its place as the new write
   - Up to 15 Aurora Replicas xacross the Availability Zones (AZs) tha DB cluster spans within an AWS Region.
 ## Amazone Elasticache - Summanry
 
 - Managed Redis / Memchaed
 - In-memory datastore, sub-milisecond latency
-- Support for Clustering(Redis) and Multi Az, 
+- Support for Clustering(Redis) and Multi Az,
 
 ## Dynamo DB - Summary
 - Can replace ElastiCahe as a key/value store
 - Highly Available, Multi Az by default
-- DAX cluster for reading cache 
+- DAX cluster for reading cache
 - Event Processing: DynamoDB Streaam to integrate with AWS Lamda, or Kinesis Data Streams
 - Global Table feature: active-ative setup
 - Export to S3
@@ -482,23 +578,29 @@ Auto
 ## S3 - Lifecycle transtion
 [- ![alt text](image-74.png)](https://docs.aws.amazon.com/images/AmazonS3/latest/userguide/images/lifecycle-transitions-v4.png)
 ## S3 - Storage Classes
+[Link](https://aws.amazon.com/s3/storage-classes/)
 ### S3 One Zone-IA
-- Amazon S3 One Zone-IA is for 
-  - data that is accessed less frequently, 
-  - requires rapid access when needed. 
-- Other S3 Storage Classes which store data in a minimum of three Availability Zones (AZs), IA stores data in a single Availability Zone (AZ) and costs 20% less than Standard-IA. 
-- One Zone-IA is ideal for customers want a lower-cost option for infrequently accessed and re-creatable data but do not require the availability and resilience of Standard or Standard-IA. 
-- The minimum storage duration is *30 days* before you can transition objects from Standard to One Zone-IA.
+- Amazon S3 One Zone-IA is for
+  - data that is accessed less frequently,
+  - requires rapid access when needed.
+- Other S3 Storage Classes which store data in a minimum of three Availability Zones (AZs), IA stores data in a single Availability Zone (AZ) and costs 20% less than Standard-IA.
+- One Zone-IA is ideal for customers want a lower-cost option for infrequently accessed and re-creatable data but do not require the availability and resilience of Standard or Standard-IA.
+- The minimum storage duration is 30 days before you can transition objects from Standard to One Zone-IA.
 
 ## Amazon Simple Notification Service(SNS)
 - A highly available, durable, secure, fully managed pub/sub messaging service.
-- Enables you to decouple 
+- Enables you to decouple
   - microservices
   - distributed systems
   - serverless applications.
 - Fully dynamically server - dynamically scale with your application
 
 ## S3
+- an object storage service that offers industry-leading scalability, data availability, security, and performance.
+- Your applications can easily achieve thousands of transactions per second in request performance when uploading and retrieving storage from Amazon S3.
+- Amazon S3 automatically scales to high request rates. For example, your application can achieve at least
+  - 3,500 PUT/COPY/POST/DELETE or 5,500 GET/HEAD requests per second per prefix in a bucket.
+- There are no limits to the number of prefixes in a bucket. For example, if you create 10 prefixes in an Amazon S3 bucket to parallelize reads, you could scale your read performance to 55,000 read requests per second.
 
 - A key/value store for objects
 - Great for bigger objects, not so greate for many small object
@@ -517,30 +619,30 @@ Auto
 - Similiar "deployment concepts" as Aurora
 - Fully Managed, hightly available with replication aross 3 AZ
 - Auto grows of 10 GB
-- Automatically scales to workloads 
+- Automatically scales to workloads
 
 ## Neptune
 - Fully managed graph database
 - Higly available with repliactions across multiple AZs
-- Great for 
+- Great for
   - knowledge graphs(Wikipedia)
   - Fraud detection
   - Recommedation egnines
-  
-## Keyspace 
+
+## Keyspace
 - For apache Casandra
-- Using 
+- Using
 
 ## Amazon QLDB
 - Stand for Quantum Ledger Database
 - Ledger is a book recording financial Transactions
 - Review history of all chanages made to your app
-- Immutable system 
+- Immutable system
 - Difference with Amazone Managed Blockchain: No decentralization component
 
 ## 244 Timestream
 - Time series database
-- Automatically Scales up/down 
+- Automatically Scales up/down
 - Faster and cheaper
 
 
@@ -562,7 +664,7 @@ Auto
 - Compress data for retrivil
 - Partion datasets in S3
 - Use larger file
-- *Federated query*:
+- Federated query:
   - Allow to run query on AWS or on premise
   - Store result back in S3
 
@@ -573,14 +675,16 @@ Auto
 - Ingest data to redshiff
   - Firehose -> Write S3 ->  S3 Copy -> RedShift
 - EC2 -> Redshift by JDBC Driver
-- *Reshift Spectrum*: Query data is already in S3 without loading it.
+- Reshift Spectrum: Query data is already in S3 without loading it.
 
 ## 248 Open Search
+- Amazon OpenSearch Service is a managed service that makes it easy for you to perform interactive log analytics, real-time application monitoring, website search, and more. OpenSearch is an open source, distributed search and analytics suite derived from Elasticsearch. It cannot be used as a caching layer for Amazon DynamoDB.
+-
 - Succesor to Elastic Search
 - On DynamoDB, queries only exist by primary key or indexs
 - Could search any field
 - Two mode: Managed Cluster or Serverless cluster
-- *Security*: Cognito, IAM Role
+- Security: Cognito, IAM Role
 - Have OpenSearch Dashboard
 - OpenSearch Patterns DynamoDB
   - DymamoDB Table -> DynamoDB Stream -> Lambda Function -> OpenSearch -> Search for Item Name -> Retrive ID -> Search Full Item in DynamoDB
@@ -593,8 +697,9 @@ Auto
 - ![alt text](image-67.png)
 
 ## 249 EMR
-
-- Stand for *Elastic MapReduce*
+- - Amazon EMR is the industry-leading cloud big data platform for processing vast amounts of data using open source tools such as Apache Spark, Apache Hive, Apache HBase, Apache Flink, Apache Hudi, and Presto. Amazon EMR uses Hadoop, an open-source framework, to distribute your data and processing across a resizable cluster of Amazon EC2 instances
+-
+- Stand for Elastic MapReduce
 - Create Hadoop cluster(Bigdata) -> analyze & process vast amount data
 - The clusters can be made of hundreds of EC2 instances
 - takes care of all the provisioning and configuration
@@ -606,6 +711,7 @@ Auto
   - On Demand
   - Reserverd
   - Spot Intances
+
 ## 250 Quick Sight
 - Severless machine learning BI Service create interative Dashboar
 - Use cases:
@@ -620,9 +726,9 @@ Auto
 ## 251 Glue
 - Serverless ETL service
 - Prepare vs Tranform data for analytics
-![alt text](image-68.png)
+  ![alt text](image-68.png)
 - Convert data into Parquet Format
-![alt text](image-69.png)
+  ![alt text](image-69.png)
 - Glue Data Catalog:
 - Glue Job Bookmarks: prevent re-processing old data
 - Glue Elastic Views
@@ -644,18 +750,23 @@ Auto
 - Many place in setup security
 
 ## 314 Amazon GuardDuty
+-- Offers threat detection that enables you to continuously monitor and protect your AWS accounts, workloads, and data stored in Amazon S3. - GuardDuty analyzes continuous streams of meta-data generated from your account and network activity found in AWS CloudTrail Events, Amazon VPC Flow Logs, and DNS Logs.
+- It also uses integrated threat intelligence such as known malicious IP addresses, anomaly detection, and machine learning to identify threats more accurately.
+  ![](https://d1.awsstatic.com/product-marketing/Amazon%20GuardDuty/product-page-diagram-Amazon-GuardDuty_how-it-works.a4daf7e3aaf3532623a3797dd3af606a85fc2e7b.png)
+
+
 - Intelligent Threat discover y to protect your AWS Account
 - Uses Machine Learning algorithms, anomaly detection, 3rd party data
 - Input data includes:
   - CloudTrail Events Logs – unusual API calls, unauthorized deployments
-    - CloudTrailManagementEvents - createVPCsubnet,createtrail,... 
+    - CloudTrailManagementEvents - createVPCsubnet,createtrail,...
     - CloudTrailS3DataEvents–getobject,listobjects,deleteobject,...
   - VPC Flow Logs – unusual internal traffic, unusual IP address
-  - DNS Logs – compromised EC2 instances sending encoded data within DNS queries 
+  - DNS Logs – compromised EC2 instances sending encoded data within DNS queries
   - Optional Features: EKS Audit Logs, RDS & Aurora, EBS, Lambda, S3 Data Events...
   - Can setup EventBridge rules to be notified in case of findings
   - ![alt text](image-71.png)
   - ![alt text](image-72.png)
 
   ## Task
-  - Review cloudfront, global accelator
+  - Review cloudfront, Global Accelerator
