@@ -99,7 +99,7 @@ Physical server that's dedicated to a single customer account.
 - EC2 instances can access your file system across AZs, regions, and VPCs
 - On-premises servers can access using AWS Direct Connect or AWS VPN.
 
-### EFS Standard–IA
+### EFS Standard IA
 - Standard–IA storage class reduces storage costs for files that are not accessed every day.
 - It does this without sacrificing the high availability, high durability, elasticity, and POSIX file system access that Amazon EFS provides. 
 - AWS recommends Standard-IA storage if you need your full dataset to be readily accessible and want to automatically save on storage costs for files that are less frequently accessed.
@@ -459,7 +459,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 ## 187 SQS Fifo queue
 - Limited throughput : 300 msg/s without batching, max: 10 message per operation = 3000 msg/s
 
-## Kinesis Data Stream
+## Kinesis-Data-Stream
 -  Amazon Kinesis Data Streams (KDS) is a massively scalable and durable real-time data streaming service. 
 -  The throughput of an Amazon Kinesis data stream is designed to scale without limits via increasing the number of shards within a data stream. 
 
@@ -781,7 +781,7 @@ Amazon Aurora Global Database is designed for globally distributed applications,
 - OpenSearch Pattern Kisesis DataStream and FireHorse
 - ![alt text](image-67.png)
 
-## 249 EMR
+## EMR
 -  Amazon EMR is the industry-leading cloud big data platform for processing vast amounts of data
 -  Using open source tools such as 
    -  Apache Spark

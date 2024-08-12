@@ -1,12 +1,12 @@
 # Practice Test 2  
   
-## 1  
+## 1  EC2
 - A company is looking at storing their *less frequently accessed files on AWS* that can be *concurrently accessed by hundreds of Amazon EC2 instances*.  
 - The company needs the most **cost-effective file storage service** that provides immediate access to data whenever needed.  
   
 ~~Solution~~  
 - *Amazon Elastic File System (EFS) Standard–IA storage class*  
-- [EFS Standard–IA](aws-ass-solution-architect.md#efs-standardia)  
+- [EFS Standard–IA](aws-ass-solution-architect.md#EFS%20Standard%20IA)  
 ~~Wrong~~  
 - *Amazon S3 Standard-Infrequent Access (S3 Standard-IA) storage class*  
 - ~~Object Storage Service~~  
@@ -86,7 +86,7 @@ This option is incorrect as it provides listing access only to the bucket conten
 - The company would prefer a solution that offers built-in user management.  
   
 **Solution**  
-- [Cognito User Pools](aws-ass-solution-architect.md#cognito-user-pools)  
+- [Cognito User Pools](aws-ass-solution-architect.md#cognito%20user%20pools)  
   
 **Wrong**  
 - [AWS_IAM authorization](aws-ass-solution-architect.md#aws_iam-authorization)  
@@ -139,7 +139,7 @@ This option is incorrect as it provides listing access only to the bucket conten
 **Wrong Answer**  
 - *AWS Lambda*:  
 - -> It cannot be used for production-grade serverless log analytics.  
-- *Amazon EMR* [EMR](aws-ass-solution-architect.md#249-emr)  
+- *Amazon EMR* [EMR](aws-ass-solution-architect.md#emr)  
 - -> Using an Amazon EMR cluster would imply **managing the underlying infrastructure** so it’s ruled out.  
 - *Amazon Kinesis Data Streams*: [Kinesis Data Stream](aws-ass-solution-architect.md#kinesis-data-stream)  
 - -> With Amazon Kinesis Data Streams, you can scale up to a sufficient number of **shards** (note, however, that you'll need to provision enough shards ahead of time). As it requires manual administration of shards, it's not the correct choice for the given use-case.  
