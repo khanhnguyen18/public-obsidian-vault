@@ -24,7 +24,7 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
   6. session policies.
 
 
-### AWS_IAM authorization
+### AWS_IAM_Authorization
  - For consumers who currently are located within your AWS environment or have the means to retrieve (IAM) temporary credentials to access your environment, you can use AWS_IAM authorization and add least-privileged permissions to the respective IAM role to securely invoke your API.
  - API Gateway API Keys is not a security mechanism and should not be used for authorization unless it’s a public API. 
  - It should be used primarily to track a consumer’s usage across your API.
@@ -99,7 +99,7 @@ Physical server that's dedicated to a single customer account.
 - EC2 instances can access your file system across AZs, regions, and VPCs
 - On-premises servers can access using AWS Direct Connect or AWS VPN.
 
-### Efs-Standard-Ia
+### Efs_Standard_Ia
 - Standard–IA storage class reduces storage costs for files that are not accessed every day.
 - It does this without sacrificing the high availability, high durability, elasticity, and POSIX file system access that Amazon EFS provides. 
 - AWS recommends Standard-IA storage if you need your full dataset to be readily accessible and want to automatically save on storage costs for files that are less frequently accessed.
@@ -319,7 +319,7 @@ Auto
 ### Automatic key rotation 
 
 ## Cognito
-### Cognito User Pools
+### Cognito_User_Pools
 - A user pool is a `user directory` in Amazon Cognito. You can leverage Amazon Cognito User Pools to either provide built-in user management or integrate with external identity providers, such as Facebook, Twitter, Google+, and Amazon. 
 - Whether your users sign-in directly or through a third party, all members of the user pool have a directory profile that you can access through a Software Development Kit (SDK).
 
@@ -335,7 +335,7 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 ![Identity](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q24-i1.jpg
 )
 
-### Cognito user identity
+### Cognito_User_Identity
 - Identity pools provide AWS credentials to grant your users access to other AWS services.
 - To enable users in your user pool to access AWS resources, you can configure an identity pool to exchange user pool tokens for AWS credentials.
 
@@ -459,7 +459,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 ## 187 SQS Fifo queue
 - Limited throughput : 300 msg/s without batching, max: 10 message per operation = 3000 msg/s
 
-## Kinesis-Data-Stream
+## Kinesis_Data_Stream
 -  Amazon Kinesis Data Streams (KDS) is a massively scalable and durable real-time data streaming service. 
 -  The throughput of an Amazon Kinesis data stream is designed to scale without limits via increasing the number of shards within a data stream. 
 
@@ -612,7 +612,7 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - Auotmated Backup with Point in time restore feature(35 days)
 - Manual DB Snapshot for longer-term recoverry
 - Support IAM Authentication, integration with Secrets Manager
-### Read-Replicas
+### Read_Replicas
 - Amazon RDS Read Replicas provide enhanced performance and durability for RDS database (DB) instances.
 - Easy to elastically scale out beyond the capacity constraints of a single DB instance for read-heavy database workloads.
 - For the MySQL, MariaDB, PostgreSQL, Oracle, and SQL Server database engines, RDS creates a second DB instance using a snapshot of DB. 

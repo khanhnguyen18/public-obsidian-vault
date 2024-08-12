@@ -6,7 +6,7 @@
   
 ~~Solution~~  
 - *Amazon Elastic File System (EFS) Standard–IA storage class*  
-- [EFS Standard–IA](aws-ass-solution-architect.md#efs-standard-ia)  
+- [EFS Standard–IA](aws-ass-solution-architect.md#Efs_Standard_Ia)  
 ~~Wrong~~  
 - *Amazon S3 Standard-Infrequent Access (S3 Standard-IA) storage class*  
 - ~~Object Storage Service~~  
@@ -86,17 +86,17 @@ This option is incorrect as it provides listing access only to the bucket conten
 - The company would prefer a solution that offers built-in user management.  
   
 **Solution**  
-- [Cognito User Pools](aws-ass-solution-architect.md#cognito-user-pools)  
+- [Cognito User Pools](aws-ass-solution-architect.md#Cognito_User_Pools)  
   
 **Wrong**  
-- [AWS_IAM authorization](aws-ass-solution-architect.md#aws_iam-authorization)  
+- [AWS_IAM authorization](aws-ass-solution-architect.md#AWS_IAM_Authorization)  
 - *Use AWS Lambda authorizer for Amazon API Gateway*  
 - If you have an existing Identity Provider (IdP), you can use an AWS Lambda authorizer for Amazon API Gateway to invoke a Lambda function to authenticate/validate a given user against your Identity Provider. You can use a Lambda authorizer for custom validation logic based on identity metadata.  
 - A Lambda authorizer can send additional information derived from a bearer token or request context values to your backend service. For example, the authorizer can return a map containing user IDs, user names, and scope. By using Lambda authorizers, your backend does not need to map authorization tokens to user-centric data, allowing you to limit the exposure of such information to just the authorization function.  
 - When using Lambda authorizers, AWS strictly advises against passing credentials or any sort of sensitive data via query string parameters or headers, so this is not as secure as using Amazon Cognito User Pools.  
 - *Use Amazon Cognito Identity Pools*  
 - identity pools aren't an authentication mechanism in themselves and hence aren't a choice for this use case.  
-- [Cognito user identity](aws-ass-solution-architect.md#cognito-user-identity)  
+- [Cognito user identity](aws-ass-solution-architect.md#Cognito_User_Identity)  
   
 ## 4 - Amazon RDS MySQL  
 - A company has recently launched a new mobile gaming application that the users are adopting rapidly.  
@@ -141,7 +141,7 @@ This option is incorrect as it provides listing access only to the bucket conten
 - -> It cannot be used for production-grade serverless log analytics.  
 - *Amazon EMR* [EMR](aws-ass-solution-architect.md#emr)  
 - -> Using an Amazon EMR cluster would imply **managing the underlying infrastructure** so it’s ruled out.  
-- *Amazon Kinesis Data Streams*: [Kinesis Data Stream](aws-ass-solution-architect.md#kinesis-data-stream)  
+- *Amazon Kinesis Data Streams*: [Kinesis Data Stream](aws-ass-solution-architect.md#Kinesis_Data_Stream)  
 - -> With Amazon Kinesis Data Streams, you can scale up to a sufficient number of **shards** (note, however, that you'll need to provision enough shards ahead of time). As it requires manual administration of shards, it's not the correct choice for the given use-case.  
   
 ## 7 - EC2 - MSSQL  
@@ -159,7 +159,7 @@ This option is incorrect as it provides listing access only to the bucket conten
 **Solution**  
 - *If the master database is encrypted, the read replicas are encrypted*  
 - Database instance running with RDS encryption, data stored at rest in the underlying storage is encrypted, as are its automated backups, read replicas, and snapshots.  
-- [Read Replicas](aws-ass-solution-architect.md#read-replicas)  
+- [Read Replicas](aws-ass-solution-architect.md#Read_Replicas)  
 **Wrong**  
   
 ## 9  
