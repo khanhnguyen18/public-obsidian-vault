@@ -13,13 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "AWS Solution Architect - Practice Test 2.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "02b0e74103ca2d14",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "aws-ass-solution-architect.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -145,11 +158,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "22e0870567ea1732",
+  "active": "02b0e74103ca2d14",
   "lastOpenFiles": [
     "AWS Solution Architect - Practice Test 2.md",
-    "aws-ass-solution-architect.md",
     "AWS Solution Architect - Practice Test 1.md",
+    "aws-ass-solution-architect.md",
     "Untitled.md",
     "themes/Minimal/theme.css",
     "themes/Minimal/manifest.json",

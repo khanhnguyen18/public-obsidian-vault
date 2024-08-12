@@ -99,7 +99,7 @@ Physical server that's dedicated to a single customer account.
 - EC2 instances can access your file system across AZs, regions, and VPCs
 - On-premises servers can access using AWS Direct Connect or AWS VPN.
 
-### EFS Standard IA
+### Efs-Standard-Ia
 - Standard–IA storage class reduces storage costs for files that are not accessed every day.
 - It does this without sacrificing the high availability, high durability, elasticity, and POSIX file system access that Amazon EFS provides. 
 - AWS recommends Standard-IA storage if you need your full dataset to be readily accessible and want to automatically save on storage costs for files that are less frequently accessed.

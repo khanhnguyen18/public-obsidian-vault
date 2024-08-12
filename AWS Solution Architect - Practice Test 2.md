@@ -6,7 +6,7 @@
   
 ~~Solution~~  
 - *Amazon Elastic File System (EFS) Standard–IA storage class*  
-- [EFS Standard–IA](aws-ass-solution-architect.md#EFS%20Standard%20IA)  
+- [EFS Standard–IA](aws-ass-solution-architect.md#efs-standard-ia)  
 ~~Wrong~~  
 - *Amazon S3 Standard-Infrequent Access (S3 Standard-IA) storage class*  
 - ~~Object Storage Service~~  
@@ -86,7 +86,7 @@ This option is incorrect as it provides listing access only to the bucket conten
 - The company would prefer a solution that offers built-in user management.  
   
 **Solution**  
-- [Cognito User Pools](aws-ass-solution-architect.md#cognito%20user%20pools)  
+- [Cognito User Pools](aws-ass-solution-architect.md#cognito-user-pools)  
   
 **Wrong**  
 - [AWS_IAM authorization](aws-ass-solution-architect.md#aws_iam-authorization)  
