@@ -612,7 +612,7 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - Auotmated Backup with Point in time restore feature(35 days)
 - Manual DB Snapshot for longer-term recoverry
 - Support IAM Authentication, integration with Secrets Manager
-### Read Replicas
+### Read-Replicas
 - Amazon RDS Read Replicas provide enhanced performance and durability for RDS database (DB) instances.
 - Easy to elastically scale out beyond the capacity constraints of a single DB instance for read-heavy database workloads.
 - For the MySQL, MariaDB, PostgreSQL, Oracle, and SQL Server database engines, RDS creates a second DB instance using a snapshot of DB. 
