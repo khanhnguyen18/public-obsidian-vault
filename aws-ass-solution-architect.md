@@ -15,16 +15,19 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 
 
 ## 13. IAM Role
+- AWS supports six types of policies: 
+  1. identity-based policies
+  2. resource-based policies,
+  3. permissions boundaries, 
+  4. service control policy (SCP)of AWS Organizations,
+  5. access control list (ACL), 
+  6. session policies.
 
-![alt text](image-40.png)
 
-* Statment consist of
-  * Sid
-  * Effect
-  * Principal
-  * Action
-  * Resource
-
+### AWS_IAM authorization
+ - For consumers who currently are located within your AWS environment or have the means to retrieve (IAM) temporary credentials to access your environment, you can use AWS_IAM authorization and add least-privileged permissions to the respective IAM role to securely invoke your API.
+ - API Gateway API Keys is not a security mechanism and should not be used for authorization unless it’s a public API. 
+ - It should be used primarily to track a consumer’s usage across your API.
 
 ## Section 5
 
@@ -70,6 +73,14 @@ As Instance Store based volumes provide high random I/O performance at low cost 
 - https://aws.amazon.com/ec2/pricing/
 
 
+### EC2 - Type of instace
+1. Dedicated Hosts
+  - A Dedicated Host is a physical EC2 server fully dedicated for your use. Dedicated Hosts can help you reduce costs by allowing you to use your existing server-bound software licenses, including Windows Server, SQL Server, and SUSE Linux Enterprise Server (subject to your license terms). Dedicated Hosts can be purchased On-Demand (hourly) or can be purchased as part of Savings Plans.
+2. On-Demand
+3. Dedicated Intance 
+Physical server that's dedicated to a single customer account.
+4. Reserve intance
+  
 ### 32.
 
 ## 57
@@ -82,13 +93,16 @@ As Instance Store based volumes provide high random I/O performance at low cost 
   2. Hard disk drive (HDD) backed volumes optimized for large streaming workloads where throughput (measured in MiB/s) is a better performance measure than IOPS.
 - You can't use st1 or sc1 EBS volumes as root volumes.
 ## EFS
+- EFS is a **file storage service** for use with Amazon compute (EC2, containers, serverless) and on-premises servers. Amazon EFS provides a file system interface, file system access semantics (such as strong consistency and file locking), and concurrently accessible storage for up to thousands of Amazon EC2 instances.
 - Provides a simple, scalable, fully managed elastic NFS file system for use with AWS Cloud services and on-premises resources.
 - Storing data within and across multiple Availability Zones (AZs) for high availability and durability
 - EC2 instances can access your file system across AZs, regions, and VPCs
 - On-premises servers can access using AWS Direct Connect or AWS VPN.
 
-- #1.13: You can connect to EFS file systems from EC2 instances in other AWS regions using an inter-region VPC peering connection, and from on-premises servers using an AWS VPN connection
-
+### EFS Standard–IA
+- Standard–IA storage class reduces storage costs for files that are not accessed every day.
+- It does this without sacrificing the high availability, high durability, elasticity, and POSIX file system access that Amazon EFS provides. 
+- AWS recommends Standard-IA storage if you need your full dataset to be readily accessible and want to automatically save on storage costs for files that are less frequently accessed.
 
 ## 69. High Availability and Scalability
 
@@ -252,6 +266,26 @@ Auto
 
 ## Route 53
 - Amazon Route 53 is a highly available and scalable cloud Domain Name System (DNS) web service. It is designed to give developers and businesses an extremely reliable and cost-effective way to route end users to Internet applications by translating names like www.example.com into the numeric IP addresses like 192.0.2.1 that computers use to connect to each other. Route 53 is ruled out as the company wants to continue using its own custom DNS service.
+### Routing Policy
+#### Lantency Routing 
+#### Failover Routing
+#### Geolocation Routing
+
+
+## Security Group
+- A security group acts as a virtual firewall that controls the traffic for one or more instances. 
+- When you launch an instance, you can specify one or more security groups; otherwise -> default security group.
+- Add rules to each security group that allows traffic to or from its associated instances.
+- Modify the rules for a security group at any time; the new rules -> applied to all instances that are associated with the security group. 
+*The following are the characteristics of security group rules*:
+- By default, security groups allow all outbound traffic.
+- Security group rules are always permissive; you can't create rules that deny access.
+- Security groups are stateful
+
+- [ec2-security-groups](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html)
+
+
+
 
 ## 127 S3
 
@@ -278,9 +312,33 @@ Auto
 
 ## KMS
 - AWS Key Management Service (AWS KMS) is a service that combines secure, highly available hardware and software to provide a key management system scaled for the cloud. When you use server-side encryption with AWS KMS (SSE-KMS), you can specify a customer-managed CMK that you have already created. SSE-KMS provides you with an audit trail that shows when your CMK was used and by whom. Therefore SSE-KMS is the correct solution for this use-case.
--
 - AWS Key Management Service (KMS) makes it easy for you to create and manage cryptographic keys and control their use across a wide range of AWS services and in your applications. AWS KMS is a secure and resilient service that uses hardware security modules that have been validated under FIPS 140-2.
 - Deleting an AWS KMS key in AWS Key Management Service (AWS KMS) is destructive and potentially dangerous. Therefore, AWS KMS enforces a waiting period. To delete a KMS key in AWS KMS you schedule key deletion. You can set the waiting period from a minimum of 7 days up to a maximum of 30 days. The default waiting period is 30 days. During the waiting period, the KMS key status and key state is Pending deletion. To recover the KMS key, you can cancel key deletion before the waiting period ends. After the waiting period ends you cannot cancel key deletion, and AWS KMS deletes the KMS key.
+- KMS is global or not?
+
+### Automatic key rotation 
+
+## Cognito
+### Cognito User Pools
+- A user pool is a `user directory` in Amazon Cognito. You can leverage Amazon Cognito User Pools to either provide built-in user management or integrate with external identity providers, such as Facebook, Twitter, Google+, and Amazon. 
+- Whether your users sign-in directly or through a third party, all members of the user pool have a directory profile that you can access through a Software Development Kit (SDK).
+
+User pools provide: 
+1. Sign-up and sign-in services. 
+2. A built-in, customizable web UI to sign in users. 
+3. Social sign-in with Facebook, Google, Login with Amazon, and Sign in with Apple, as well as sign-in with SAML identity providers from your user pool. 
+4. User directory management and user profiles. 5
+5. Security features such as multi-factor authentication (MFA), checks for compromised credentials, account takeover protection, and phone and email verification. 
+6. Customized workflows and user migration through AWS Lambda triggers.
+
+After creating an Amazon Cognito user pool, in API Gateway, you must then create a COGNITO_USER_POOLS authorizer that uses the user pool.
+![Identity](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q24-i1.jpg
+)
+
+### Cognito user identity
+- Identity pools provide AWS credentials to grant your users access to other AWS services.
+- To enable users in your user pool to access AWS resources, you can configure an identity pool to exchange user pool tokens for AWS credentials.
+
 ## 130 Bucket policy
 
 * Use tool to generate policy
@@ -402,6 +460,9 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - Limited throughput : 300 msg/s without batching, max: 10 message per operation = 3000 msg/s
 
 ## Kinesis Data Stream
+-  Amazon Kinesis Data Streams (KDS) is a massively scalable and durable real-time data streaming service. 
+-  The throughput of an Amazon Kinesis data stream is designed to scale without limits via increasing the number of shards within a data stream. 
+
 - Enables real-time processing of streaming big data.
 - It provides ordering of records, as well as the ability to read and/or replay records in the same order to multiple Amazon Kinesis Applications.
 - The Amazon Kinesis Client Library (KCL) delivers all records for a given partition key to the same record processor, making it easier to build multiple applications reading from the same Amazon Kinesis data stream (for example, to perform counting, aggregation, and filtering).
@@ -421,12 +482,20 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - Only Cloudwatch and S3 buck could ingest data(not AWS CloudTrail)
 
 ## Firehose
-- the easiest way to load streaming data into data stores and analytics tools.
-- It can capture, transform, and load streaming data into Amazon S3, Amazon Redshift, Amazon OpenSearch Service, and Splunk, enabling near real-time analytics with existing business intelligence tools and dashboards you’re already using today.
+- the easiest way to **load streaming data** into 
+  - data stores 
+  - analytics tools
+  - data lakes
+- It can capture, transform, and load streaming data into:
+  -  Amazon S3
+  -  Amazon Redshift
+  -  Amazon OpenSearch Service
+  -  Splunk
+- Enabling near real-time analytics
 - It is a fully managed service that automatically scales to match the throughput of your data and requires no ongoing administration.
-- It can also batch, compress, and encrypt the data before loading it, minimizing the amount of storage used at the destination and increasing security.
-  ![Overview](https://d1.awsstatic.com/pdp-how-it-works-assets/product-page-diagram_Amazon-KDF_HIW-V2-Updated-Diagram@2x.6e531854393eabf782f5a6d6d3b63f2e74de0db4.png)
-  ![S3](image.png)
+- It can also batch, compress, and encrypt the data before loading it
+  - -> minimizing the amount of storage used at the destination and increasing security.
+- ![Overview](https://d1.awsstatic.com/pdp-how-it-works-assets/product-page-diagram_Amazon-KDF_HIW-V2-Updated-Diagram@2x.6e531854393eabf782f5a6d6d3b63f2e74de0db4.png)
 ## Analytics
 - Amazon Kinesis Data Analytics is the easiest way to analyze streaming data in real-time. Kinesis Data Analytics enables you to easily and quickly build queries and sophisticated streaming applications in three simple steps:
 - setup your streaming data sources
@@ -543,6 +612,22 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - Auotmated Backup with Point in time restore feature(35 days)
 - Manual DB Snapshot for longer-term recoverry
 - Support IAM Authentication, integration with Secrets Manager
+### Read Replicas
+- Amazon RDS Read Replicas provide enhanced performance and durability for RDS database (DB) instances.
+- Easy to elastically scale out beyond the capacity constraints of a single DB instance for read-heavy database workloads.
+- For the MySQL, MariaDB, PostgreSQL, Oracle, and SQL Server database engines, RDS creates a second DB instance using a snapshot of DB. 
+- It then uses the engines native asynchronous replication to update the read replica whenever there is a change to the source DB instance. 
+- Can be within an Availability Zone, Cross-AZ, or Cross-Region.
+- [Read Replicas Link](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q44-i1.jpg)
+
+### storage auto-scaling
+- If your workload is unpredictable, you can enable storage autoscaling for an Amazon RDS DB instance. 
+- When Amazon RDS detects that you are running out of free database space it automatically scales up your storage. 
+- Amazon RDS starts a storage modification for an autoscaling-enabled DB instance when these factors apply:
+  - Free available space is less than 10 percent of the allocated storage.
+  - The low-storage condition lasts at least five minutes.
+  - At least six hours have passed since the last storage modification.
+  - The maximum storage threshold is the limit that you set for autoscaling the DB instance. You can't set the maximum storage threshold for autoscaling-enabled instances to a value greater than the maximum allocated storage.
 
 - ![alt text](image-63.png)
 ## 236 - Aurora
@@ -697,11 +782,19 @@ Amazon Aurora Global Database is designed for globally distributed applications,
 - ![alt text](image-67.png)
 
 ## 249 EMR
-- - Amazon EMR is the industry-leading cloud big data platform for processing vast amounts of data using open source tools such as Apache Spark, Apache Hive, Apache HBase, Apache Flink, Apache Hudi, and Presto. Amazon EMR uses Hadoop, an open-source framework, to distribute your data and processing across a resizable cluster of Amazon EC2 instances
--
+-  Amazon EMR is the industry-leading cloud big data platform for processing vast amounts of data
+-  Using open source tools such as 
+   -  Apache Spark
+   -  Apache Hive
+   -  Apache HBase
+   -  Apache Flink
+   -  Apache Hudi
+   -  and Presto. 
+- Amazon EMR uses Hadoop, an open-source framework, to distribute your data and processing across a resizable cluster of Amazon EC2 instances
+  
 - Stand for Elastic MapReduce
 - Create Hadoop cluster(Bigdata) -> analyze & process vast amount data
-- The clusters can be made of hundreds of EC2 instances
+
 - takes care of all the provisioning and configuration
 - Use cases: data processing, machine learning, web indexing, big data...
 - Master Node: Manage the cluster
