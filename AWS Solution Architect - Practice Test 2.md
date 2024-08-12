@@ -198,4 +198,147 @@ This option is incorrect as it provides listing access only to the bucket conten
   
 **Enable encryption on the Amazon RDS database using the AWS Console** - *no direct option* to encrypt an RDS DB using the AWS Console.  
   
+## 11 - Linux File System
+- Mount a *network file system* on *Linux instances*, 
+- Files will be stored and accessed frequently -> infrequently. 
+- -> What solution is the **MOST cost-effective**
+
+**Solution**
+- Amazon EFS Infrequent Access [](aws-ass-solution-architect.md#efs)
+**Wrong**
+- S3 Glacier Deep Archive
+    -  *These are data archiving solutions and hence this option is incorrect.*
+- Amazon Fsx for Lustre
+    - *Better suited for distributed computing for HPC(expensive)*
+- Amazone S3 Intelligent Tiering
+    - object storage service,
+## 12 - EBS Volumn Termination
+Change the default configuration for Amazon EBS volume termination. 
+By default, the root volume of EC2 for an EBS-backed AMI is deleted when the instance terminates.
+
+**Solution**
+- `DeleteOnTermination` to false
+**Wrong**
+- `DeleteOnTermination` to true
+- `TerminateOnDelete`
+
+## 13
+- To improve the *performance* and *security* of the application, 
+- CloudFront distribution with an ALB as the custom origin. 
+- Also AWS WAFwith Amazon CloudFront distribution. 
+- The security team at the company has noticed a surge in **malicious attacks** from a **specific IP address** to **steal sensitive data stored** on the Amazon EC2 instances.
+
+
+**Solution**
+- *Create an IP match condition in the AWS WAF to block the malicious IP address*
+  - [WAF](aws-ass-solution-architect.md#WAF)
+**Wrong**
+- *Network AC*: are not associated with instances
+- *Security Group*: only allow not deny
+- *Create a ticket with AWS support* : Managing the security of your application is your responsibility, not that of AWS
+
+## 14- Aurora Replica
+- Application uses an Amazon Aurora Multi-AZ deploymentd
+- Causing *high input/output (I/O)* and *adding latency to the write requests against the database*.
+
+**Solution**
+- Set up a read replica and modify the application to use the appropriate endpoint
+    - [Aurora](aws-ass-solution-architect.md#aurora)
+**Wrong**
+- Provision another Amazon Aurora database and link it to the primary database as a read replica
+- Activate read-through caching on the Amazon Aurora database
+- Read from the Multi-AZ standby instance
+  - You create a standby instance while setting up a Multi-AZ deployment for Amazon RDS and NOT for Aurora.
+
+## 15 AWS Organizations 
+- You have multiple AWS accounts within a single AWS Region managed by **AWS Organizations** 
+- Ensure all EC2 in all these accounts can communicate privately. 
+- Which of the following solutions provides the capability at the CHEAPEST cost?
+
+**Solution**
+- Create a **VPC** in an account and share one or more of its subnets with the other accounts using *Resource Access Manager*
+    - [RAM](aws-ass-solution-architect.md#ram)
+    - The correct solution is to share the subnet(s) within a VPC using RAM. 
+    - This will allow all Amazon EC2 instances to be deployed in the same VPC (although from different accounts) and easily communicate with one another.
+
+**Wrong**
+- Create a **VPC peering connection** between all virtual private cloud (VPCs)
+  - [VPC peering connection](aws-ass-solution-architect.md#vpc_peering)
+- Create a **Private Link** between all the Amazon EC2 instances
+  - [Private Link](aws-ass-solution-architect.md#private_link)
+- Create an **AWS Transit Gateway** and link all the virtual private cloud (VPCs) in all the accounts together
+    - [AWS Transit Gateway](aws-ass-solution-architect.md#aws_transit_gateway)
+    - will work but will be an expensive solution
+
+## 16
+What does this IAM policy do?
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Mystery Policy",
+      "Action": [
+        "ec2:RunInstances"
+      ],
+      "Effect": "Allow",
+      "Resource": "*",
+      "Condition": {
+        "IpAddress": {
+          "aws:SourceIp": "34.50.31.0/24"
+        }
+      }
+    }
+  ]
+}
+
+```
+  
+**Answer**
+*It allows starting an Amazon EC2 instance only when the IP where the call originates is within the 34.50.31.0/24 CIDR block*
+    - AWS evaluates these policies when an IAM principal (user or role) makes a request
+    - The `aws:SourceIP` in this condition always represents the IP of the caller of the API. That is very helpful if you want to restrict access to certain AWS API for example from the public IP of your on-premises infrastructure.
+    - *IPs Type*
+      - **elastic IP address (EIP)** - An elastic IP address (EIP) is a static IPv4 address designed for dynamic cloud computing. An Elastic IP address is associated with your AWS account. With an Elastic IP address, you can mask the failure of an instance or software by rapidly remapping the address to another instance in your account.
+      - **Private IP address** - A private IPv4 address is an IP address that's not reachable over the Internet. You can use private IPv4 addresses for communication between instances in the same VPC.
+      - **Public IP address** - A public IP address is an IPv4 address that's reachable from the Internet. You can use public addresses for communication between your instances and the Internet.
+
+## 17 - EC2 Hibernate
+- Machine Learning research group uses a proprietary computer vision application hosted on an Amazon EC2 instance. 
+- Every time the instance needs to be stopped and started again, the application takes about 3 minutes to start as some auxiliary software programs need to be executed so that the application can function. 
+- The research group would like to minimize the application boostrap time whenever the system needs to be stopped and then started at a later point in time.
+**Solution**
+- Use Amazon  [EC2 Instance Hibernate](aws-ass-solution-architect.md#ec2_hibernate)
+
+## 18 - Cert Renew
+ - App on EC2 instances. 
+ - Application handles sensitive customer data, the security team at the company wants to ensure that any SSL/TLS certificates configured on Amazon EC2 instances via the AWS Certificate Manager (ACM) are renewed before their expiry date. 
+ - Notifies the security team 30 days before the certificate expiration. 
+ - The solution should require the least amount of scripting and maintenance effort.
+
+**Solution**
+- Leverage AWS Config managed rule to check if any SSL/TLS certificates created via ACM are marked for expiration within 30 days. Configure the rule to trigger an Amazon SNS notification to the security team if any certificate expires within 30 days
+  - [AWS_Certificate_Manager](aws-ass-solution-architect.md#aws_certificate_manager)
+  - [AWS_Config](aws-ass-solution-architect.md#aws_config)
+  - You can configure AWS Config to stream configuration changes and notifications to an Amazon SNS topic
+**Wrong**
+- *Monitor the days to expiry Amazon CloudWatch metric for certificates imported into ACM. Create a CloudWatch alarm to monitor such certificates based on the days to expiry metric and then trigger a custom action of notifying the security team*
+  - Users can build alarms to monitor certificates based on days to expiry and also trigger custom actions such as calling a Lambda function or paging an administrator.
+
+- Leverage AWS Config managed rule to check if any SSL/TLS certificates created via ACM are marked for expiration within 30 days. Configure the rule to trigger an Amazon SNS notification to the security team if any certificate expires within 30 days
+
+- Monitor the days to expiry Amazon CloudWatch metric for certificates created via ACM. Create a CloudWatch alarm to monitor such certificates based on the days to expiry metric and then trigger a custom action of notifying the security team
+**-> Any SSL/TLS certificates created via ACM do not need any monitoring/intervention for expiration. ACM automatically renews such certificates. Hence both these options are incorrect.**
+
+## 19 - RDS For MySQL
+- Uses **Amazon RDS for MySQL** but is running into performance issues despite using **Read Replicas**. 
+- The company has branch offices across the world, and it needs the solution to work on a global scale.
+Which of the following will you recommend as the MOST cost-effective and high-performance solution?
+
+**Solution**
+- *Use Amazon Aurora Global Database to enable fast local reads with low latency in each region*
+    [](aws-ass-solution-architect.md#aurora-replica)
+
+**Wrong**
 ## 21 - Very Hard

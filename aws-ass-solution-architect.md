@@ -2,11 +2,11 @@
 
 ## Link
 
-
+```shell
 open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions-Architect-Slides-v37.pdf"
+```
 
-
-## 11. IAM Introduction: Users, Groups, Policies
+## 11. IAM
 
 - Global service
 - Root account use
@@ -33,7 +33,6 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 
 ### 30. AWS Budget setup
 
-![alt text](image-39.png)
 
 ## ECS
 - fully managed container orchestration service. ECS allows you to easily run, scale, and secure Docker container applications on AWS.
@@ -45,13 +44,27 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - security assessments help you check for unintended network accessibility of your Amazon EC2 instances and for vulnerabilities on those EC2 instances.
 -  Amazon Inspector assessments are offered to you as pre-defined rules packages mapped to common security best practices and vulnerability definitions.
 
-## AWS Web Application Firewal(WAF)
+## WAF
+![](https://d1.awsstatic.com/products/WAF/product-page-diagram_AWS-WAF_How-it-Works@2x.452efa12b06cb5c87f07550286a771e20ca430b9.png)
 - a web application firewall service that lets you monitor web requests and protect your web applications from malicious requests.
 - Use AWS WAF to block or allow requests based on conditions that you specify, such as the IP addresses.
 - You can also use AWS WAF preconfigured protections to block common attacks like SQL injection or cross-site scripting.
 - You can use AWS WAF with your Application Load Balancer to allow or block requests based on the rules in a web access control list (web ACL). Geographic (Geo) Match Conditions in AWS WAF allows you to use AWS WAF to restrict application access based on the geographic location of your viewers. With geo match conditions you can choose the countries from which AWS WAF should allow access.
 - Geo match conditions are important for many customers. For example, legal and licensing requirements restrict some customers from delivering their applications outside certain countries. These customers can configure a whitelist that allows only viewers in those countries. Other customers need to prevent the downloading of their encrypted software by users in certain countries. These customers can configure a blacklist so that end-users from those countries are blocked from downloading their software.
 ## 31. EC2
+### EC2_Hibernate
+- When you hibernate an instance, AWS signals the operating system to perform hibernation (suspend-to-disk).
+-  Hibernation saves the contents from 
+   -  the instance memory (RAM) to your Amazon EBS root volume. 
+-  AWS then persists the instance's Amazon EBS root volume and any attached Amazon EBS data volumes.
+- When you start your instance:
+  - The Amazon EBS root volume is restored to its previous state
+  - The RAM contents are reloaded
+  - The processes that were previously running on the instance are resumed
+
+Previously attached data volumes are reattached and the instance retains its instance ID
+
+![Link](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/hibernation-flow.png)
 ### EC2 - Placement Group
 - Depending on the type of workload, you can create a placement group using one of the following placement strategies:
   - Cluster - Packs instances close together inside an Availability Zone. This strategy enables workloads to achieve the low-latency network performance necessary for tightly-coupled node-to-node communication that is typical of high-performance computing (HPC) applications.
@@ -61,7 +74,7 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
   - Spead: Strictly place small group of intances accross distince underlying harware to reduce correlated failures.
 - More information: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html
 
-### EC2 - Intance store
+  ### EC2 - Intance store
 - Provides temporary block-level storage for your instance.
 - This storage is located on disks that are physically attached to the host instance.
 - Instance store is ideal for the temporary storage of information that changes frequently such as buffers, caches, scratch data, and other temporary content, or for data that is replicated across a fleet of instances, such as a load-balanced pool of web servers.
@@ -93,8 +106,19 @@ Physical server that's dedicated to a single customer account.
   2. Hard disk drive (HDD) backed volumes optimized for large streaming workloads where throughput (measured in MiB/s) is a better performance measure than IOPS.
 - You can't use st1 or sc1 EBS volumes as root volumes.
 ## EFS
-- EFS is a **file storage service** for use with Amazon compute (EC2, containers, serverless) and on-premises servers. Amazon EFS provides a file system interface, file system access semantics (such as strong consistency and file locking), and concurrently accessible storage for up to thousands of Amazon EC2 instances.
-- Provides a simple, scalable, fully managed elastic NFS file system for use with AWS Cloud services and on-premises resources.
+![](https://d1.awsstatic.com/r2018/b/EFS/product-page-diagram-Amazon-EFS-Launch_How-It-Works.cf947858f0ef3557b9fc14077bdf3f65b3f9ff43.png)
+- Provides a simple, scalable, fully managed *Elastic NFS file system* for use with
+  -  AWS Cloud services
+  -  On-premises resources.
+  
+- EFS is a **file storage service** for use 
+  - Amazon compute (EC2, containers, serverless) 
+  - on-premises servers. 
+- Amazon EFS provides:
+  - a file system interface
+  - file system access semantics (such as strong consistency and file locking), 
+  - concurrently accessible storage for up to thousands of Amazon EC2 instances.
+
 - Storing data within and across multiple Availability Zones (AZs) for high availability and durability
 - EC2 instances can access your file system across AZs, regions, and VPCs
 - On-premises servers can access using AWS Direct Connect or AWS VPN.
@@ -104,6 +128,8 @@ Physical server that's dedicated to a single customer account.
 - It does this without sacrificing the high availability, high durability, elasticity, and POSIX file system access that Amazon EFS provides. 
 - AWS recommends Standard-IA storage if you need your full dataset to be readily accessible and want to automatically save on storage costs for files that are less frequently accessed.
 
+### Efs_Infrequent_Access
+- Storage class that provides price/performance that is cost-optimized for files, not accessed every day, with storage prices up to **92% lower compared to Amazon EFS Standard**
 ## 69. High Availability and Scalability
 
 * High Avallability usually goes hand in hand with horizontal
@@ -160,7 +186,40 @@ Physical server that's dedicated to a single customer account.
 ## 81 SSL Hand on
 
 Add listener
+## Private_Link
+- Simplifies the security of data shared with cloud-based applications by eliminating the exposure of data to the public Internet. 
+- Provides private connectivity between VPCs, AWS services, and on-premises applications, securely on the Amazon network. Private Link is a distractor in this question. 
+- Private Link is leveraged to create a private connection between an application that is fronted by an NLB in an account, and ENI in another account, without the need of VPC peering and allowing the connections between the two to remain within the AWS network.
 
+## AWS_Config
+- ![AWS_Config](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q9-i2.jpg)
+- provides a detailed view of the configuration of AWS resources in your AWS account. This includes how the resources are related to one another and how they were configured in the past so that you can see how the configurations and relationships change over time.
+- AWS Config provides AWS-managed rules, which are predefined, customizable rules that AWS Config uses to evaluate whether your AWS resources comply with common best practices. You can leverage an AWS Config managed rule to check if any ACM certificates in your account are marked for expiration within the specified number of days. Certificates provided by ACM are automatically renewed. ACM does not automatically renew the certificates that you import. The rule is NON_COMPLIANT if your certificates are about to expire.
+## AWS_Certificate_Manager
+- service that lets you easily provision, manage, and deploy public and private SSL/TLS certificates for use with AWS services and your internal connected resources. 
+- SSL/TLS certificates are used to secure network communications and establish the identity of websites over the Internet as well as resources on private networks.
+
+## AWS_Transit_Gateway
+Is a service that enables customers to connect their Amazon Virtual Private Clouds (VPCs) and their on-premises networks to a single gateway
+
+## VPC_Peering
+A VPC peering connection is a networking connection between two VPCs that enables you to route traffic between them using private IPv4 addresses or IPv6 addresses. Instances in either VPC can communicate with each other as if they are within the same network. You can create a VPC peering connection between your VPCs, or with a VPC in another AWS account. The VPCs can be in different regions (also known as an inter-region VPC peering connection). VPC peering connections will work, but won't efficiently scale if you add more accounts (you'll have to create many connections).
+## RAM
+![RAM](https://d1.awsstatic.com/products/RAM/product-page-diagram_AWS-Resource-Access-Manager(1).379df75d48a8e2cc6160859b7ca3626a9b9be0c1.png)
+- AWS Resource Access Manager (RAM) is a service that enables share AWS resources with 
+  - any AWS account 
+  - within your AWS Organization. 
+- You can share:
+  - AWS Transit Gateways
+  - Subnets
+  - AWS License Manager configurations
+  - Amazon Route 53 Resolver rules resources with RAM. 
+- RAM eliminates the need to create duplicate resources in multiple accounts, reducing the operational overhead of managing those resources in every single account you own.
+-  You can create resources centrally in a multi-account environment, and use RAM to share those resources across accounts in three simple steps: 
+   -  create a Resource Share
+   -  Specify resources
+   -  Specify accounts. 
+-  RAM is available to you at no additional charge.
 ## 83 Auto Scaling Group (ASG)
 
 The goal of an Auto Scaling Group (ASG) is to:
@@ -170,7 +229,6 @@ The goal of an Auto Scaling Group (ASG) is to:
 • Automatically register new instances to a load balancer
 • Re-create an EC2 instance in case a previous one is terminated (ex: if unhealthy)
 
-![alt text](image-41.png)
 Auto Scaling - CloudWatch Alarms & Scaling
 • It is possible to scale an ASG based on CloudWatch alarms
 • An alarm monitors a metric (such as Average CPU, or a custom metric)
@@ -197,27 +255,19 @@ Features of Aurora
 
 ## 93
 
-Auto
-
-![alt tvsext](image-42.png)
-
 ## 98. Elastic Cache HandOn
 
 * Security
-  ![alt text](image-43.png)
   * Encryption Config
     * Transit
     * At rest
   * Security
 * Cluster detail:
-  ![alt text](image-44.png)
   * Primary Endpoint
   * Reader Endpoint
 
 ## 99. Elastic Cache for SA
 
-*  ![alt text](image-46.png)
-*  ![alt text](image-47.png)
 
 ## 101. Route 53
 
@@ -237,12 +287,9 @@ Auto
 * Subnet: Span all azs
 
 
-![alt text](image-48.png)
 
 * DNS Record Time:
-  ![alt text](image-49.png)
 
-  ![alt text](image-50.png)
 * Go to AWS Cloudshell
   * sudo yum install -y bind-utils
   * nslookup  test.steahan...
@@ -255,11 +302,7 @@ Auto
 
 ## 106 TTL(Time to live)
 
-* \
-
 ## 107. CNam and Alias
-
-![alt text](image-51.png)
 
 * Alias: Point hostname to aws resource
 * CName not for apex record
@@ -291,7 +334,6 @@ Auto
 
 * So3 looks like a global service but buckets are created in a region
 * Prefix = Directory
-*  ![alt text](image-52.png)
 * Bucket
 * Object
   * Metadata
@@ -532,7 +574,6 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 * Microseconds latency for cached data
 * Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
 * 5 minutes TTL for cache (default)
-  ![alt text](image-59.png)
 
 
 ### DynamoDB - Stream Processing
@@ -570,8 +611,6 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
   * Cognito
   * Custom Authorize(Lamda)
 * How to API gateway work:
-  ![alt text](image-73.png)
-
 
 ## Choosing right database
 - RDBMS (SQL/OLTP) - Great for joins
@@ -629,11 +668,27 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
   - At least six hours have passed since the last storage modification.
   - The maximum storage threshold is the limit that you set for autoscaling the DB instance. You can't set the maximum storage threshold for autoscaling-enabled instances to a value greater than the maximum allocated storage.
 
-- ![alt text](image-63.png)
-## 236 - Aurora
+## Aurora
 - Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for the cloud, that combines the performance and availability of traditional enterprise databases with the simplicity and cost-effectiveness of open source databases. Amazon Aurora features a distributed, fault-tolerant, self-healing storage system that auto-scales up to 128TB per database instance. Aurora is not an in-memory database.
+- Amazon Aurora Global Database is designed for globally distributed applications, allowing a single Amazon Aurora database to span multiple AWS regions. It replicates your data with no impact on database performance, enables fast local reads with low latency in each region, and provides disaster recovery from region-wide outages. Amazon Aurora Global Database is the correct choice for the given use-case.
 
-Amazon Aurora Global Database is designed for globally distributed applications, allowing a single Amazon Aurora database to span multiple AWS regions. It replicates your data with no impact on database performance, enables fast local reads with low latency in each region, and provides disaster recovery from region-wide outages. Amazon Aurora Global Database is the correct choice for the given use-case.
+![](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/images/AuroraArch001.png)
+- **Cluster** consists of one or more DB instances and a cluster volume that manages the data for those DB instances. 
+- An Aurora cluster volume is a virtual database storage volume that spans multiple Availability Zones (AZs), with each Availability Zone (AZ) having a copy of the DB cluster data. 
+- Two types of DB instances make up an Aurora DB cluster:
+  - **Primary DB instance** 
+    - Supports read and write operations, and performs all of the data modifications to the cluster volume. 
+    - Each Aurora DB cluster has one primary DB instance.
+  - **Aurora Replica**
+    - Connects to the same storage volume as the primary DB instance and supports only read operations. 
+    - Each Aurora DB cluster can have up to 15 Aurora Replicas in addition to the primary DB instance.
+-  Aurora automatically fails over to an Aurora Replica in case the primary DB instance becomes unavailable. 
+-  You can specify the failover priority for Aurora Replicas.
+-  Aurora Replicas can also offload read workloads from the primary DB instance.
+-  You use the reader endpoint for read-only connections for your Aurora cluster. 
+-  This endpoint uses a load-balancing mechanism to help your cluster handle a query-intensive workload. 
+-  The reader endpoint is the endpoint that you supply to applications that do reporting or other read-only operations on the cluster. 
+-  The reader endpoint load-balances connections to available Aurora Replicas in an Aurora DB cluster.
 
 - Compatilbe API for Post
 - Store in 6 replica - 3 AZ
@@ -641,7 +696,14 @@ Amazon Aurora Global Database is designed for globally distributed applications,
 - Aurora Serverless
 - Aurora Global:
 - Aurora Machine Learning: Perfrm ML using SageMaker & Comprehend on Aurora
-### Aurora Replica
+
+### Aurora
+### Aurora_Global_Table
+![Aurora_Global_Table](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q5-i1.jpg)
+- Amazon Aurora Global Database is designed for globally distributed applications, allowing a single Amazon Aurora database to span multiple AWS regions.
+- It replicates your data with no impact on database performance, enables fast local reads with low latency in each region, and provides disaster recovery from region-wide outages.
+- https://aws.amazon.com/rds/aurora/global-database/
+### Aurora_Replica
 - Purpose
   - Scale read operations of your app(reader endpoint) -> Increase avaibility
   - If the writer instance becomes unavailable, automatically promotes one of the reader instances to take its place as the new write
@@ -652,13 +714,19 @@ Amazon Aurora Global Database is designed for globally distributed applications,
 - In-memory datastore, sub-milisecond latency
 - Support for Clustering(Redis) and Multi Az,
 
-## Dynamo DB - Summary
+## DynamoDB
+- A key-value and document database that delivers single-digit millisecond performance at any scale.
+-  It's a fully managed, multi-region, multi-master, durable database with built-in security, backup and restore, and in-memory caching for internet-scale applications.
 - Can replace ElastiCahe as a key/value store
 - Highly Available, Multi Az by default
 - DAX cluster for reading cache
 - Event Processing: DynamoDB Streaam to integrate with AWS Lamda, or Kinesis Data Streams
 - Global Table feature: active-ative setup
 - Export to S3
+## DynamoDB_GlobalTable
+![DynamoDB_GlobalTable](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q5-i2.jpg)
+- Global Tables builds upon DynamoDB’s global footprint to provide you with a fully managed, multi-region, and multi-master database that provides fast, local, read, and write performance for massively scaled, global applications. 
+- Global Tables replicates your Amazon DynamoDB tables automatically across your choice of AWS region
 
 ## S3 - Lifecycle transtion
 [- ![alt text](image-74.png)](https://docs.aws.amazon.com/images/AmazonS3/latest/userguide/images/lifecycle-transitions-v4.png)
@@ -773,13 +841,10 @@ Amazon Aurora Global Database is designed for globally distributed applications,
 - Have OpenSearch Dashboard
 - OpenSearch Patterns DynamoDB
   - DymamoDB Table -> DynamoDB Stream -> Lambda Function -> OpenSearch -> Search for Item Name -> Retrive ID -> Search Full Item in DynamoDB
-- ![alt text](image-65.png)
 
 - OpenSearch Patterns Clouwatch Logs
-  - ![alt text](image-66.png)
 
 - OpenSearch Pattern Kisesis DataStream and FireHorse
-- ![alt text](image-67.png)
 
 ## EMR
 -  Amazon EMR is the industry-leading cloud big data platform for processing vast amounts of data
@@ -819,9 +884,7 @@ Amazon Aurora Global Database is designed for globally distributed applications,
 ## 251 Glue
 - Serverless ETL service
 - Prepare vs Tranform data for analytics
-  ![alt text](image-68.png)
 - Convert data into Parquet Format
-  ![alt text](image-69.png)
 - Glue Data Catalog:
 - Glue Job Bookmarks: prevent re-processing old data
 - Glue Elastic Views
@@ -839,7 +902,6 @@ Amazon Aurora Global Database is designed for globally distributed applications,
 - S3, Rds, Relation & NoSql DB.
 - Fine-grained access control
 - Build on to of AWS Blue
-- ![alt text](image-70.png)
 - Many place in setup security
 
 ## 314 Amazon GuardDuty
@@ -858,8 +920,6 @@ Amazon Aurora Global Database is designed for globally distributed applications,
   - DNS Logs – compromised EC2 instances sending encoded data within DNS queries
   - Optional Features: EKS Audit Logs, RDS & Aurora, EBS, Lambda, S3 Data Events...
   - Can setup EventBridge rules to be notified in case of findings
-  - ![alt text](image-71.png)
-  - ![alt text](image-72.png)
 
   ## Task
   - Review cloudfront, Global Accelerator
