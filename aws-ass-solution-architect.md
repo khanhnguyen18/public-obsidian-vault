@@ -6,15 +6,39 @@
 open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions-Architect-Slides-v37.pdf"
 ```
 
-## 11. IAM
+## AWS Organization
+### AWS_Organization_SCP
+- One type of policy that you can use to manage your organization. 
+- SCPs offer central control over the maximum available permissions for all accounts in your organization, allowing you to ensure your accounts stay within your organization’s access control guidelines. 
+- SCPs are available only in an organization that has all features enabled. 
+- SCPs aren't available if your organization has enabled only the consolidated billing features. 
+- Attaching an SCP to an AWS Organizations entity (root, OU, or account) defines a guardrail for what actions the principals can perform. 
+
+
+
+## IAM
 
 - Global service
 - Root account use
 - Policies is define permission of user
 - Apply least previledge principle
 
+### IAM_Permissions_Boundaries
+- AWS supports permissions boundaries for IAM entities (users or roles). A permissions boundary is an advanced feature for using a managed policy to set the maximum permissions that an identity-based policy can grant to an IAM entity. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies and its permissions boundaries. Here we have to use an IAM permission boundary. They can only be applied to roles or users, not IAM groups.
+- ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q39-i1.jpg)
 
-## 13. IAM Role
+### IAM_Role
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q3-i1.jpg)
+
+- Applications that run on an EC2 must include AWS credentials in their AWS API requests.
+  - Could store AWS credentials directly within the EC2 and allow applications in that instance to use those credentials.
+  -  But have to manage the credentials and ensure that they securely pass the credentials to each instance and update each EC2 when it's time to rotate the credentials.
+
+-> *IAM role to manage temporary credentials for applications that run on an EC2*.
+  - When you use a role, you don't have to distribute long-term credentials (such as a username and password or access keys) to an EC2. 
+  - The role supplies temporary permissions that applications can use when they make calls to other AWS resources. When you launch an EC2, you specify an IAM role to associate with the instance. 
+  - Applications that run on the instance can then use the role-supplied temporary credentials to sign API requests. 
+
 - AWS supports six types of policies: 
   1. identity-based policies
   2. resource-based policies,
@@ -41,7 +65,7 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - With the EC2 launch type, there is no additional charge for the EC2 launch type. You pay for AWS resources (e.g. EC2 instances or EBS volumes) you create to store and run your application.
 
 ## Amazon Inspector
-- security assessments help you check for unintended network accessibility of your Amazon EC2 instances and for vulnerabilities on those EC2 instances.
+- security assessments help you check for unintended network accessibility of your EC2s and for vulnerabilities on those EC2 instances.
 -  Amazon Inspector assessments are offered to you as pre-defined rules packages mapped to common security best practices and vulnerability definitions.
 
 ## WAF
@@ -65,13 +89,29 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 Previously attached data volumes are reattached and the instance retains its instance ID
 
 ![Link](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/hibernation-flow.png)
-### EC2 - Placement Group
+### EC2_Launch_Configuration
+- Instance configuration template that an *Auto Scaling group* uses to launch EC2 instances. 
+- When you create a launch configuration, you specify information for the instances such as the ID of the Amazon Machine Image (AMI), the instance type, a key pair, one or more security groups, and a block device mapping.
+
+
+### EC2_Launch_Template
+- A launch template is similar to a launch configuration, in that it specifies instance configuration information such as the ID of the Amazon Machine Image (AMI), the instance type, a key pair, security groups, and the other parameters that you use to launch EC2 instances. 
+- Also, defining a launch template instead of a launch configuration allows you to have multiple versions of a template.
+
+- With launch templates, you can provision capacity across multiple instance types using both On-Demand Instances and Spot Instances to achieve the desired scale, performance, and cost. 
+
+### EC2_Placement_Group
 - Depending on the type of workload, you can create a placement group using one of the following placement strategies:
-  - Cluster - Packs instances close together inside an Availability Zone. This strategy enables workloads to achieve the low-latency network performance necessary for tightly-coupled node-to-node communication that is typical of high-performance computing (HPC) applications.
+  - Cluster 
+    - Packs instances close together inside an AZ. ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q12-i1.jpg)
+    - This strategy enables workloads to achieve the low-latency network performance necessary for tightly-coupled node-to-node communication that is typical of high-performance computing (HPC) applications.
   - Partition:
-    - do not share underlying harware with groups intance(Kafka, Hadoop , Cassandra)
-    - A partition placement group can have a maximum of seven partitions per Availability Zone
-  - Spead: Strictly place small group of intances accross distince underlying harware to reduce correlated failures.
+    - do not share underlying harware with groups instances(Kafka, Hadoop , Cassandra)
+    - A partition placement group can have a maximum of seven partitions per AZ
+    ![Partition](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q12-i2.jpg)
+  - Spead: 
+    - Strictly place small group of intances accross distince underlying harware to reduce correlated failures.
+  ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q12-i3.jpg)
 - More information: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html
 
   ### EC2 - Intance store
@@ -80,25 +120,28 @@ Previously attached data volumes are reattached and the instance retains its ins
 - Instance store is ideal for the temporary storage of information that changes frequently such as buffers, caches, scratch data, and other temporary content, or for data that is replicated across a fleet of instances, such as a load-balanced pool of web servers.
 - Instance store volumes are included as part of the instance's usage cost.
 
-As Instance Store based volumes provide high random I/O performance at low cost (as the storage is part of the instance's usage cost) and the resilient architecture can adjust for the loss of any instance, therefore you should use Instance Store based Amazon EC2 instances for this use-case.
+As Instance Store based volumes provide high random I/O performance at low cost (as the storage is part of the instance's usage cost) and the resilient architecture can adjust for the loss of any instance, therefore you should use Instance Store based EC2s for this use-case.
 - Instance store is ideal for the temporary storage of information that changes frequently such as buffers, caches, scratch data, and other temporary content, or for data that is replicated across a fleet of instances, such as a load-balanced pool of web servers
-### EC2 - Pricing
-- https://aws.amazon.com/ec2/pricing/
-
 
 ### EC2 - Type of instace
-1. Dedicated Hosts
-  - A Dedicated Host is a physical EC2 server fully dedicated for your use. Dedicated Hosts can help you reduce costs by allowing you to use your existing server-bound software licenses, including Windows Server, SQL Server, and SUSE Linux Enterprise Server (subject to your license terms). Dedicated Hosts can be purchased On-Demand (hourly) or can be purchased as part of Savings Plans.
-2. On-Demand
-3. Dedicated Intance 
-Physical server that's dedicated to a single customer account.
-4. Reserve intance
+- https://aws.amazon.com/ec2/pricing/
+
+#### EC2_Dedicated_Hosts
+- A Dedicated Host is a physical EC2 server fully dedicated for your use. Dedicated Hosts can help you reduce costs by allowing you to use your existing server-bound software licenses, including Windows Server, SQL Server, and SUSE Linux Enterprise Server (subject to your license terms). Dedicated Hosts can be purchased On-Demand (hourly) or can be purchased as part of Savings Plans.
+- A Dedicated Host is also a physical server that's dedicated for your use. With a Dedicated Host, you have visibility and control over how instances are placed on the server.
+#### EC2_Dedicated_Instance 
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q23-i1.jpg)
+- Run in a virtual private cloud (VPC) on hardware that's dedicated to a single customer. 
+- Dedicated Instances that belong to different AWS accounts are physically isolated at a hardware level, even if those accounts are linked to a single-payer account. 
+- However, Dedicated Instances may share hardware with other instances from the same AWS account that are not Dedicated Instances.
+
+#### EC2_On_Demand
+
+#### EC2_Reserve_Instances
+
+#### EC2_Spot_Instances
+- A Spot Instance is an unused Amazon EC2 instance that is available for less than the On-Demand price. Your Spot Instance runs whenever capacity is available and the maximum price per hour for your request exceeds the Spot price. Any instance present with unused capacity will be allocated. Even though this is cost-effective, it does not fulfill the single-tenant hardware requirement of the client and hence is not the correct option.
   
-### 32.
-
-## 57
-
-* EBS snapshot archive: 75% cheaper
 
 ## EBS
 - Amazon EBS volume types fall into two categories:
@@ -117,9 +160,9 @@ Physical server that's dedicated to a single customer account.
 - Amazon EFS provides:
   - a file system interface
   - file system access semantics (such as strong consistency and file locking), 
-  - concurrently accessible storage for up to thousands of Amazon EC2 instances.
+  - concurrently accessible storage for up to thousands of EC2s.
 
-- Storing data within and across multiple Availability Zones (AZs) for high availability and durability
+- Storing data within and across AZs for high availability and durability
 - EC2 instances can access your file system across AZs, regions, and VPCs
 - On-premises servers can access using AWS Direct Connect or AWS VPN.
 
@@ -152,9 +195,13 @@ Physical server that's dedicated to a single customer account.
 - Include
   - ALB
   - NLB
-### Application Load Balancer (ALB)
+### ALB
 - The Application Load Balancer (ALB) is best suited for load balancing HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
 - This is the correct option since the question has a specific requirement for content-based routing which can be configured via the Application Load Balancer. Different Availability Zones (AZs) provide high availability to the overall architecture and Auto Scaling group will help mask any instance failures.
+
+#### ALB_with_Cognito_User_Pools
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q17-i1.jpg)
+- Application Load Balancer can be used to securely authenticate users for accessing your applications. This enables you to offload the work of authenticating users to your load balancer so that your applications can focus on their business logic. You can use Cognito User Pools to authenticate users through well-known social IdPs, such as Amazon, Facebook, or Google, through the user pools supported by Amazon Cognito or through corporate identities, using SAML, LDAP, or Microsoft AD, through the user pools supported by Amazon Cognito
 
 #### Content-Based Routing
 - ALB has access to HTTP headers and allows you to route requests to different backend services accordingly.
@@ -203,7 +250,10 @@ Add listener
 Is a service that enables customers to connect their Amazon Virtual Private Clouds (VPCs) and their on-premises networks to a single gateway
 
 ## VPC_Peering
-A VPC peering connection is a networking connection between two VPCs that enables you to route traffic between them using private IPv4 addresses or IPv6 addresses. Instances in either VPC can communicate with each other as if they are within the same network. You can create a VPC peering connection between your VPCs, or with a VPC in another AWS account. The VPCs can be in different regions (also known as an inter-region VPC peering connection). VPC peering connections will work, but won't efficiently scale if you add more accounts (you'll have to create many connections).
+- A networking connection between two VPCs that enables you to route traffic between them using private IPv4 addresses or IPv6 addresses. 
+- Instances in either VPC can communicate with each other as if they are within the same network. 
+- You can create a VPC peering connection between your VPCs, or with a VPC in another AWS account. 
+- The VPCs can be in different regions (also known as an inter-region VPC peering connection). VPC peering connections will work, but won't efficiently scale if you add more accounts (you'll have to create many connections).
 ## RAM
 ![RAM](https://d1.awsstatic.com/products/RAM/product-page-diagram_AWS-Resource-Access-Manager(1).379df75d48a8e2cc6160859b7ca3626a9b9be0c1.png)
 - AWS Resource Access Manager (RAM) is a service that enables share AWS resources with 
@@ -220,7 +270,19 @@ A VPC peering connection is a networking connection between two VPCs that enable
    -  Specify resources
    -  Specify accounts. 
 -  RAM is available to you at no additional charge.
-## 83 Auto Scaling Group (ASG)
+
+## AWS_DataSync
+![DataSync](https://d1.awsstatic.com/Digital%20Marketing/House/Editorial/products/DataSync/Product-Page-Diagram_AWS-DataSync_On-Premises-to-AWS%402x.8769b9dea1615c18ee0597b236946cbe0103b2da.png)
+- Online data transfer service that simplifies, automates, and accelerates copying large amounts of data between:
+  - on-premises storage systems and AWS Storage services
+  - AWS Storage services.
+- You can use AWS DataSync to migrate data located on-premises, at the edge, or in other clouds to Amazon S3, Amazon EFS, Amazon FSx for Windows File Server, Amazon FSx for Lustre, Amazon FSx for OpenZFS, and Amazon FSx for NetApp ONTAP.
+
+- Using task scheduling in AWS DataSync, you can periodically execute a transfer task from your source storage system to the destination. You can use the DataSync scheduled task to send the video files to the Amazon EFS file system every 24 hours.
+## Auto_Scaling_Group
+
+
+
 
 The goal of an Auto Scaling Group (ASG) is to:
 • Scale out (add EC2 instances) to match an increased load
@@ -234,11 +296,16 @@ Auto Scaling - CloudWatch Alarms & Scaling
 • An alarm monitors a metric (such as Average CPU, or a custom metric)
 • Metrics such as Average CPU are computed for the overall ASG instances
 
+### ASG_Not_terminate
+- *ASG* doesn't terminate an instance that came into service based on *EC2* and *ELB* health checks until the health check grace period expires.
+- immediately terminate instances with an *Impaired status*. Instead, Amazon EC2 Auto Scaling waits a few minutes for the instance to recover. Amazon EC2 Auto Scaling might also delay or not terminate instances that fail to report data for status checks. This usually happens when there is insufficient data for the status check metrics in Amazon CloudWatch.
+- By default, ASG doesn't use the results of ELB health checks to determine an instance's health status when the group's health check configuration is set to EC2. As a result, Amazon EC2 Auto Scaling doesn't terminate instances that fail ELB health checks. If an instance's status is OutofService on the ELB console, but the instance's status is Healthy on the Amazon EC2 Auto Scaling console, confirm that the health check type is set to ELB.
+
+
 ## 88. Rds red rplicas vs Multiaz
 
 * Network Cost
   * not pay fee for RDS read Rplca winthin in same region
-  * \
 
 ## 91
 
@@ -327,10 +394,7 @@ Features of Aurora
 
 - [ec2-security-groups](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html)
 
-
-
-
-## 127 S3
+## S3
 
 * So3 looks like a global service but buckets are created in a region
 * Prefix = Directory
@@ -343,8 +407,7 @@ Features of Aurora
   * SSE-S3
   * KMS
 
-### S3 Security
-
+### S3_Security
 - User base
   - Which url could use for specific user
 - Resource Base
@@ -352,11 +415,55 @@ Features of Aurora
   - Object Access Controler LIst - Finer Grant
   - Bucket(ACL)
 
+### S3_Enryption_Options
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q10-i1.jpg)
+- Options for protecting data at rest in Amazon S3:
+  1. Server-Side Encryption – Request Amazon S3 to encrypt your object before saving it on disks in its data centers and then decrypt it when you download the objects.
+  2. Client-Side Encryption – Encrypt data client-side and upload the encrypted data to Amazon S3. In this case, you manage the encryption process, the encryption keys, and related tools.
+
+1. *Server-Side Encryption with Customer-Provided Keys* : 
+- You manage the enrtyption Key
+- S3 will encrypt
+
+2. *Server-Side Encryption with Amazon S3 managed keys*(**Default**)
+- Each object is encrypted with a unique key. 
+- As an additional safeguard, it encrypts the key itself with a master key that it regularly rotates. So this option is incorrect.
+
+3. *Server-Side Encryption with AWS Key Management Service (AWS KMS) keys* (SSE-KMS) 
+- Amazon S3 SSE-KMS to encrypt your S3 object data. 
+- Also, when SSE-KMS is requested for the object, the S3 checksum as part of the object's metadata, is stored in encrypted form.
+
+4. *Client-Side Encryption with data encryption* 
+- Done on the client-side before sending it to Amazon S3. You can encrypt the data client-side and upload the encrypted data to Amazon S3. 
+- In this case, you manage the encryption process, the encryption keys, and related tools.
+
+
+## AWS_Systems_Manager_Parameter_Store
+- Provides secure, hierarchical storage for configuration data management and secrets management. 
+- You can store data such as passwords, database strings, EC2 IDs, Amazon Machine Image (AMI) IDs, and license codes as parameter values. 
+- You can store values as plain text or encrypted data. You can reference Systems Manager parameters in your scripts, commands, SSM documents, and configuration and automation workflows by using the unique name that you specified when you created the parameter.
+
+
+## CloudHSM
+- Acloud-based hardware security module (HSM) that enables you to easily generate and use your encryption keys on the AWS Cloud. 
+- With AWS CloudHSM, you can manage your encryption keys using FIPS 140-2 Level 3 validated HSMs. AWS CloudHSM is standards-compliant and enables you to export all of your keys to most other commercially-available HSMs, subject to your configurations. 
+- It is a fully-managed service that automates time-consuming administrative tasks for you, such as hardware provisioning, software patching, high-availability, and backups.
+
+
 ## KMS
-- AWS Key Management Service (AWS KMS) is a service that combines secure, highly available hardware and software to provide a key management system scaled for the cloud. When you use server-side encryption with AWS KMS (SSE-KMS), you can specify a customer-managed CMK that you have already created. SSE-KMS provides you with an audit trail that shows when your CMK was used and by whom. Therefore SSE-KMS is the correct solution for this use-case.
+- Service that combines secure, highly available hardware and software to provide a key management system scaled for the cloud. 
+- When you use server-side encryption with AWS KMS (SSE-KMS), you can specify a customer-managed CMK that you have already created. SSE-KMS provides you with an audit trail that shows when your CMK was used and by whom. 
 - AWS Key Management Service (KMS) makes it easy for you to create and manage cryptographic keys and control their use across a wide range of AWS services and in your applications. AWS KMS is a secure and resilient service that uses hardware security modules that have been validated under FIPS 140-2.
-- Deleting an AWS KMS key in AWS Key Management Service (AWS KMS) is destructive and potentially dangerous. Therefore, AWS KMS enforces a waiting period. To delete a KMS key in AWS KMS you schedule key deletion. You can set the waiting period from a minimum of 7 days up to a maximum of 30 days. The default waiting period is 30 days. During the waiting period, the KMS key status and key state is Pending deletion. To recover the KMS key, you can cancel key deletion before the waiting period ends. After the waiting period ends you cannot cancel key deletion, and AWS KMS deletes the KMS key.
-- KMS is global or not?
+- *KMS is an encryption service*, it's not a secrets store
+### KMS_MutiRegion_Keys
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q46-i1.jpg)
+
+AWS KMS supports multi-region keys, which are AWS KMS keys in different AWS regions that can be used interchangeably – as though you had the same key in multiple regions. 
+- Each set of related multi-region keys has the same key material and key ID, so you can encrypt data in one AWS region and decrypt it in a different AWS region without re-encrypting or making a cross-region call to AWS KMS.
+
+### Deleting an AWS KMS key
+- Destructive and potentially dangerous. Therefore, AWS KMS enforces a waiting period. To delete a KMS key in AWS KMS you schedule key deletion. You can set the waiting period from a minimum of 7 days up to a maximum of 30 days. The default waiting period is 30 days. During the waiting period, the KMS key status and key state is Pending deletion. To recover the KMS key, you can cancel key deletion before the waiting period ends. After the waiting period ends you cannot cancel key deletion, and AWS KMS deletes the KMS key.
+
 
 ### Automatic key rotation 
 
@@ -410,6 +517,11 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 ## 163 - S3 - Object Standard
 
 
+## AWS_Secrets_Manager
+- Helps you protect secrets needed to access your applications, services, and IT resources. 
+- The service enables you to easily rotate, manage, and retrieve database credentials, API keys, and other secrets throughout their lifecycle. 
+- Users and applications retrieve secrets with a call to Secrets Manager APIs, eliminating the need to hardcode sensitive information in plain text. 
+- Secrets Manager offers secret rotation with built-in integration for Amazon RDS, Amazon Redshift, and Amazon DocumentDB.
 
 ## Cloudfront
 - CDN service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment.
@@ -445,12 +557,14 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 - Create Private AWS network
 - Perform healcheck for your app
 
-## AWS Direct Connect
+## AWS_Direct_Connect
 - Establish a dedicated network connection from your premises to AWS.
 - AWS Direct Connect lets you establish a dedicated network connection between your network and one of the AWS Direct Connect locations.
 - With AWS Direct Connect plus VPN, you can combine one or more AWS Direct Connect dedicated network connections with the Amazon VPC VPN. This combination provides an IPsec-encrypted private connection that also reduces network costs, increases bandwidth throughput, and provides a more consistent network experience than internet-based VPN connections.
 - Involves significant monetary investment and takes at least a month to set up, therefore it's not the correct fit for this use-case.
 
+### AWS_Direct_Connect_VIFs: 
+![AWS_Direct_Connect_VIFs](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q11-i1.jpg)
 ## AWS Transit Gateway
 -  A network transit hub that you can use to interconnect your virtual private clouds (VPC) and on-premises networks. AWS Transit Gateway by itself cannot establish a low latency and high throughput connection between a data center and AWS Cloud.
 
@@ -473,9 +587,12 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - The open-source Lustre file system is designed for applications that require fast storage – where you want your storage to keep up with your compute.
 - FSx for Lustre integrates with Amazon S3, making it easy to process data sets with the Lustre file system. When linked to an S3 bucket, an FSx for Lustre file system transparently presents S3 objects as files and allows you to write changed data back to S3.
 
-## Amazon FSx for Windows File Server
-- Amazon FSx for Windows File Server provides fully managed, highly reliable file storage that is accessible over the industry-standard Service Message Block (SMB) protocol. It is built on Windows Server, delivering a wide range of administrative features such as user quotas, end-user file restore, and Microsoft Active Directory (AD) integration. FSx for Windows does not allow you to present S3 objects as files and does not allow you to write changed data back to S3. Therefore you cannot reference the "cold data" with quick access for reads and updates at low cost. Hence this option is not correct.
--
+## Amazon_FSx_for_Windows_File_Server
+- Provides fully managed, highly reliable file storage that is accessible over the industry-standard Service Message Block (SMB) protocol. 
+- It is built on Windows Server, delivering a wide range of administrative features such as user quotas, end-user file restore, and Microsoft Active Directory (AD) integration. 
+- The Distributed File System Replication (DFSR) service is a new multi-master replication engine that is used to keep folders synchronized on multiple servers. Amazon FSx supports the use of Microsoft’s Distributed File System (DFS) to organize shares into a single folder structure up to hundreds of PB in size.
+- Amazon FSx for Windows is a perfect distributed file system, with replication capability, and can be mounted on Windows.
+- FSx for Windows does not allow you to present S3 objects as files and does not allow you to write changed data back to S3. Therefore you cannot reference the "cold data" with quick access for reads and updates at low cost. Hence this option is not correct.
 - provides all of the benefits of a native Windows SMB environment that is fully managed and secured and scaled like any other AWS service. You get detailed reporting, replication, backup, failover, and support for native Windows tools like DFS and Active Directory.
 - support file shares in Amazon FSx for Windows File Server, so this option is incorrect.
 - Amazon FSx File Gateway: low-latency, on-premises access to fully managed file shares in Amazon FSx for Windows File Server. For applications deployed on AWS, you may access your file shares directly from Amazon FSx in AWS
@@ -498,8 +615,17 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 
 - File Gateway does not support file shares in Amazon FSx for Windows File Server, so this option is incorrect.
 
-## 187 SQS Fifo queue
+## SQS
+- Fully managed message queuing service that enables decouple and scale microservices, distributed systems, and serverless applications. 
+- SQS offers two types of message queues. 
+  1. *Standard queues* offer maximum throughput, best-effort ordering, and at-least-once delivery. 
+  2. *SQS FIFO queues* are designed to guarantee that messages are processed exactly once, in the exact order that they are sent.
+
+
+### SQS_Fifo_queue
 - Limited throughput : 300 msg/s without batching, max: 10 message per operation = 3000 msg/s
+- If we don't specify a **GroupID**, then all the messages are in absolute order, but we can only have 1 consumer at most.
+- To allow for multiple consumers to read data for each Desktop application, and to scale the number of consumers, we should use the "Group ID" attribute. So this is the correct option.
 
 ## Kinesis_Data_Stream
 -  Amazon Kinesis Data Streams (KDS) is a massively scalable and durable real-time data streaming service. 
@@ -651,12 +777,13 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - Auotmated Backup with Point in time restore feature(35 days)
 - Manual DB Snapshot for longer-term recoverry
 - Support IAM Authentication, integration with Secrets Manager
-### Read_Replicas
+### RDS_Read_Replicas
 - Amazon RDS Read Replicas provide enhanced performance and durability for RDS database (DB) instances.
 - Easy to elastically scale out beyond the capacity constraints of a single DB instance for read-heavy database workloads.
 - For the MySQL, MariaDB, PostgreSQL, Oracle, and SQL Server database engines, RDS creates a second DB instance using a snapshot of DB. 
 - It then uses the engines native asynchronous replication to update the read replica whenever there is a change to the source DB instance. 
 - Can be within an Availability Zone, Cross-AZ, or Cross-Region.
+- A read replica is billed as a standard DB Instance and at the same rates. You are not charged for the data transfer incurred in replicating data between your source DB instance and read replica within the same AWS Region.
 - [Read Replicas Link](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q44-i1.jpg)
 
 ### storage auto-scaling
@@ -669,12 +796,13 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
   - The maximum storage threshold is the limit that you set for autoscaling the DB instance. You can't set the maximum storage threshold for autoscaling-enabled instances to a value greater than the maximum allocated storage.
 
 ## Aurora
-- Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for the cloud, that combines the performance and availability of traditional enterprise databases with the simplicity and cost-effectiveness of open source databases. Amazon Aurora features a distributed, fault-tolerant, self-healing storage system that auto-scales up to 128TB per database instance. Aurora is not an in-memory database.
-- Amazon Aurora Global Database is designed for globally distributed applications, allowing a single Amazon Aurora database to span multiple AWS regions. It replicates your data with no impact on database performance, enables fast local reads with low latency in each region, and provides disaster recovery from region-wide outages. Amazon Aurora Global Database is the correct choice for the given use-case.
-
 ![](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/images/AuroraArch001.png)
-- **Cluster** consists of one or more DB instances and a cluster volume that manages the data for those DB instances. 
-- An Aurora cluster volume is a virtual database storage volume that spans multiple Availability Zones (AZs), with each Availability Zone (AZ) having a copy of the DB cluster data. 
+
+- MySQL and PostgreSQL-compatible relational database built for the cloud, that combines the performance and availability of traditional enterprise databases with the simplicity and cost-effectiveness of open source databases. 
+- **Aurora DB cluster** consists of one or more DB instances and a cluster volume that manages the data for those DB instances. 
+-  **An Aurora cluster volume** is a virtual database storage volume that spans multiple AZs, with each Availability Zone (AZ) having a copy of the Amazon Aurora DB cluster data. Aurora supports Multi-AZ Aurora Replicas that improve the application's read-scaling and availability.
+- Amazon Aurora features a distributed, fault-tolerant, self-healing storage system that auto-scales up to 128TB per database instance.
+
 - Two types of DB instances make up an Aurora DB cluster:
   - **Primary DB instance** 
     - Supports read and write operations, and performs all of the data modifications to the cluster volume. 
@@ -689,25 +817,32 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 -  This endpoint uses a load-balancing mechanism to help your cluster handle a query-intensive workload. 
 -  The reader endpoint is the endpoint that you supply to applications that do reporting or other read-only operations on the cluster. 
 -  The reader endpoint load-balances connections to available Aurora Replicas in an Aurora DB cluster.
-
 - Compatilbe API for Post
 - Store in 6 replica - 3 AZ
 - Cluster: Customer endopint for writer and reader DB instaces
 - Aurora Serverless
-- Aurora Global:
 - Aurora Machine Learning: Perfrm ML using SageMaker & Comprehend on Aurora
+### Aurora_Back_Up
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q52-i1.jpg)
+- Aurora backs up your cluster volume automatically and retains restore data for the length of the backup retention period. 
+- Aurora backups are continuous and incremental so you can quickly restore to any point within the backup retention period. 
+- *No performance impact or interruption of database service* occurs as backup data is being written.
 
-### Aurora
+- Automated backups occur daily during the preferred backup window. If the backup requires more time than allotted to the backup window, the backup continues after the window ends, until it finishes. The backup window can't overlap with the weekly maintenance window for the DB cluster. Aurora backups are continuous and incremental, but the backup window is used to create a daily system backup that is preserved within the backup retention period. The latest restorable time for a DB cluster is the most recent point at which you can restore your DB cluster, typically within 5 minutes of the current time.
+
+
 ### Aurora_Global_Table
 ![Aurora_Global_Table](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q5-i1.jpg)
 - Amazon Aurora Global Database is designed for globally distributed applications, allowing a single Amazon Aurora database to span multiple AWS regions.
 - It replicates your data with no impact on database performance, enables fast local reads with low latency in each region, and provides disaster recovery from region-wide outages.
 - https://aws.amazon.com/rds/aurora/global-database/
+
 ### Aurora_Replica
 - Purpose
   - Scale read operations of your app(reader endpoint) -> Increase avaibility
   - If the writer instance becomes unavailable, automatically promotes one of the reader instances to take its place as the new write
   - Up to 15 Aurora Replicas xacross the Availability Zones (AZs) tha DB cluster spans within an AWS Region.
+
 ## Amazone Elasticache - Summanry
 
 - Managed Redis / Memchaed
@@ -763,6 +898,9 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - Batch Operation on objects using S3 Batch, Listing file using S3 repository
 - Performanace: Moti-part upload, S3 Tranfer Accelator, S3 Seelct
 - Automation: S3 Event Notification(SNS, SQS, Lambda, EventBride)
+## Hosting_Static_Website
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q2-i1.jpg)
+
 
 ## DocumentDB
 - Aurora is an "AWS-IMplementation" of PostgreSQL/SQL
@@ -855,7 +993,7 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
    -  Apache Flink
    -  Apache Hudi
    -  and Presto. 
-- Amazon EMR uses Hadoop, an open-source framework, to distribute your data and processing across a resizable cluster of Amazon EC2 instances
+- Amazon EMR uses Hadoop, an open-source framework, to distribute your data and processing across a resizable cluster of EC2s
   
 - Stand for Elastic MapReduce
 - Create Hadoop cluster(Bigdata) -> analyze & process vast amount data
