@@ -100,8 +100,8 @@ This option is incorrect as it provides listing access only to the bucket conten
   
 ## 4 - Amazon RDS MySQL  
 - A company has recently launched a new mobile gaming application that the users are adopting rapidly.  
-- The company uses Amazon RDS MySQL as the database.  
-- The engineering team wants an urgent solution to this issue where the rapidly increasing workload might exceed the available database storage.  
+- The company uses **Amazon RDS MySQL** as the database.  
+- The engineering team wants an urgent solution to this issue where the rapidly increasing workload might **exceed the available database storage**.  
   
 **Solution**  
 - *Enable storage auto-scaling for Amazon RDS MySQL* :  
