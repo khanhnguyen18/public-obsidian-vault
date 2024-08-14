@@ -31,8 +31,8 @@
   --background-modifier-error-rgb: 61, 0, 0;
   --background-modifier-error-hover: #470000;
   --background-modifier-cover: rgba(0, 0, 0, 0.6);
-  --text-accent: #ffb86c;
-  --text-accent-hover: #8be9fd;
+  --text-accent: #6cd0ff;
+  --text-accent-hover: rgba(196, 194, 194, 0.87);
   --text-normal: #f8f8f2;
   --text-muted: #f8f8f2;
   --text-faint: #bd93f9;
@@ -242,6 +242,7 @@ strong, .cm-strong {
 em, .cm-em {
   color: var(--text-muted);
   font-style: italic;
+  color: #ffd700;
 }
 
 /* strikethrough in preview and editor */

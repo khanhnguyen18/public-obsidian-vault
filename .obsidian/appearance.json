@@ -1,6 +1,4 @@
 {
   "cssTheme": "Dracula for Obsidian",
-  "enabledCssSnippets": [
-    "style"
-  ]
+  "enabledCssSnippets": []
 }
