@@ -100,8 +100,8 @@ This option is incorrect as it provides listing access only to the bucket conten
   
 ## 4 - Amazon RDS MySQL  
 - A company has recently launched a new mobile gaming application that the users are adopting rapidly.  
-- The company uses **Amazon RDS MySQL** as the database.  
-- The engineering team wants an urgent solution to this issue where the rapidly increasing workload might **exceed the available database storage**.  
+- The company uses Amazon RDS MySQL as the database.  
+- The engineering team wants an urgent solution to this issue where the rapidly increasing workload might exceed the available database storage.  
   
 **Solution**  
 - *Enable storage auto-scaling for Amazon RDS MySQL* :  
@@ -629,3 +629,196 @@ Use Amazon Cognito Authentication via Cognito User Pools for your Application Lo
 1. Use *Cognito Identity Pools* with ALB: Amazon Cognito identity pools provide temporary AWS credentials for users who are guests (unauthenticated) and for users who have been authenticated and received a token.
 2. *CloudFront Distribution* + *Cognito_User_Pools*:  Cognito User Pools with CloudFront distribution as you have to create a separate AWS Lambda@Edge function to accomplish the authentication via Cognito User Pools. This involves additional development effort
 3. Amazon Cognito Authentication via Cognito Identity Pools for your Amazon CloudFront distribution - Same As beblow
+
+## 40 Route 53 Failover
+- A manufacturing company area prone to *natural disasters*. 
+- The company is *not ready to fully migrate to the AWS Cloud*, but it wants a failover environment on AWS in case the on-premises data center fails. 
+- The company runs web servers that connect to external vendors.
+- The data available on AWS and on-premises must be uniform.
+
+Which of the following solutions would have the LEAST amount of downtime?
+
+**Solution**
+- Set up a Amazon Route 53 failover record. 
+  - Run application servers on **EC2** instances behind an **ALB** in an **Auto Scaling group**. 
+  - Set up [[AWS Storage Gateway]](aws-ass-solution-architect.md#aws_storage_gateway) with stored volumes to back up data to **Amazon S3**
+->
+- Storage Gateway also integrates natively with Amazon S3 cloud storage which makes your data available for in-cloud processing.
+- 
+**Wrong**
+1. *Set up a Amazon Route 53 failover record*. 
+  - Run an **AWS Lambda** function to execute an **AWS CloudFormation template** to launch 2 Amazon EC2.
+  - Set up **AWS Storage Gateway** with stored volumes to back up data to **Amazon S3**. 
+  - Set up an **AWS Direct Connect** connection between a VPC and the data center
+  
+2. *Set up a Amazon Route 53 failover record.*
+   1. Set up an **AWS Direct Connect** connection between a VPC and the data center. 
+   2. Run application servers on **Amazon EC2** in an **Auto Scaling group**. 
+   3. Run an AWS Lambda function to execute an **AWS CloudFormation template** to create an ALB
+3. *Set up a Amazon Route 53 failover record*. 
+   1. Execute an **AWS CloudFormation template** from a script to provision EC2 behind an ALB. 
+   2. Set up **AWS Storage Gateway** with stored volumes to back up data to **Amazon S3**
+
+AWS CloudFormation is a convenient provisioning mechanism for a broad range of AWS and third-party resources. It supports the infrastructure needs of many different types of applications such as existing enterprise applications, legacy applications, applications built using a variety of AWS resources, and container-based solutions.
+
+These three options involve AWS CloudFormation as part of the solution. Now, AWS CloudFormation takes time to provision the resources and hence is not the right solution when LEAST amount of downtime is mandated for the given use case. Therefore, these options are not the right fit for the given requirement.
+
+## 41 VPC Gateway
+Many VPC in various account - need to be connected in a star network with one another and connected with on-premises networks through AWS Direct Connect.
+
+**Solution**
+- [AWS Transit Gateway](aws-ass-solution-architect.md#AWS_Transit_Gateway)
+
+**Wrong**
+- [AWS PrivateLink](aws-ass-solution-architect.md#private_link)
+
+- [VPC Peering](aws-ass-solution-architect.md#vpc_peering)
+  - VPC Peering helps connect two VPCs and is not transitive. It would require to create many peering connections between all the VPCs to have them connect This alone wouldn't work, because we would need to also connect the on-premises data center through Direct Connect and Direct Connect Gateway, but that's not mentioned in this answer.
+- [Virtual private gateway (VGW)](aws-ass-solution-architect.md#virtual_private_gateway)
+
+## 42 CPU utilization Notification
+A cybersecurity company uses a fleet of Amazon EC2 instances to run a proprietary application.
+Wants to be notified via an email whenever the **CPU utilization for any of the Amazon EC2 instances breaches a certain threshold.**
+Solution with the LEAST amount of development effort? (Select two)
+
+**Solution**
+- [Amazon CloudWatch](aws-ass-solution-architect.md#cloudwatch)
+  - You can use Amazon CloudWatch Alarms to send an email via Amazon SNS whenever any of the Amazon EC2 instances breaches a certain threshold. Hence both these options are correct.
+- [Amazon SNS](aws-ass-solution-architect.md#sns)
+
+**Wrong**
+- [Amazon SQS](aws-ass-solution-architect.md#sqs)
+- [AWS Lambda](aws-ass-solution-architect.md#lambda)
+- [AWS Step Functions](##)
+  - You cannot use Step Functions to monitor CPU utilization of Amazon EC2 instances or send notification emails, hence this option is incorrect.
+
+## 43 Route 53 Policy
+- Content management application with the web-tier running on **EC2 instances** and the database tier running on **Aurora** in `us-east-1`
+- 90% of its customers in the *US* and *Europe*
+- Getting reports of deteriorated application performance from customers in Europe with high application load time
+**Solution**
+- Setup another fleet of EC2 instances for the web tier in the `eu-west-1` region. Enable latency routing policy in Route 53
+  - [Route53_Lantency_Routing](aws-ass-solution-architect.md#Route53_Lantency_Routing)
+- Create Aurora read replicas in the `eu-west-1` region
+  - [Aurora](aws-ass-solution-architect.md#aurora_replica)
+  - Aurora read replicas can be used to scale out reads across regions. This will improve the application performance for users in Europe. Therefore, this is also a correct option for the given use-case.
+**Wrong**
+- Setup another fleet of EC2 instances for the web tier in the `eu-west-1` region. Enable geolocation routing policy in Route 53
+  - [Geolocation_Routing](aws-ass-solution-architect.md#geolocation_routing)
+  - You cannot use geolocation routing to reduce latency, hence this option is incorrect.
+
+- Create Aurora Multi-AZ standby instance in the `eu-west-1` region
+  - Amazon Aurora Multi-AZ enhances the availability and durability for the database, it does not help in read scaling, so it is not a correct option for the given use-case.
+  - [](aws-ass-solution-architect.md#aurora_back_up)
+- Setup another fleet of xEC2 instances for the web tier in the `eu-west-1` region. Enable failover routing policy in Amazon Route 53
+  - [Failover_Routing](aws-ass-solution-architect.md#failover_routing)
+  - You cannot use failover routing to reduce latency, hence this option is incorrect.
+
+## 44 Server-side encryption norms
+Store confidential data in Amazon S3 and it needs to meet the following data security and compliance norms:
+- Encryption key usage must be logged for auditing purposes
+- Encryption Keys must be rotated every year
+- The data must be encrypted at rest
+
+Which is the MOST operationally efficient solution?
+**Solution**
+- *Server-side encryption* with AWS KMS keys (SSE-KMS) with automatic key rotation
+  - [Server-side encryption](aws-ass-solution-architect.md#s3_security)
+  - [Rotating_KMS_Keys](aws-ass-solution-architect.md#rotating_kms_keys)
+
+**Wrong**
+1. *Server-side encryption with AWS Key Management Service (AWS KMS) keys (SSE-KMS) with manual key rotation*
+  - possible to manually rotate the AWS KMS key, it is not the best fit solution as it is not operationally efficient.
+2. *Server-side encryption (SSE-S3) with automatic key rotation*
+  - cannot log the usage of the encryption key for auditing purposes
+3. *Server-side encryption with customer-provided keys (SSE-C) with automatic key rotation*
+  -  It is possible to automatically rotate the customer-provided keys but you will need to develop the underlying solution to automate the key rotation
+
+## 45 Database
+- Application that will perform **a lot of overwrites and deletes on data** 
+- Require the latest information to be available anytime data is read via queries on database tables.
+
+As a Solutions Architect, which database technology will you recommend?
+
+**Solution**
+- *RDS*
+  - [RDS](aws-ass-solution-architect.md#rds)
+**Wrong**
+1. [Amazon ElastiCache](aws-ass-solution-architect.md#amazon_elasticache)
+2. [Amazon S3](aws-ass-solution-architect.md#s3)
+  - Not DB technology
+3. [Amazon Neptune](aws-ass-solution-architect.md#neptune)
+  - Amazon Neptune is a graph database so it's not a good fit.
+   
+## 46 SG Statful And NCL Stateless
+- A developer has configured *inbound traffic* for the relevant ports in both 
+  1. the Security Group of the Amazon EC2
+  2. the network access control list (network ACL) of the subnet for the EC2. 
+- But unable to connect to the service running on EC2.
+
+**Solution**
+- Security Groups are stateful, so allowing inbound traffic to the necessary ports enables the connection. Network access control list (network ACL) are stateless, so you must allow both inbound and outbound traffic
+
+## 47
+- Real-time data analytics tool for IBO
+- The IoT data is funneled into *Kinesis Data Streams* which further acts as the source of a delivery stream for *Kinesis Firehose*
+- The engineering team has now configured a *Kinesis Agent* to send IoT data from another set of devices to the same *Kinesis Firehose* delivery stream
+- They noticed that data is not reaching Kinesis Firehose as expected
+
+**Solution**
+- Kinesis Agent cannot write to Amazon Kinesis Firehose for which the delivery stream source is already set as Amazon Kinesis Data Streams
+  - [Firehose](aws-ass-solution-architect.md#firehose)
+  - Kinesis Data Stream is configured as the source of a Kinesis Firehose delivery stream, Firehose’s `PutRecord` and `PutRecordBatch` operations are disabled and `Kinesis Agent` cannot write to Kinesis Firehose Delivery Stream directly
+
+**Wrong**
+1. Kinesis Agent can only write to Amazon Kinesis Data Streams, not to Amazon Kinesis Firehose
+-  [Kinesis Agent](aws-ass-solution-architect.md#kinesis_agent) is a stand-alone Java software application that offers an easy way to collect and send data to Amazon Kinesis Data Streams or Amazon Kinesis Firehose. So this option is incorrect.
+- Amazon Kinesis Firehose delivery stream has reached its limit and needs to be scaled manually - Amazon Kinesis Firehose is a fully managed service that automatically scales to match the throughput of your data and requires no ongoing administration. Therefore this option is not correct.
+
+
+## 48 VPC
+
+- Multiple AWS accounts and has interconnected these accounts in a hub-and-spoke style using the *AWS Transit Gateway*. 
+- Amazon VPCs have been provisioned across these AWS accounts to facilitate network isolation.
+
+Which of the following solutions would reduce both the administrative overhead and the costs while providing shared access to services required by workloads in each of the VPCs?
+
+**Solution**
+- Build a shared services Amazon Virtual Private Cloud (Amazon VPC)
+  - [Centralized_VPC_Endpoints](aws-ass-solution-architect.md#centralized_vpc_endpoints)
+**Wrong**
+- Use [Fully meshed VPC Peering connection](aws-ass-solution-architect.md#fully_meshed_vpc_peering)
+- Use VPCs connected with AWS Direct Connect
+
+## 49 
+An *HTTP application* is deployed on an *Auto Scaling Group ALB* that provides HTTPS termination,
+accesses a PostgreSQL database managed by Amazon RDS.
+How should you configure the security groups?
+
+**Solution**
+- PostgreSQL port = 5432 HTTP port = 80 HTTPS port = 443
+- The traffic goes like this : 
+  1. The client sends an *HTTPS request* to ALB on port 443. This is handled by the rule - "*The security group of the ALB should have an inbound rule from anywhere on port 443*"
+  2. *ALB* then forwards the request to one of the EC2. This is handled by the rule - "The security group of the Amazon EC2 instances should have an inbound rule from the security group of the Application Load Balancer on port 80"
+  3. The Amazon EC2 instance further accesses the PostgreSQL database managed by Amazon RDS on port 5432. This is handled by the rule - "The security group of Amazon RDS should have an inbound rule from the security group of the Amazon EC2 instances in the Auto Scaling group on port 5432"
+
+**Wrong**
+- The security group of the Amazon EC2 instances should have an inbound rule from the security group of the Amazon RDS database on port 5432
+
+- The security group of Amazon RDS should have an inbound rule from the security group of the Amazon EC2 instances in the Auto Scaling group on port 80
+
+- The security group of the Application Load Balancer should have an inbound rule from anywhere on port 80
+
+## 50 
+- Auto Scaling needs to terminate an instance from `us-east-1a` AZ as it has the most number of instances amongst the Availability Zone (AZs) being used currently. 
+There are 4 instances in the Availability Zone (AZ) us-east-1a like so: 
+1. Instance A has the oldest launch template
+2. Instance B has the oldest launch configuration
+3. Instance C has the newest launch configuration 
+4. Instance D is closest to the next billing hour.
+
+Which of the following instances would be terminated per the default termination policy?
+**Solution**
+- Instance B
+  - [EC2_Default_Termination_Policy](aws-ass-solution-architect.md#ec2_default_termination_policy)
+

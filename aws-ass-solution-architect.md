@@ -76,6 +76,13 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - You can use AWS WAF with your Application Load Balancer to allow or block requests based on the rules in a web access control list (web ACL). Geographic (Geo) Match Conditions in AWS WAF allows you to use AWS WAF to restrict application access based on the geographic location of your viewers. With geo match conditions you can choose the countries from which AWS WAF should allow access.
 - Geo match conditions are important for many customers. For example, legal and licensing requirements restrict some customers from delivering their applications outside certain countries. These customers can configure a whitelist that allows only viewers in those countries. Other customers need to prevent the downloading of their encrypted software by users in certain countries. These customers can configure a blacklist so that end-users from those countries are blocked from downloading their software.
 ## 31. EC2
+### EC2_Default_Termination_Policy
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q65-i1.jpg)
+Following the order:
+1. On-Demand vs Spot instances. 
+2. instance with the oldest launch template unless there is an instance that uses a launch configuration(A)
+3. Next, you need to consider any instance which has the oldest launch configuration.(B) 
+4. Closest to the next billing hour(D)
 ### EC2_Hibernate
 - When you hibernate an instance, AWS signals the operating system to perform hibernation (suspend-to-disk).
 -  Hibernation saves the contents from 
@@ -210,32 +217,10 @@ As Instance Store based volumes provide high random I/O performance at low cost 
 - As you will see in a moment, each Application Load Balancer allows you to define up to 10 URL-based rules to route requests to target groups. Over time, we plan to give you access to other routing methods.
 
 
-## 72. ALT
-
-* x-forward-for
-
-## 73. ALB demo
-
-* Create target group
-* Practice load balancer
-
-## 74
-
-* Only allow access from ALB
-* Define condition rule
-
-## 78
-
-* Sticky cooki
-
-## 79 Cross zone Load Balancing
-
-## 81 SSL Hand on
-
-Add listener
 ## Private_Link
 - Simplifies the security of data shared with cloud-based applications by eliminating the exposure of data to the public Internet. 
-- Provides private connectivity between VPCs, AWS services, and on-premises applications, securely on the Amazon network. Private Link is a distractor in this question. 
+- Provides private connectivity between VPCs, AWS services, and on-premises applications, securely on the Amazon network. 
+- Private Link is utilized to create a private connection between an application that is fronted by an NLB in an account, and an Elastic Network Interface (ENI) in another account, without the need of VPC peering, and allowing the connections between the two to remain within the AWS network.
 - Private Link is leveraged to create a private connection between an application that is fronted by an NLB in an account, and ENI in another account, without the need of VPC peering and allowing the connections between the two to remain within the AWS network.
 
 ## AWS_Config
@@ -247,13 +232,23 @@ Add listener
 - SSL/TLS certificates are used to secure network communications and establish the identity of websites over the Internet as well as resources on private networks.
 
 ## AWS_Transit_Gateway
-Is a service that enables customers to connect their Amazon Virtual Private Clouds (VPCs) and their on-premises networks to a single gateway
+
+- Is a service that enables customers to connect their Amazon Virtual Private Clouds (VPCs) and their on-premises networks to a single gateway
+
+
+- Without AWS Transit Gateway 
+![](https://d1.awsstatic.com/product-marketing/transit-gateway/tgw-before.7f287b3bf00bbc4fbdeadef3c8d5910374aec963.png)
+- With AWS Transit Gateway:
+  ![](https://d1.awsstatic.com/product-marketing/transit-gateway/tgw-after.d85d3e2cb67fd2ed1a3be645d443e9f5910409fd.png)
+
+- Cannot establish a low latency and high throughput connection between a data center and AWS Cloud.
 
 ## VPC_Peering
 - A networking connection between two VPCs that enables you to route traffic between them using private IPv4 addresses or IPv6 addresses. 
 - Instances in either VPC can communicate with each other as if they are within the same network. 
 - You can create a VPC peering connection between your VPCs, or with a VPC in another AWS account. 
 - The VPCs can be in different regions (also known as an inter-region VPC peering connection). VPC peering connections will work, but won't efficiently scale if you add more accounts (you'll have to create many connections).
+- VPC could can be in different regions
 ## RAM
 ![RAM](https://d1.awsstatic.com/products/RAM/product-page-diagram_AWS-Resource-Access-Manager(1).379df75d48a8e2cc6160859b7ca3626a9b9be0c1.png)
 - AWS Resource Access Manager (RAM) is a service that enables share AWS resources with 
@@ -374,15 +369,31 @@ Features of Aurora
 * Alias: Point hostname to aws resource
 * CName not for apex record
 
-## Route 53
-- Amazon Route 53 is a highly available and scalable cloud Domain Name System (DNS) web service. It is designed to give developers and businesses an extremely reliable and cost-effective way to route end users to Internet applications by translating names like www.example.com into the numeric IP addresses like 192.0.2.1 that computers use to connect to each other. Route 53 is ruled out as the company wants to continue using its own custom DNS service.
-### Routing Policy
-#### Lantency Routing 
-#### Failover Routing
-#### Geolocation Routing
+## Route_53
+- H highly available and scalable cloud Domain Name System (DNS) web service. 
+- It is designed to give developers and businesses an extremely reliable and cost-effective way to route end users to Internet applications by translating names like www.example.com into the numeric IP addresses like 192.0.2.1 that computers use to connect to each other. 
+- d
+### Routing_Policy
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q6-i1.jpg)
+#### Route53_Lantency_Routing
+- Use latency based routing when you have resources in multiple AWS Regions and you want to route traffic to the region that provides the lowest latency
+- To use latency-based routing, you create latency records for your resources in multiple AWS Region
+- When Amazon Route 53 receives a DNS query for your domain or subdomain (example.com or acme.example.com), it determines which AWS Regions you've created latency records for, determines which region gives the user the lowest latency, and then selects a latency record for that region.
+- Route 53 responds with the value from the selected record, such as the IP address for a web server.
+#### Failover_Routing
+- Failover routing lets you route traffic to a resource when the resource is healthy or to a different resource when the first resource is unhealthy. 
+- The primary and secondary records can route traffic to anything from an Amazon S3 bucket that is configured as a website to a complex tree of records. 
+#### Geolocation_Routing
+- Geolocation routing lets you choose the resources that serve your traffic based on the geographic location of your users, meaning the location that DNS queries originate from. 
+- For example, you might want all queries from Europe to be routed to an ELB load balancer in the Frankfurt region. 
+- You can also use geolocation routing to restrict the distribution of content to only the locations in which you have distribution rights. 
+- You cannot use geolocation routing to reduce latency, hence this option is incorrect.
 
-
-## Security Group
+## Network_ACL
+- To enable the connection to a service running on an instance, the associated network ACL must allow both inbound traffic on the port that the service is listening on as well as allow outbound traffic from ephemeral ports. When a client connects to a server, a random port from the ephemeral port range (1024-65535) becomes the client's source port.
+- By default, network ACLs allow all inbound and outbound traffic. If your network ACL is more restrictive, then you need to explicitly allow traffic from the ephemeral port range
+- If you accept traffic from the internet, then you also must establish a route through an internet gateway. If you accept traffic over VPN or AWS Direct Connect, then you must establish a route through a virtual private gateway.
+## Security_Group
 - A security group acts as a virtual firewall that controls the traffic for one or more instances. 
 - When you launch an instance, you can specify one or more security groups; otherwise -> default security group.
 - Add rules to each security group that allows traffic to or from its associated instances.
@@ -395,6 +406,8 @@ Features of Aurora
 - [ec2-security-groups](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html)
 
 ## S3
+- It is an object storage service that offers industry-leading scalability, data availability, security, and performance.
+-  Your applications can easily achieve thousands of transactions per second in request performance when uploading and retrieving storage from Amazon S3.
 
 * So3 looks like a global service but buckets are created in a region
 * Prefix = Directory
@@ -418,20 +431,25 @@ Features of Aurora
 ### S3_Enryption_Options
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q10-i1.jpg)
 - Options for protecting data at rest in Amazon S3:
-  1. Server-Side Encryption – Request Amazon S3 to encrypt your object before saving it on disks in its data centers and then decrypt it when you download the objects.
+  1. Server-Side Encryption
   2. Client-Side Encryption – Encrypt data client-side and upload the encrypted data to Amazon S3. In this case, you manage the encryption process, the encryption keys, and related tools.
 
-1. *Server-Side Encryption with Customer-Provided Keys* : 
+#### Server_Side_Encryption
+![Server_Side_Encryption](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q50-i1.jpg)
+ – The encryption of data at its destination by the application or service that receives it. Amazon S3 encrypts your data at the object level as it writes it to disks in its data centers and decrypts it for you when you access it.
+###### Server_Side_Encryption_with_Customer_Provided_Keys 
 - You manage the enrtyption Key
 - S3 will encrypt
 
-2. *Server-Side Encryption with Amazon S3 managed keys*(**Default**)
+###### *Server-Side Encryption with Amazon S3 managed keys*(**Default**)
 - Each object is encrypted with a unique key. 
 - As an additional safeguard, it encrypts the key itself with a master key that it regularly rotates. So this option is incorrect.
 
-3. *Server-Side Encryption with AWS Key Management Service (AWS KMS) keys* (SSE-KMS) 
+###### SSE-KMS
 - Amazon S3 SSE-KMS to encrypt your S3 object data. 
 - Also, when SSE-KMS is requested for the object, the S3 checksum as part of the object's metadata, is stored in encrypted form.
+- KMS key could rotate rotate automatically
+ 
 
 4. *Client-Side Encryption with data encryption* 
 - Done on the client-side before sending it to Amazon S3. You can encrypt the data client-side and upload the encrypted data to Amazon S3. 
@@ -455,6 +473,14 @@ Features of Aurora
 - When you use server-side encryption with AWS KMS (SSE-KMS), you can specify a customer-managed CMK that you have already created. SSE-KMS provides you with an audit trail that shows when your CMK was used and by whom. 
 - AWS Key Management Service (KMS) makes it easy for you to create and manage cryptographic keys and control their use across a wide range of AWS services and in your applications. AWS KMS is a secure and resilient service that uses hardware security modules that have been validated under FIPS 140-2.
 - *KMS is an encryption service*, it's not a secrets store
+
+- If you use KMS keys, you can use AWS KMS through the AWS Management Console or the AWS KMS API to do the following:
+  1. Centrally create, view, edit, monitor, enable or disable, rotate, and schedule deletion of KMS keys.
+  2. Define the policies that control how and by whom KMS keys can be used.
+  3. Audit their usage to prove that they are being used correctly. Auditing is supported by the AWS KMS API, but not by the AWS KMSAWS Management Console.
+### Rotating_KMS_Keys
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q50-i2.jpg)
+- When you enable automatic key rotation for a KMS key, AWS KMS generates new cryptographic material for the KMS key every year.
 ### KMS_MutiRegion_Keys
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q46-i1.jpg)
 
@@ -557,6 +583,10 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 - Create Private AWS network
 - Perform healcheck for your app
 
+## Virtual_private_gateway
+- A virtual private gateway (VGW), also known as a VPN Gateway, 
+- is the endpoint on the VPC side of your VPN connection. 
+- You can create a virtual private gateway before creating the VPC itself. 
 ## AWS_Direct_Connect
 - Establish a dedicated network connection from your premises to AWS.
 - AWS Direct Connect lets you establish a dedicated network connection between your network and one of the AWS Direct Connect locations.
@@ -565,11 +595,9 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 
 ### AWS_Direct_Connect_VIFs: 
 ![AWS_Direct_Connect_VIFs](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q11-i1.jpg)
-## AWS Transit Gateway
--  A network transit hub that you can use to interconnect your virtual private clouds (VPC) and on-premises networks. AWS Transit Gateway by itself cannot establish a low latency and high throughput connection between a data center and AWS Cloud.
 
-## AWS site-to-site VPN
-- Enables you to securely connect your ~on-premises~ network or branch office site to your Amazon VPC.
+## AWS_Site_To_Site_VPN
+- Enables you to securely connect your **on-premises** network or branch office site to your Amazon VPC.
 - Utilizes protocol security(IPSec) to establish encrypted network connectivity between your intranet and Amazon VPC over the Internet.
 - VPN Connections are a good solution if you have an immediate need, have low to modest bandwidth requirements, and can tolerate the inherent variability in Internet-based connectivity.
 - However, Site-to-site VPN cannot provide low latency and high throughput connection, therefore this option is ruled out.
@@ -597,13 +625,13 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - support file shares in Amazon FSx for Windows File Server, so this option is incorrect.
 - Amazon FSx File Gateway: low-latency, on-premises access to fully managed file shares in Amazon FSx for Windows File Server. For applications deployed on AWS, you may access your file shares directly from Amazon FSx in AWS
 - ![](https://d1.awsstatic.com/r2018/b/FSx-Windows/FSx_Windows_File_Server_How-it-Works.9396055e727c3903de991e7f3052ec295c86f274.png)
-## 178 Storage gateway
+## AWS_Storage_gateway
 - A hybrid cloud storage service that gives you on-premises access to virtually unlimited cloud storage.
 - types of gateways
   - Tape Gateway
     - allows moving tape backups to the cloud.
   - File Gateway
-    - offer ~SMB~ or ~NFs~ in S3 with local catching
+    - offer ~~SMB~~ or ~~NFs~~ in S3 with local catching
   - Volume Gateway
     - Present cloud-based iSCSI block storage volumes to your on-premises applications.
 - that seamlessly connect on-premises applications to cloud storage, caching data locally for low-latency access.
@@ -611,15 +639,19 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   - [Link](https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html)
 
 ### File gateway
-- https://d1.awsstatic.com/cloud-storage/Amazon%20FSx%20File%20Gateway%20How%20It%20Works%20Diagram.edbf58e4917d47d04e5a5c22132d44bd92733bf5.png
+![](https://d1.awsstatic.com/cloud-storage/Amazon%20FSx%20File%20Gateway%20How%20It%20Works%20Diagram.edbf58e4917d47d04e5a5c22132d44bd92733bf5.png)
 
 - File Gateway does not support file shares in Amazon FSx for Windows File Server, so this option is incorrect.
+
+## Step_Functions
+- Lets you *coordinate multiple AWS services* into *serverless workflows* so you can build and update apps quickly. 
+- Using Step Functions, you can design and run workflows that stitch together services, such as AWS Lambda, AWS Fargate, and Amazon SageMaker, into feature-rich applications. 
 
 ## SQS
 - Fully managed message queuing service that enables decouple and scale microservices, distributed systems, and serverless applications. 
 - SQS offers two types of message queues. 
   1. *Standard queues* offer maximum throughput, best-effort ordering, and at-least-once delivery. 
-  2. *SQS FIFO queues* are designed to guarantee that messages are processed exactly once, in the exact order that they are sent.
+  2. *FIFO queues* are designed to guarantee that messages are processed exactly once, in the exact order that they are sent.
 
 
 ### SQS_Fifo_queue
@@ -627,6 +659,9 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - If we don't specify a **GroupID**, then all the messages are in absolute order, but we can only have 1 consumer at most.
 - To allow for multiple consumers to read data for each Desktop application, and to scale the number of consumers, we should use the "Group ID" attribute. So this is the correct option.
 
+
+## Kinesis_Agent
+- a stand-alone Java software application that offers an easy way to collect and send data to Amazon Kinesis Data Streams or Amazon Kinesis Firehose.
 ## Kinesis_Data_Stream
 -  Amazon Kinesis Data Streams (KDS) is a massively scalable and durable real-time data streaming service. 
 -  The throughput of an Amazon Kinesis data stream is designed to scale without limits via increasing the number of shards within a data stream. 
@@ -663,6 +698,9 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - It is a fully managed service that automatically scales to match the throughput of your data and requires no ongoing administration.
 - It can also batch, compress, and encrypt the data before loading it
   - -> minimizing the amount of storage used at the destination and increasing security.
+
+- When an Amazon Kinesis Data Stream is configured as the source of a Kinesis Firehose delivery stream, Firehose’s PutRecord and PutRecordBatch operations are disabled and Kinesis Agent cannot write to Kinesis Firehose Delivery Stream directly
+  
 - ![Overview](https://d1.awsstatic.com/pdp-how-it-works-assets/product-page-diagram_Amazon-KDF_HIW-V2-Updated-Diagram@2x.6e531854393eabf782f5a6d6d3b63f2e74de0db4.png)
 ## Analytics
 - Amazon Kinesis Data Analytics is the easiest way to analyze streaming data in real-time. Kinesis Data Analytics enables you to easily and quickly build queries and sophisticated streaming applications in three simple steps:
@@ -674,18 +712,40 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   - Kinesis Data Firehose
 
 
-## 218. Lambda
-- run code without provisioning or managing servers. You pay only for the compute time that you consume—there’s no charge when your code isn’t running.
-- currently supports 1000 concurrent executions per AWS account per region.
+## VPC
+### Fully_meshed_VPC_Peering
+- -This approach creates multiple peering connections to facilitate the sharing of information between resources in different VPCs. This design connects multiple VPCs in a fully meshed configuration, with peering connections between each pair of VPCs. With this configuration, each VPC has access to the resources in all other VPCs. Each peering connection requires modifications to all the other VPCs’ route tables and, as the number of VPCs grows, this can be difficult to maintain. And keep in mind that AWS recommends a maximum of 125 peering connections per VPC. It's complex to manage and isn't a right fit for the current scenario.
+### Transit_VPC
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q21-i2.jpg)
+- Transit VPC uses customer-managed Amazon EC2 VPN instances in a dedicated transit VPC with an Internet gateway. 
+- This design requires the customer to deploy, configure, and manage EC2-based VPN appliances, which will result in additional EC2, and potentially third-party product and licensing charges.
+-  Note that this design will generate additional data transfer charges for traffic traversing the transit VPC: data is charged when it is sent from a spoke VPC to the transit VPC, and again from the transit VPC to the on-premises network or a different AWS Region. Transit VPC is not the right choice here.
+### Centralized_VPC_Endpoints 
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q21-i1.jpg)
+- Consider an organization that has built a hub-and-spoke network with AWS Transit Gateway. VPCs have been provisioned into multiple AWS accounts, perhaps to facilitate network isolation or to enable delegated network administration. When deploying distributed architectures such as this, a popular approach is to build a "shared services VPC, which provides access to services required by workloads in each of the VPCs. This might include directory services or VPC endpoints. Sharing resources from a central location instead of building them in each VPC may reduce administrative overhead and cost.
+- A VPC endpoint allows you to privately connect your VPC to supported AWS services without requiring an Internet gateway, NAT device, VPN connection, or AWS Direct Connect connection. Endpoints are virtual devices that are horizontally scaled, redundant, and highly available VPC components. They allow communication between instances in your VPC and services without imposing availability risks or bandwidth constraints on your network traffic.
+
+- VPC endpoints enable you to reduce data transfer charges resulting from network communication between private VPC resources (such as Amazon Elastic Cloud Compute—or EC2—instances) and AWS Services (such as Amazon Quantum Ledger Database, or QLDB). Without VPC endpoints configured, communications that originate from within a VPC destined for public AWS services must egress AWS to the public Internet in order to access AWS services. This network path incurs outbound data transfer charges. Data transfer charges for traffic egressing from Amazon EC2 to the Internet vary based on volume. With VPC endpoints configured, communication between your VPC and the associated AWS service does not leave the Amazon network. If your workload requires you to transfer significant volumes of data between your VPC and AWS, you can reduce costs by leveraging VPC endpoints.
+
+## Lambda
+- Run code without provisioning or managing servers. 
+- You pay only for the compute time that you consume—there’s no charge when your code isn’t running.
+- Currently supports *1000 concurrent executions* per **AWS account** per region.
+
 - If your Amazon SNS message deliveries to AWS Lambda contribute to crossing these concurrency quotas, your Amazon SNS message deliveries will be throttled. You need to contact AWS support to raise the account limit
 - Integrates natively with Kinesis Data Streams. The polling, checkpointing, and error handling complexities are abstracted when you use this native integration. The processed data can then be configured to be saved in Amazon DynamoDB.
+
 ### 219. Lambda SnapStart
 
 * For Java
 * Snap start -> Function is preitnitize
 
-## Amazon ElastiCache
-Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amazon RDS or Amazon DynamoDB, providing a high-performance middle tier for applications with extremely high request rates and/or low latency requirements
+## Amazon_ElastiCache
+- ElastiCache allows you to seamlessly set up, run, and scale popular open-source compatible in-memory data stores in the cloud. 
+- Build data-intensive apps or boost the performance of your existing databases by retrieving data from high throughput and low latency in-memory data stores. 
+- Amazon ElastiCache is a popular choice for real-time use cases like Caching, Session Stores, Gaming, Geospatial Services, Real-Time Analytics, and Queuing. ElastiCache could work but it's a better fit as a caching technology to enhance reads
+  
+- Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amazon RDS or Amazon DynamoDB, providing a high-performance middle tier for applications with extremely high request rates and/or low latency requirements
 
 
 ## 225. Dynamodb Advanced Features
@@ -761,6 +821,14 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - Time series: AmazonTimestream
 
 ## RDS
+- RDS makes it easy to set up, operate, and scale a relational database in the cloud. 
+- It provides cost-efficient and resizable capacity while automating time-consuming administration tasks such as hardware provisioning, database setup, patching, and backups. 
+- RDS allows you to create, read, update, and delete records without any item lock or ambiguity.
+- All RDS transactions must be ACID compliant(Atomic, Consistent, Isolated, and Durable) to ensure data integrity.
+  1. Atomicity requires that either transaction as a whole is successfully executed or if a part of the transaction fails, then the entire transaction be invalidated. 
+  2. Consistency mandates the data written to the database as part of the transaction must adhere to all defined rules, and restrictions including constraints, cascades, and triggers. 
+  3. Isolation is critical to achieving concurrency control and makes sure each transaction is independent unto itself. 
+  4. Durability requires that all of the changes made to the database be permanent once a transaction is completed
 
 - Managed Postgres / Mysql / Oracle / SQL Server / DB2 / MariaDB
 - Provision
@@ -838,10 +906,9 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - https://aws.amazon.com/rds/aurora/global-database/
 
 ### Aurora_Replica
-- Purpose
-  - Scale read operations of your app(reader endpoint) -> Increase avaibility
-  - If the writer instance becomes unavailable, automatically promotes one of the reader instances to take its place as the new write
-  - Up to 15 Aurora Replicas xacross the Availability Zones (AZs) tha DB cluster spans within an AWS Region.
+- Scale read operations of your app(reader endpoint) -> Increase avaibility
+- If the writer instance becomes unavailable, automatically promotes one of the reader instances to take its place as the new write
+- Up to 15 Aurora Replicas xacross the Availability Zones (AZs) tha DB cluster spans within an AWS Region.
 
 ## Amazone Elasticache - Summanry
 
@@ -875,14 +942,23 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - One Zone-IA is ideal for customers want a lower-cost option for infrequently accessed and re-creatable data but do not require the availability and resilience of Standard or Standard-IA.
 - The minimum storage duration is 30 days before you can transition objects from Standard to One Zone-IA.
 
-## Amazon Simple Notification Service(SNS)
+## Cloudwatch
+- [Link](https://aws.amazon.com/cloudwatch/faqs/)
+- Monitoring and observability service built for DevOps engineers, developers, site reliability engineers (SREs), and IT managers. 
+- Provides you with data and actionable insights to monitor your applications, respond to system-wide performance changes, optimize resource utilization, and get a unified view of operational health. 
+- Allows you to monitor AWS cloud resources and the applications you run on AWS.
+
+
+
+## SNS
+- [Link](https://aws.amazon.com/sns/)
 - A highly available, durable, secure, fully managed pub/sub messaging service.
 - Enables you to decouple
   - microservices
   - distributed systems
   - serverless applications.
 - Fully dynamically server - dynamically scale with your application
-
+- SNS provides *topics* for high-throughput, push-based, many-to-many messaging.
 ## S3
 - an object storage service that offers industry-leading scalability, data availability, security, and performance.
 - Your applications can easily achieve thousands of transactions per second in request performance when uploading and retrieving storage from Amazon S3.
@@ -913,12 +989,16 @@ Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amaz
 - Automatically scales to workloads
 
 ## Neptune
+- Amazon Neptune is a fast, reliable, fully-managed graph database service that makes it easy to build and run applications that work with highly connected datasets. The core of Amazon Neptune is a purpose-built, high-performance graph database engine optimized for storing billions of relationships and querying the graph with milliseconds latency.
+-  Amazon Neptune is highly available, with read replicas, point-in-time recovery, continuous backup to Amazon S3, and replication across Availability Zones. Neptune is secure with support for HTTPS encrypted client connections and encryption at rest. Amazon Neptune is fully managed, so you no longer need to worry about database management tasks such as hardware provisioning, software patching, setup, configuration, or backups.
+-  
 - Fully managed graph database
 - Higly available with repliactions across multiple AZs
 - Great for
   - knowledge graphs(Wikipedia)
   - Fraud detection
   - Recommedation egnines
+
 
 ## Keyspace
 - For apache Casandra
