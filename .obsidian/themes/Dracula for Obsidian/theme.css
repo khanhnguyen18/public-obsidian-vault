@@ -247,7 +247,13 @@ em, .cm-em {
 
 /* strikethrough in preview and editor */
 s, .cm-strikethrough {
-  color: var(--text-muted);
+  color: var(--text-title-h1);
+  text-decoration: none !important;
+}
+
+del {
+  text-decoration: none !important;
+  color: var(--text-title-h1);
 }
 
 /* list in editor */
