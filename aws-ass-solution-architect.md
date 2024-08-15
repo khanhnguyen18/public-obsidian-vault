@@ -6,7 +6,10 @@
 open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions-Architect-Slides-v37.pdf"
 ```
 
-## AWS Organization
+## AWS_Organization
+- AWS Organizations helps you centrally govern your environment as you grow and scale your workloads on AWS. 
+- You can automate account creation, create groups of accounts to reflect your business needs, and apply policies for these groups for governance. You can also simplify billing by setting up a single payment method for all of your AWS accounts. 
+- Through integrations with other AWS services, you can use Organizations to define central configurations and resource sharing across accounts in your organization.
 ### AWS_Organization_SCP
 - One type of policy that you can use to manage your organization. 
 - SCPs offer central control over the maximum available permissions for all accounts in your organization, allowing you to ensure your accounts stay within your organization’s access control guidelines. 
@@ -131,6 +134,8 @@ As Instance Store based volumes provide high random I/O performance at low cost 
 - Instance store is ideal for the temporary storage of information that changes frequently such as buffers, caches, scratch data, and other temporary content, or for data that is replicated across a fleet of instances, such as a load-balanced pool of web servers
 
 ### EC2 - Type of instace
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q35-i1.jpg)
+
 - https://aws.amazon.com/ec2/pricing/
 
 #### EC2_Dedicated_Hosts
@@ -148,9 +153,15 @@ As Instance Store based volumes provide high random I/O performance at low cost 
 
 #### EC2_Spot_Instances
 - A Spot Instance is an unused Amazon EC2 instance that is available for less than the On-Demand price. Your Spot Instance runs whenever capacity is available and the maximum price per hour for your request exceeds the Spot price. Any instance present with unused capacity will be allocated. Even though this is cost-effective, it does not fulfill the single-tenant hardware requirement of the client and hence is not the correct option.
-  
+
+#### EC2_Spot_Fleet
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q49-i1.jpg)
+The Spot Fleet selects the Spot Instance pools that meet your needs and launches Spot Instances to meet the target capacity for the fleet. By default, Spot Fleets are set to maintain target capacity by launching replacement instances after Spot Instances in the fleet are terminated.
+
+A Spot Instance is an unused Amazon EC2 instance that is available for less than the On-Demand price. Spot Instances provide great cost efficiency, but we need to select an instance type in advance. In this case, we want to use the most cost-optimal option and leave the selection of the cheapest spot instance to a Spot Fleet request, which can be optimized with the lowestPrice strategy. So this is the correct option
 
 ## EBS
+- An easy to use, high-performance block storage service designed for use with Amazon Elastic Compute Cloud (EC2) for both throughput and transaction-intensive workloads at any scale.
 - Amazon EBS volume types fall into two categories:
   1. Solid state drive (SSD) backed volumes optimized for transactional workloads involving frequent read/write operations with small I/O size, where the dominant performance attribute is IOPS.
   2. Hard disk drive (HDD) backed volumes optimized for large streaming workloads where throughput (measured in MiB/s) is a better performance measure than IOPS.
@@ -172,6 +183,15 @@ As Instance Store based volumes provide high random I/O performance at low cost 
 - Storing data within and across AZs for high availability and durability
 - EC2 instances can access your file system across AZs, regions, and VPCs
 - On-premises servers can access using AWS Direct Connect or AWS VPN.
+
+### EFS_Throuhput_Mode
+- *With Bursting Throughput mode*, throughput on Amazon EFS scales as the size of your file system in the standard storage class grow
+- *With Provisioned Throughput mode*, you can instantly provision the throughput of your file system (in MiB/s) independent of the amount of data stored.
+### EFS_Performance_Mode
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q64-i1.jpg)
+- *General Purpose performance mode* is ideal for latency-sensitive use cases, like web serving environments, content management systems, home directories, and general file serving. If you don't choose a performance mode when you create your file system, Amazon EFS selects the General Purpose mode for you by default.
+-*Max I/O performance mode* is used to scale to higher levels of aggregate throughput and operations per second. This scaling is done with a tradeoff of slightly higher latencies for file metadata operations. Highly parallelized applications and workloads, such as big data analysis, media processing, and genomic analysis, can benefit from this mode.
+
 
 ### Efs_Standard_Ia
 - Standard–IA storage class reduces storage costs for files that are not accessed every day.
@@ -393,6 +413,11 @@ Features of Aurora
 - To enable the connection to a service running on an instance, the associated network ACL must allow both inbound traffic on the port that the service is listening on as well as allow outbound traffic from ephemeral ports. When a client connects to a server, a random port from the ephemeral port range (1024-65535) becomes the client's source port.
 - By default, network ACLs allow all inbound and outbound traffic. If your network ACL is more restrictive, then you need to explicitly allow traffic from the ephemeral port range
 - If you accept traffic from the internet, then you also must establish a route through an internet gateway. If you accept traffic over VPN or AWS Direct Connect, then you must establish a route through a virtual private gateway.
+
+## DNS_Hosted_Zones
+- DNS **hostnames** and **DNS resolution** are required settings for private hosted zones. DNS queries for private hosted zones can be resolved by the Amazon-provided VPC DNS server only. As a result, these options must be enabled for your private hosted zone to work.
+- DNS hostnames: For non-default virtual private clouds that aren't created using the Amazon VPC wizard, this option is disabled by default. If you create a private hosted zone for a domain and create records in the zone without enabling DNS hostnames, private hosted zones aren't enabled. To use a private hosted zone, this option must be enabled.
+  DNS resolution: Private hosted zones accept DNS queries only from a VPC DNS server. The IP address of the VPC DNS server is the reserved IP address at the base of the VPC IPv4 network range plus two. Enabling DNS resolution allows you to use the VPC DNS server as a Resolver for performing DNS resolution. Keep this option disabled if you're using a custom DNS server in the DHCP Options set, and you're not using a private hosted zone.
 ## Security_Group
 - A security group acts as a virtual firewall that controls the traffic for one or more instances. 
 - When you launch an instance, you can specify one or more security groups; otherwise -> default security group.
@@ -419,7 +444,14 @@ Features of Aurora
 * Default encrytiokn
   * SSE-S3
   * KMS
+### S3_LifeCycle
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q34-i1.jpg)
 
+### S3_Glacier
+- **Amazon S3 Glacier and S3 Glacier Deep Archive** are a secure, durable, and extremely low-cost Amazon S3 cloud storage classes for data archiving and long-term backup. They are designed to deliver 99.999999999% durability and provide comprehensive security and compliance capabilities that can help meet even the most stringent regulatory requirements. Finally, Amazon S3 Glacier Deep Archive provides more cost savings than Amazon S3 Glacier.
+
+- You can't move data directly from AWS Snowball into Amazon S3 Glacier, you need to go through Amazon S3 first, and then use a lifecycle policy. So this option is correct.
+- https://aws.amazon.com/glacier/
 ### S3_Security
 - User base
   - Which url could use for specific user
@@ -514,9 +546,18 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 - Identity pools provide AWS credentials to grant your users access to other AWS services.
 - To enable users in your user pool to access AWS resources, you can configure an identity pool to exchange user pool tokens for AWS credentials.
 
-## 130 Bucket policy
 
-* Use tool to generate policy
+## ACL
+- Within Amazon S3, you can use ACLs to give read or write access on buckets or objects to groups of users. With ACLs, you can only grant other AWS accounts (not specific users) access to your Amazon S3 resources. So, this is not the right choice for the current requirement.
+## S3_Bucket_Policy
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q14-i1.jpg)
+- Bucket policies in Amazon S3 can be used to add or deny permissions across some or all of the objects within a single bucket. 
+- Policies can be attached to users, groups, or Amazon S3 buckets, enabling centralized management of permissions. 
+- With bucket policies, you can grant users within your AWS Account or other AWS Accounts access to your Amazon S3 resources.
+
+- You can further restrict access to specific resources based on certain conditions. For example, you can restrict access based on request time (Date Condition), whether the request was sent using SSL (Boolean Conditions), a requester’s IP address (IP Address Condition), or based on the requester's client application (String Conditions). To identify these conditions, you use policy keys.
+
+
 
 ## S3 Transfer Acceleration(S3TA)
 - enables fast, easy, and secure transfers of files over long distances between your client and an S3 bucket.
@@ -566,7 +607,11 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 * Origin access
 * Distribution
 
-## 170. Global Accelerator
+## AWS_Global_Accelerator
+- AWS Global Accelerator is a **network layer service** that directs traffic to optimal endpoints over the AWS global network, this improves *the availability and performance of your internet applications*. 
+- It provides *two static anycast IP addresse*s that act as a fixed entry point to your application endpoints in a single or multiple AWS Regions, such as your ALB, NLB, EIP or EC2, in a single or in multiple AWS regions.
+
+
 - Utilizes the Amazon global network, allowing you to improve the performance of your applications by:
   1. lowering first-byte latency(the round trip time for a packet to go from a client to your endpoint and back again)
   2. jitter (the variation of latency)
@@ -583,6 +628,9 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 - Create Private AWS network
 - Perform healcheck for your app
 
+## Code deploy
+- In AWS CodeDeploy, a deployment is the process, and the components involved in the process, of installing content on one or more instances. This content can consist of code, web and configuration files, executables, packages, scripts, and so on.
+- AWS CodeDeploy deploys content that is stored in a source repository, according to the configuration rules you specify.
 ## Virtual_private_gateway
 - A virtual private gateway (VGW), also known as a VPN Gateway, 
 - is the endpoint on the VPC side of your VPN connection. 
@@ -602,11 +650,22 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 - VPN Connections are a good solution if you have an immediate need, have low to modest bandwidth requirements, and can tolerate the inherent variability in Internet-based connectivity.
 - However, Site-to-site VPN cannot provide low latency and high throughput connection, therefore this option is ruled out.
 ## AWS Snow Family
-* Ops Hub
-* Data transfer
 
-- AWS Snowball Edge Storage Optimized: It provides up to 80 Terabytes of usable HDD storage, 40 vCPUs, 1 TB of SATA SSD storage, and up to 40 Gigabytes network connectivity to address large scale data transfer and pre-processing use cases.
-- Snowmobile: 100 petabyte in one location
+### AWS_Snowball
+- A data migration and edge computing device that comes in two options. 
+  1. **Snowball Edge Storage Optimized**:
+    - Devices provide both block storage and Amazon S3-compatible object storage
+    - Up to:
+      - 40 vCPUs
+      - 80 Terabytes of usable HDD storage
+      - 1 TB of SATA SSD storage
+      - up to 40 Gigabytes network connectivity to address large scale data transfer and pre-processing use cases. 
+    - *-> suited for local storage and large scale data transfer*
+  2. **AWS Snowball Edge Compute Optimized** devices provide 52 vCPUs, block and object storage, and an optional GPU for use cases like advanced machine learning and full-motion video analysis in disconnected environments.
+
+### AWS_Snowmobile
+- 100 petabyte in one location
+
 ## AWS Directory Service for Microsoft Active Directory (AWS Managed Microsoft AD)
 AWS Directory Service for Microsoft Active Directory, also known as AWS Managed Microsoft AD, enables your directory-aware workloads and AWS resources to use managed Active Directory in the AWS Cloud.
 ## Amazon FSx for Lustre
@@ -727,6 +786,11 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 
 - VPC endpoints enable you to reduce data transfer charges resulting from network communication between private VPC resources (such as Amazon Elastic Cloud Compute—or EC2—instances) and AWS Services (such as Amazon Quantum Ledger Database, or QLDB). Without VPC endpoints configured, communications that originate from within a VPC destined for public AWS services must egress AWS to the public Internet in order to access AWS services. This network path incurs outbound data transfer charges. Data transfer charges for traffic egressing from Amazon EC2 to the Internet vary based on volume. With VPC endpoints configured, communication between your VPC and the associated AWS service does not leave the Amazon network. If your workload requires you to transfer significant volumes of data between your VPC and AWS, you can reduce costs by leveraging VPC endpoints.
 
+## BlueGreenDeployment
+- Blue/green deployment is a technique for releasing applications by shifting traffic between two identical environments running different versions of the application:
+  - "Blue" is the currently running version
+  - "green" the new version.
+- This type of deployment allows you to test features in the green environment without impacting the currently running version of your application. When you’re satisfied that the green version is working properly, you can gradually reroute the traffic from the old blue environment to the new green environment. Blue/green deployments can mitigate common risks associated with deploying software, such as downtime and rollback capability.
 ## Lambda
 - Run code without provisioning or managing servers. 
 - You pay only for the compute time that you consume—there’s no charge when your code isn’t running.
@@ -845,6 +909,8 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - Auotmated Backup with Point in time restore feature(35 days)
 - Manual DB Snapshot for longer-term recoverry
 - Support IAM Authentication, integration with Secrets Manager
+### RDS_Comparable
+![CompareTable](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q8-i1.jpg)
 ### RDS_Read_Replicas
 - Amazon RDS Read Replicas provide enhanced performance and durability for RDS database (DB) instances.
 - Easy to elastically scale out beyond the capacity constraints of a single DB instance for read-heavy database workloads.
@@ -918,7 +984,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 
 ## DynamoDB
 - A key-value and document database that delivers single-digit millisecond performance at any scale.
--  It's a fully managed, multi-region, multi-master, durable database with built-in security, backup and restore, and in-memory caching for internet-scale applications.
+- It's a fully managed, multi-region, multi-master, durable database with built-in security, backup and restore, and in-memory caching for internet-scale applications.
 - Can replace ElastiCahe as a key/value store
 - Highly Available, Multi Az by default
 - DAX cluster for reading cache
@@ -1039,7 +1105,8 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   - Allow to run query on AWS or on premise
   - Store result back in S3
 
-## REDSHIFT
+## Redshift
+- A fully-managed petabyte-scale cloud-based data warehouse product designed for large scale data set storage and analysis.
 - Is base on PostgresSQL but not use for Online Tracsactio Processing
 - For OLAP(Online Analytic Processing)
 - Should load the data(From Kinesis Firehose)
@@ -1099,10 +1166,12 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - In-memory computation using SPICE engine if data is imported into QuickSight
 - Enterprise edition: Possibility to setup Column-Level security (CLS)
 
-## 251 Glue
+## Glue
+![](https://d1.awsstatic.com/Products/product-name/diagrams/product-page-diagram_Glue_Event-driven-ETL-Pipelines.e24d59bb79a9e24cdba7f43ffd234ec0482a60e2.png)
 - Serverless ETL service
 - Prepare vs Tranform data for analytics
 - Convert data into Parquet Format
+- stored in a compressed format via the Glue job
 - Glue Data Catalog:
 - Glue Job Bookmarks: prevent re-processing old data
 - Glue Elastic Views

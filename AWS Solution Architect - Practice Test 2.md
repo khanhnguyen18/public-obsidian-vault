@@ -599,7 +599,7 @@ Your company has an on-premises Distributed File System Replication (DFSR) servi
 - *Server-Side Encryption with AWS Key Management Service (AWS KMS) keys (SSE-KMS)*
 - *Client-Side Encryption with data encryption is done on the client-side before sending it to Amazon S3*
 
-# 38 AWS KMS multi-region key
+## 38 AWS KMS multi-region key
 - Operated only in the `us-east-1` region and stores encrypted data in Amazon S3 using `SSE-KMS`. 
 - As part of enhancing its security posture as well as improving the backup and recovery architecture, the company wants to store the encrypted data in Amazon S3 that is replicated into the `us-west-1`.
 - The security policies mandate that the data must be encrypted and decrypted using the same key in both AWS regions.
@@ -809,7 +809,7 @@ How should you configure the security groups?
 
 - The security group of the Application Load Balancer should have an inbound rule from anywhere on port 80
 
-## 50 
+## 50 EC2_Default_Termination_Policy
 - Auto Scaling needs to terminate an instance from `us-east-1a` AZ as it has the most number of instances amongst the Availability Zone (AZs) being used currently. 
 There are 4 instances in the Availability Zone (AZ) us-east-1a like so: 
 1. Instance A has the oldest launch template
@@ -822,3 +822,304 @@ Which of the following instances would be terminated per the default termination
 - Instance B
   - [EC2_Default_Termination_Policy](aws-ass-solution-architect.md#ec2_default_termination_policy)
 
+## 51 - AWS Snowball and S3 Glacier
+Use AWS Snowball to move *on-premises backups* into a *long term archival tier on AWS*.
+Which solution provides the MOST cost savings?
+
+**Solution**
+- Create an AWS Snowball job and target an Amazon S3 bucket. Create a lifecycle policy to transition this data to Amazon S3 Glacier Deep Archive on the same day
+  - [AWS_Snowball](aws-ass-solution-architect.md#aws_snowball ) + [S3_Glacier](aws-ass-solution-architect.md#s3_glacier)
+  - For this scenario, you will want to minimize the time spent in *Amazon S3 Standard* for all files to avoid unintended Amazon S3 Standard storage charges. 
+  - AWS recommends using a *zero-day lifecycle policy*. when using it, you are only charged Amazon S3 Glacier Deep Archive rates. 
+  - When billed, the lifecycle policy is accounted for first, and if the destination is Amazon S3 Glacier Deep Archive, you are charged Amazon S3 Glacier Deep Archive rates for the transferred files.
+- You can't move data directly from AWS Snowball into Amazon S3 Glacier, you need to go through Amazon S3 first, and then use a lifecycle policy. So this option is correct.
+- **Wrong**
+
+- Create an AWS Snowball job and target a Amazon S3 Glacier Vault
+- Create a AWS Snowball job and target an Amazon S3 Glacier Deep Archive Vault
+- Create an AWS Snowball job and target an Amazon S3 bucket. Create a lifecycle policy to transition this data to Amazon S3 Glacier on the same day
+
+## 52
+- A weather forecast agency collects key weather metrics across multiple cities in the US and sends this data in the form of *key-value pairs* to AWS Cloud at a *one-minute frequency*.
+
+As a solutions architect, which of the following AWS services would you use to build a solution for processing and then *reliably storing this data* with *high availability*? (Select two)
+
+**Solution**
+- [Amazon DynamoDB](aws-ass-solution-architect.md#dynamodb)
+- [AWS Lambda](aws-ass-solution-architect.md#lambda)
+**Wrong**
+- [Amazon RDS](aws-ass-solution-architect.md#rds) - Relation Database
+- [Amazon Redshift](aws-ass-solution-architect.md#redshift) 
+- [Amazon ElastiCache](aws-ass-solution-architect.md#amazon_elasticache) - Elasticache is used as a caching layer in front of relational databases. It is not a good fit to store data in key-value pairs from the IoT sources, so this option is not correct.
+
+## 53
+- A retail company wants to rollout and test a blue-green deployment for its *global application* in the next 48 hours.
+- Most of the customers use mobile phones which are prone to DNS caching. The company has only two days left for the annual Thanksgiving sale to commence.
+
+As a Solutions Architect, which of the following options would you recommend to test the deployment on as many users as possible in the given time frame?
+
+
+**Solution**
+- Use AWS Global Accelerator to distribute a portion of traffic to a particular deployment
+  - [BlueGreenDeployment](aws-ass-solution-architect.md#bluegreendeployment)
+  - [Global Accelerator](aws-ass-solution-architect.md#aws_global_accelerator)
+    - AWS Global Accelerator uses endpoint weights to determine the proportion of traffic that is directed to endpoints in an endpoint group, and traffic dials to control the percentage of traffic that is directed to an endpoint group (an AWS region where your application is deployed).
+
+    - While relying on the DNS service is a great option for blue/green deployments, it may not fit use-cases that require a fast and controlled transition of the traffic. Some client devices and internet resolvers cache DNS answers for long periods; this DNS feature improves the efficiency of the DNS service as it reduces the DNS traffic across the Internet, and serves as a resiliency technique by preventing authoritative name-server overloads. The downside of this in blue/green deployments is that you don’t know how long it will take before all of your users receive updated IP addresses when you update a record, change your routing preference or when there is an application failure.
+      - https://aws.amazon.com/blogs/networking-and-content-delivery/using-aws-global-accelerator-to-achieve-blue-green-deployments
+
+    - With AWS Global Accelerator, you can shift traffic gradually or all at once between the blue and the green environment and vice-versa without being subject to DNS caching on client devices and internet resolvers, traffic dials and endpoint weights changes are effective within seconds.
+**Wrong**
+- Use ELB to distribute traffic across deployments
+  - ELB can distribute traffic across healthy instances. You can also use the Application Load Balancers weighted target groups feature for blue/green deployments as it does not rely on the DNS service. In addition you don’t need to create new ALBs for the green environment. As the use-case refers to a global application, so this option cannot be used for a multi-Region solution which is needed for the given requirement.
+- Use Amazon Route 53 weighted routing to spread traffic across different deployments
+  - Weighted routing lets you associate multiple resources with a single domain name (example.com) or subdomain name (acme.example.com) and choose how much traffic is routed to each resource. This can be useful for a variety of purposes, including load balancing and testing new versions of the software. As discussed earlier, DNS caching is a negative behavior for this use case and hence Amazon Route 53 is not a good option.
+- Use AWS CodeDeploy deployment options to choose the right deployment
+  - [Code deploy](aws-ass-solution-architect.md#code-deploy) 
+  - Blue/Green deployment is one of the deployment types that CodeDeploy supports. CodeDeploy is not meant to distribute traffic across instances, so this option is incorrect
+
+## 54 EC2 Pricing
+An IT company wants to optimize the costs incurred on its fleet of *100 Amazon EC2 instances* for the next year. 
+- Based on historical analyses, the engineering team observed that *70 of these instances handle* the compute services of its flagship application and need to be always available. 
+- The other 30 instances are used to handle batch jobs that can afford a delay in processing.
+
+As a solutions architect, which of the following would you recommend as the MOST cost-optimal solution?
+
+**Solution**
+Purchase 70 reserved instances (RIs) and 30 spot instances
+  - [EC2 Pricing](aws-ass-solution-architect.md#ec2---type-of-instace)
+**Wrong**
+Purchase 70 on-demand instances and 30 spot instances
+Purchase 70 on-demand instances and 30 reserved instances
+Purchase 70 reserved instances and 30 on-demand instances
+
+## 55
+- A big data consulting firm needs to set up a *data lake* on *Amazon S3* for a Health-Care client. 
+- The data lake is split in raw and refined zones. 
+- For compliance reasons, the **source data** needs to be kept for a minimum of 5 years. 
+- The source data arrives in the **raw zone** and is then processed via an *AWS Glue* into the refined zone. The business analysts run ad-hoc queries only on the data in the refined zone using *Amazon Athena*.
+-  The team is concerned about the cost of data storage in both the raw and refined zones as the data is increasing at a rate of 1 terabyte daily in each zone.
+
+**Solution**
+
+1. Use *AWS Glue ETL job* to write the transformed data in the **refined zone** using a compressed file format
+  - [AWS Glue ETL job](aws-ass-solution-architect.md#glue)
+  - You cannot transition the **refined zone** data into Amazon S3 Glacier Deep Archive because it is used by the business analysts for ad-hoc querying. Therefore, the best optimization is to have the **refined zone**data stored in a compressed format via the Glue job. The compressed data would reduce the storage cost incurred on the data in the refined zone.
+
+2. Setup a lifecycle policy to transition the raw zone data into Amazon S3 Glacier Deep Archive after 1 day of object creation
+ - [S3 Lifecycle](aws-ass-solution-architect.md#s3_lifecycle)
+
+**Wrong**
+2. Create an AWS Lambda function based job to delete the raw zone data after 1 day
+- As mentioned in the use-case, the source data needs to be kept for a minimum of 5 years for compliance reasons. Therefore the data in the raw zone cannot be deleted after 1 day.
+
+3. Setup a lifecycle policy to transition the refined zone data into Amazon S3 Glacier Deep Archive after 1 day of object creation
+   - You cannot transition the *refined zone* data into Amazon S3 Glacier Deep Archive because it is used by the business analysts for ad-hoc querying. Hence this option is incorrect.
+4. Use *AWS Glue ETL* job to write the transformed data in the refined zone using CSV format
+ - It is cost-optimal to write the data in the refined zone using a compressed format instead of CSV format. The compressed data would reduce the storage cost incurred on the data in the refined zone. So, this option is incorrect.
+
+## 56 
+- A startup has just developed a video backup service hosted on a fleet of Amazon EC2 instances. 
+- The Amazon EC2 instances are behind an ALB and the instances are using EBS Volumes for storage. 
+- The service provides authenticated users the ability to upload videos that are then saved on the EBS volume attached to a given instance. 
+- On the first day of the beta launch, users start complaining that they can see only some of the videos in their uploaded videos backup. 
+- Every time the users log into the website, they claim to see a different subset of their uploaded videos.
+
+Which of the following is the MOST optimal solution to make sure that users can view all the uploaded videos? (Select two)
+
+**Solution**
+1. Write a one time job to copy the videos from all [EBS](aws-ass-solution-architect.md#ebs) to Amazon S3 and then modify the application to use Amazon S3 standard for storing the videos
+3. Mount Amazon Elastic File System (Amazon EFS) on all Amazon EC2 instances. Write a one time job to copy the videos from all Amazon EBS volumes to Amazon EFS. Modify the application to use Amazon EFS for storing the videos
+
+- *As Amazon EBS volumes are attached locally to the Amazon EC2 instances, therefore the uploaded videos are tied to specific Amazon EC2 instances. Every time the user logs in, they are directed to a different instance and therefore their videos get dispersed across multiple EBS volumes. The correct solution is to use either Amazon S3 or Amazon EFS to store the user videos.*
+
+**Wrong**
+1. Write a one time job to copy the videos from all Amazon EBS volumes to Amazon RDS and then modify the application to use Amazon RDS for storing the videos
+
+2. Write a one time job to copy the videos from all Amazon EBS volumes to Amazon DynamoDB and then modify the application to use Amazon DynamoDB for storing the videos
+3. Write a one time job to copy the videos from all Amazon EBS volumes to Amazon S3 Glacier Deep Archive and then modify the application to use Amazon S3 Glacier Deep Archive for storing the videos
+
+
+## 57
+
+- An IT company provides S3 bucket access to specific users within the same account for completing project specific work. 
+With changing business requirements, cross-account S3 access requests are also growing every month. 
+The company is looking for a solution that can offer user level as well as account-level access permissions for the data stored in Amazon S3 buckets.
+
+As a Solutions Architect, which of the following would you suggest as the MOST optimized way of controlling access for this use-case?
+
+**Solution**
+1. Use [S3 Bucket Policies](aws-ass-solution-architect.md#s3_bucket_policy)
+
+**Wrong**
+
+2. Use [Access Control Lists (ACLs)](aws-ass-solution-architect.md#acl)
+3. Use [Security Groups](aws-ass-solution-architect.md#security_group)
+For EC2, not for S3
+4. [Use Identity and Access Management (IAM) policies](aws-ass-solution-architect.md#iam)
+- Organizations with many employees to create and manage multiple users under a single AWS account. IAM policies are attached to the users, enabling centralized control of permissions for users under your AWS Account to access buckets or objects. With IAM policies, you can only grant users within your own AWS account permission to access your Amazon S3 resources. So, this is not the right choice for the current requirement.
+
+
+## 58 
+- Private hosted zone and associated it with a Virtual Private Cloud (VPC). 
+- However, the Domain Name System (DNS) queries for the private hosted zone remain unresolved.
+
+As a Solutions Architect, can you identify the Amazon VPC options to be configured in order to get the private hosted zone to work?
+**Solution**
+- Enable DNS hostnames and DNS resolution for private hosted zones
+  - DNS hostnames and DNS resolution are required settings for private hosted zones. DNS queries for private hosted zones can be resolved by the Amazon-provided VPC DNS server only. As a result, these options must be enabled for your private hosted zone to work.
+  - [DNS](aws-ass-solution-architect.md#dns_hosted_zones)
+**Wrong**
+- Remove any overlapping namespaces for the private and public hosted zones
+- Fix the Name server (NS) record and Start Of Authority (SOA) records that may have been created with wrong configurations
+- Fix conflicts between your private hosted zone and any Resolver rule that routes traffic to your network for the same domain name, as it results in ambiguity over the route to be taken
+
+
+## 59 
+You would like to migrate an AWS account from an AWS Organization A to an AWS Organization B. What are the steps dco to it?
+
+### 
+- Remove the member account from the old organization. Send an invite to the member account from the new Organization. Accept the invite to the new organization from the member account
+
+Open an AWS Support ticket to ask them to migrate the account
+
+**Solution**
+1. Remove the member account from the old organization. Send an invite to the member account from the new Organization. Accept the invite to the new organization from the member account
+  - [AWS Organization](aws-ass-solution-architect.md#aws_organization)
+  - To migrate accounts from one organization to another, you must have root or IAM access to both the member and master accounts. Here are the steps to follow: 
+    - 1. Remove the member account from the old organization 
+    - 2. Send an invite to the member account from the new Organization 
+    - 3. Accept the invite to the new organization from the member account
+
+**Wrong**
+2. Open an AWS Support ticket to ask them to migrate the account
+
+
+3. Send an invite to the new organization. Remove the member account from the old organization. Accept the invite to the new organization from the member account
+
+
+4. Send an invite to the new organization. Accept the invite to the new organization from the member account. Remove the member account from the old organization
+
+## 60 
+
+Your company has a monthly big data workload, running for about 2 hours, which can be efficiently distributed across multiple servers of various sizes, with a variable number of CPUs. The solution for the workload should be able to withstand server failures.
+
+**Solution**
+3. Run the workload on a Spot Fleet
+
+**Fail***
+1. Run the workload on [Dedicated Hosts](aws-ass-solution-architect.md#ec2_dedicated_hosts)
+They're not particularly cost-efficient. So this option is not correct.
+
+1. Run the workload on Reserved Instances (RI)
+
+- Reserved Instances are less cost-optimized than Spot Instances, and most efficient when used continuously. Here the workload is once a month, so this is not efficient.
+3. Run the workload on Spot Instances
+
+- A Spot Instance is an unused Amazon EC2 instance that is available for less than the On-Demand price. Because Spot Instances enable you to request unused Amazon EC2 instances at steep discounts, you can lower your Amazon EC2 costs significantly. The hourly price for a Spot Instance is called a Spot price. Only spot fleets can maintain target capacity by launching replacement instances after Spot Instances in the fleet are terminated, so spot instances, by themselves, are not the right fit for this use-case.
+
+
+## 61
+
+- EC2 instances (behind Application Load Balancer) deployed in a single Availability Zone (AZ).
+- To maintain an acceptable level of end-user experience, the application needs at least 4 instances to be always available.
+
+As a solutions architect, which of the following would you recommend so that the application achieves high availability with MINIMUM cost?
+**Solution**
+2. Deploy the instances in three Availability Zones (AZs). Launch two instances in each Availability Zone (AZ)
+   1. The correct option is to deploy the instances in three Availability Zones (AZs) and launch two instances in each Availability Zone (AZ). Even if one of the AZs goes out of service, still we shall have 4 instances available and the application can maintain an acceptable level of end-user experience. Therefore, we can achieve high availability with just 6 instances in this case.
+**Faild**
+1. Deploy the instances in two Availability Zones (AZs). Launch two instances in each Availability Zone (AZ)
+
+3. Deploy the instances in two Availability Zones (AZs). Launch four instances in each Availability Zone (AZ)
+4. Deploy the instances in one Availability Zones. Launch two instances in the Availability Zone (AZ)
+
+## 62
+What does this IAM policy do?
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Mystery Policy",
+      "Action": [
+        "ec2:RunInstances"
+      ],
+      "Effect": "Allow",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "eu-west-1"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Solution**
+2. It allows running Amazon EC2 instances only in the eu-west-1 region, and the API call can be made from anywhere in the world
+  - You can use the `aws:RequestedRegion` key to compare the AWS Region that was called in the request with the Region that you specify in the policy. You can use this global condition key to control which Regions can be requested.
+
+  - `aws:RequestedRegion` represents the *target of the API call*. So in this example, we can only launch an Amazon EC2 instance in eu-west-1, and we can do this API call from anywhere.
+
+**Wrongo**
+1. It allows running Amazon EC2 instances in any region when the API call is originating from the eu-west-1 region
+3. It allows running Amazon EC2 instances anywhere but in the eu-west-1 region
+4. It allows running Amazon EC2 instances in the eu-west-1 region, when the API call is made from the eu-west-1 region
+    
+## 63 - EFS Performance Mode
+An analytics company wants to improve the performance of its big data processing workflows running on Amazon Elastic File System (Amazon EFS). Which of the following performance modes should be used for Amazon EFS to address this requirement?
+**Solution**
+2. Max I/O
+  - [EFS](aws-ass-solution-architect.md#efs)
+  - *Max I/O performance mode* is used to scale to higher levels of aggregate throughput and operations per second. This scaling is done with a tradeoff of slightly higher latencies for file metadata operations. Highly parallelized applications and workloads, such as big data analysis, media processing, and genomic analysis, can benefit from this mode.
+  - [EFS Mode](aws-ass-solution-architect.md#efs_performance_mode)
+**Wrong**
+1. General Purpose
+
+3. Provisioned Throughput
+4. Bursting Throughput
+- [EFS Througput Mode](aws-ass-solution-architect.md#efs_throuhput_mode)
+
+
+## 64 Aurora DB Global
+
+A company is developing a global healthcare application that requires the least possible *latency for database read/write operations* from users in *several geographies across* the world. 
+The company has hired you as an AWS Certified Solutions Architect Associate to build a solution using Amazon Aurora that offers an effective recovery point objective (RPO) of seconds and a recovery time objective (RTO) of a minute.
+
+**Solution**
+2. Set up an [Amazon Aurora Global Database](aws-ass-solution-architect.md#aurora_global_table) cluster
+
+**Wrong**
+1. Set up an Amazon Aurora multi-master Database cluster
+3. Set up an Amazon Aurora provisioned Database cluster
+
+==> Both these options work in a single AWS Region, so these options are incorrect.
+
+
+4. Set up an Amazon Aurora multi-master Database cluster
+  - AWS does not offer the multi-master feature in a Aurora database cluster,
+
+
+## 65
+An IT company is working on a client project to build a Supply Chain Management application. 
+The web-tier of the application runs on an *Amazon EC2 instance* and the database tier is on *Amazon RDS MySQL*.
+- For beta testing, all the resources are currently deployed in *a single Availability Zone (AZ)*. The development team wants to improve application availability before the go-live.
+
+Given that all end users of the web application would be located in the US, which of the following would be the MOST resource-efficient solution?
+
+**Solution**
+4. Deploy the web-tier *Amazon EC2 instances* in two Availability Zones (AZs), behind an Elastic Load Balancer. Deploy the *Amazon RDS MySQL* database **in Multi-AZ configuration**
+  - Elastic Load Balancing automatically distributes incoming application traffic across multiple targets, such as Amazon EC2 instances, containers, IP addresses, and Lambda functions. It can handle the varying load of your application traffic in a single Availability Zone or across multiple Availability Zones. Therefore, deploying the web-tier Amazon EC2 instances in two Availability Zones (AZs), behind an Elastic Load Balancer would improve the availability of the application.
+  - Amazon RDS Multi-AZ deployments provide enhanced availability and durability for RDS database (DB) instances, making them a natural fit for production database workloads. When you provision a Multi-AZ DB Instance, Amazon RDS automatically creates a primary DB Instance and synchronously replicates the data to a standby instance in a different Availability Zone (AZ). Each Availability Zone (AZ) runs on its own physically distinct, independent infrastructure, and is engineered to be highly reliable. Deploying the Amazon RDS MySQL database in Multi-AZ configuration would improve availability and hence this is the correct
+[RDS](aws-ass-solution-architect.md#rds)
+
+**Wrong**
+1. Deploy the web-tier Amazon EC2 instances in two regions, behind an Elastic Load Balancer. Deploy the Amazon RDS MySQL database in read replica configuration
+
+2. Deploy the web-tier Amazon EC2 instances in two regions, behind an Elastic Load Balancer. Deploy the Amazon RDS MySQL database **in Multi-AZ configuration**
+
+3. Deploy the web-tier Amazon EC2 instances in two Availability Zones (AZs), behind an Elastic Load Balancer. Deploy the Amazon RDS MySQL database in read replica configuration
+
+- Amazon RDS Read Replicas provide enhanced performance and durability for RDS database (DB) instances. They make it easy to elastically scale out beyond the capacity constraints of a single DB instance for read-heavy database workloads. Read replicas are meant to address scalability issues. You cannot use read replicas for improving availability, so both these options are incorrect.
