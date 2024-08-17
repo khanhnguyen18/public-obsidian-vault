@@ -79,6 +79,13 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - You can use AWS WAF with your Application Load Balancer to allow or block requests based on the rules in a web access control list (web ACL). Geographic (Geo) Match Conditions in AWS WAF allows you to use AWS WAF to restrict application access based on the geographic location of your viewers. With geo match conditions you can choose the countries from which AWS WAF should allow access.
 - Geo match conditions are important for many customers. For example, legal and licensing requirements restrict some customers from delivering their applications outside certain countries. These customers can configure a whitelist that allows only viewers in those countries. Other customers need to prevent the downloading of their encrypted software by users in certain countries. These customers can configure a blacklist so that end-users from those countries are blocked from downloading their software.
 ## 31. EC2
+### elastic-fabric-adapter-efa
+![](https://d1.awsstatic.com/Product-Page-Diagram_Elastic-Fabric-Adapter_How-it-Works_updated.2a51303e17a203eb094ab098ebc31a61dab66365.png)
+- **A network device** that you can attach to your Amazon EC2 instance to accelerate High Performance Computing (HPC) and machine learning applications. 
+- It enhances the performance of inter-instance communication that is critical for scaling HPC and machine learning applications. 
+- EFA devices provide all *Elastic Network Adapter (ENA)* devices functionalities plus a new OS bypass hardware interface that allows user-space applications to communicate directly with the hardware-provided reliable transport functionality.
+
+
 ### EC2_Default_Termination_Policy
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q65-i1.jpg)
 Following the order:
@@ -215,13 +222,30 @@ A Spot Instance is an unused Amazon EC2 instance that is available for less than
 * Run instances for the same application across multi AZ
 * Auto Scaling Group multi AZ
 
-## 70. Elastic Load Balancing (ELB)
+## ELB
 - ELB and Global Accelerator solve the challenge of routing user requests to healthy application endpoints.
 -  AWS Global Accelerator relies on ELB to provide the traditional load balancing features such as support for internal and non-AWS endpoints, pre-warming, and Layer 7 routing.
 - Provides load balancing within one Region, AWS Global Accelerator provides traffic management across multiple Regions.
 - Include
   - ALB
   - NLB
+### ELB_Idle_Timeout
+  - For each request that a client makes through Elastic Load Balancing, the load balancer maintains two connections. 
+  - The front-end connection is between the client and the load balancer. 
+  - The back-end connection is between the load balancer and a registered Amazon EC2 instance. 
+  - The load balancer has a configured "idle timeout" period that applies to its connections. If no data has been sent or received by the time that the "idle timeout" period elapses, the load balancer closes the connection. 
+### ELB_Sticky_Sessions
+  - You can use the sticky session feature (also known as session affinity) to enable the load balancer to bind a user's session to a specific instance. 
+  - This ensures that all requests from the user during the session are sent to the same instance. 
+### ELB_CrossZoneLoadBalancing
+  - The nodes for your load balancer distribute requests from clients to registered targets.
+  -  When cross-zone load balancing is enabled, each load balancer node distributes traffic across the registered targets in all enabled Availability Zones (AZs). 
+### EBL_Connection_Draining
+- To ensure that Elastic Load Balancing stops sending requests to instances that are de-registering or unhealthy while keeping the existing connections open, use connection draining. 
+- This enables the load balancer to complete in-flight requests made to instances that are de-registering or unhealthy. 
+- The maximum timeout value can be set between 1 and 3,600 seconds (the default is 300 seconds). When the maximum time limit is reached, the load balancer forcibly closes connections to the de-registering instance.
+
+
 ### ALB
 - The Application Load Balancer (ALB) is best suited for load balancing HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
 - This is the correct option since the question has a specific requirement for content-based routing which can be configured via the Application Load Balancer. Different Availability Zones (AZs) provide high availability to the overall architecture and Auto Scaling group will help mask any instance failures.
@@ -722,9 +746,10 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 ## Kinesis_Agent
 - a stand-alone Java software application that offers an easy way to collect and send data to Amazon Kinesis Data Streams or Amazon Kinesis Firehose.
 ## Kinesis_Data_Stream
--  Amazon Kinesis Data Streams (KDS) is a massively scalable and durable real-time data streaming service. 
--  The throughput of an Amazon Kinesis data stream is designed to scale without limits via increasing the number of shards within a data stream. 
-
+-  Is a massively scalable and durable real-time data streaming service. 
+-  The throughput of an Amazon Kinesis data stream is designed to scale without limits via increasing the number of shards within a data stream.
+-  KDS can continuously capture gigabytes of data per second from hundreds of thousands of sources such as website clickstreams, database event streams, financial transactions, social media feeds, IT logs, and location-tracking events. 
+- The throughput of an Amazon Kinesis data stream is designed to scale without limits via increasing the number of shards within a data stream
 - Enables real-time processing of streaming big data.
 - It provides ordering of records, as well as the ability to read and/or replay records in the same order to multiple Amazon Kinesis Applications.
 - The Amazon Kinesis Client Library (KCL) delivers all records for a given partition key to the same record processor, making it easier to build multiple applications reading from the same Amazon Kinesis data stream (for example, to perform counting, aggregation, and filtering).
@@ -770,8 +795,19 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   - Kinesis Data Streams
   - Kinesis Data Firehose
 
+## AWS Config
+![](https://d1.awsstatic.com/Products/product-name/diagrams/product-page-diagram-Config_how-it-works.bd28728a9066c55d7ee69c0a655109001462e25b.png)
+AWS Config is a service that enables you to assess, audit, and evaluate the configurations of your AWS resources. With Config, you can review changes in configurations and relationships between AWS resources, dive into detailed resource configuration histories, and determine your overall compliance against the configurations specified in your internal guidelines. You can use Config to answer questions such as - “What did my AWS resource look like at xyz point in time?”
 
 ## VPC
+### Elastic Network Adapter (ENA)
+- Elastic Network Adapter (ENA) devices support enhanced networking via single root I/O virtualization (SR-IOV) to provide high-performance networking capabilities. 
+
+### Elastic_Ip_Address_EIP
+-  - An Elastic IP address (EIP) is a static IPv4 address associated with your AWS account. An Elastic IP address is a public IPv4 address, which is reachable from the internet. 
+### Elastic_Network_Interface_ENI
+- Is a Logical networking component in a VPC that represents a virtual network card. 
+- You can create a network interface, attach it to an instance, detach it from an instance, and attach it to another instance. 
 ### Fully_meshed_VPC_Peering
 - -This approach creates multiple peering connections to facilitate the sharing of information between resources in different VPCs. This design connects multiple VPCs in a fully meshed configuration, with peering connections between each pair of VPCs. With this configuration, each VPC has access to the resources in all other VPCs. Each peering connection requires modifications to all the other VPCs’ route tables and, as the number of VPCs grows, this can be difficult to maintain. And keep in mind that AWS recommends a maximum of 125 peering connections per VPC. It's complex to manage and isn't a right fit for the current scenario.
 ### Transit_VPC
@@ -914,12 +950,20 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 ### RDS_Read_Replicas
 - Amazon RDS Read Replicas provide enhanced performance and durability for RDS database (DB) instances.
 - Easy to elastically scale out beyond the capacity constraints of a single DB instance for read-heavy database workloads.
+
 - For the MySQL, MariaDB, PostgreSQL, Oracle, and SQL Server database engines, RDS creates a second DB instance using a snapshot of DB. 
+
 - It then uses the engines native asynchronous replication to update the read replica whenever there is a change to the source DB instance. 
 - Can be within an Availability Zone, Cross-AZ, or Cross-Region.
 - A read replica is billed as a standard DB Instance and at the same rates. You are not charged for the data transfer incurred in replicating data between your source DB instance and read replica within the same AWS Region.
-- [Read Replicas Link](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q44-i1.jpg)
+- There are a variety of scenarios where deploying one or more read replicas for a given source DB instance may make sense. Common reasons for deploying a read replica include:
 
+  1. Scaling beyond the compute or I/O capacity of a single DB instance for read-heavy database workloads. This excess read traffic can be directed to one or more read replicas.
+  2. Serving read traffic while the source DB instance is unavailable. If your source DB Instance cannot take I/O requests (e.g. due to I/O suspension for backups or scheduled maintenance), you can direct read traffic to your read replica(s). For this use case, keep in mind that the data on the read replica may be “stale” since the source DB Instance is unavailable.
+  3. Business reporting or data warehousing scenarios; you may want business reporting queries to run against a read replica, rather than your primary, production DB Instance.
+  4. You may use a read replica for disaster recovery of the source DB instance, either in the same AWS Region or in another Region.
+- ![Read Replicas Link](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q44-i1.jpg)
+- ![Compare](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q41-i1.jpg)
 ### storage auto-scaling
 - If your workload is unpredictable, you can enable storage autoscaling for an Amazon RDS DB instance. 
 - When Amazon RDS detects that you are running out of free database space it automatically scales up your storage. 
@@ -965,10 +1009,22 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - Automated backups occur daily during the preferred backup window. If the backup requires more time than allotted to the backup window, the backup continues after the window ends, until it finishes. The backup window can't overlap with the weekly maintenance window for the DB cluster. Aurora backups are continuous and incremental, but the backup window is used to create a daily system backup that is preserved within the backup retention period. The latest restorable time for a DB cluster is the most recent point at which you can restore your DB cluster, typically within 5 minutes of the current time.
 
 
+### Aurora_Disaster_Recovery
+With an Aurora global database, you can choose from two different approaches to failover:
+
+- **Managed planned failover** – This feature is intended for controlled environments, such as disaster recovery (DR) testing scenarios, operational maintenance, and other planned operational procedures. Managed planned failover allows you to relocate the primary DB cluster of your Aurora global database to one of the secondary Regions. Because this feature synchronizes secondary DB clusters with the primary before making any other changes, RPO is 0 (no data loss).
+
+- **Unplanned failover ("detach and promote")** – To recover from an unplanned outage, you can perform a cross-Region failover to one of the secondaries in your Aurora global database. The RTO for this manual process depends on how quickly you can perform the tasks listed in Recovering an Amazon Aurora global database from an unplanned outage. The RPO is typically measured in seconds, but this depends on the Aurora storage replication lag across the network at the time of the failure.
 ### Aurora_Global_Table
 ![Aurora_Global_Table](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q5-i1.jpg)
 - Amazon Aurora Global Database is designed for globally distributed applications, allowing a single Amazon Aurora database to span multiple AWS regions.
 - It replicates your data with no impact on database performance, enables fast local reads with low latency in each region, and provides disaster recovery from region-wide outages.
+- By using an Aurora global database, you can plan for and recover from disaster fairly quickly. Recovery from disaster is typically measured using values for RTO and RPO.
+
+-- Recovery time objective (RTO) – The time it takes a system to return to a working state after a disaster. In other words, RTO measures downtime. For an Aurora global database, RTO can be in the order of minutes.
+
+- Recovery point objective (RPO) – The amount of data that can be lost (measured in time). For an Aurora global database, RPO is typically measured in seconds.
+
 - https://aws.amazon.com/rds/aurora/global-database/
 
 ### Aurora_Replica
@@ -1008,6 +1064,9 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - One Zone-IA is ideal for customers want a lower-cost option for infrequently accessed and re-creatable data but do not require the availability and resilience of Standard or Standard-IA.
 - The minimum storage duration is 30 days before you can transition objects from Standard to One Zone-IA.
 
+## AWS_System_Manager
+- Using AWS Systems Manager, you can group resources, like Amazon EC2 instances, Amazon S3 buckets, or Amazon RDS instances, by application, view operational data for monitoring and troubleshooting, and take action on your groups of resources
+- 
 ## Cloudwatch
 - [Link](https://aws.amazon.com/cloudwatch/faqs/)
 - Monitoring and observability service built for DevOps engineers, developers, site reliability engineers (SREs), and IT managers. 
@@ -1043,6 +1102,29 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 ## Hosting_Static_Website
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q2-i1.jpg)
 
+
+## Macie
+![](https://d1.awsstatic.com/product-marketing/macie/Product-Page-Diagram_AWS-Macie%402x.369dcc5a001e7a44b121d65637ff82b60b809148.png)
+- Amazon Macie is a fully managed data security and data privacy service that uses machine learning and pattern matching to discover and protect your sensitive data on Amazon S3. Macie automatically detects a large and growing list of sensitive data types, including personally identifiable information (PII) such as names, addresses, and credit card numbers. It also gives you constant visibility of the data security and data privacy of your data stored in Amazon S3.
+
+
+## GuardDuty
+![](https://d1.awsstatic.com/product-marketing/Amazon%20GuardDuty/product-page-diagram-Amazon-GuardDuty_how-it-works.a4daf7e3aaf3532623a3797dd3af606a85fc2e7b.png)
+
+- Amazon GuardDuty offers threat detection that enables you to continuously monitor and protect your AWS accounts, workloads, and data stored in Amazon S3. GuardDuty analyzes continuous streams of meta-data generated from your account and network activity found in AWS CloudTrail Events, Amazon VPC Flow Logs, and DNS Logs. It also uses integrated threat intelligence such as known malicious IP addresses, anomaly detection, and machine learning to identify threats more accurately.
+
+
+## Simple_AD
+- Simple AD provides a subset of the features offered by AWS Managed Microsoft AD. Simple AD is a standalone managed directory that is powered by a Samba 4 Active Directory Compatible Server. Simple AD does not support features such as trust relationships with other domains. Therefore, this option is not correct.
+## Cloud_Directory 
+- Amazon Cloud Directory is a cloud-native directory that can store hundreds of millions of application-specific objects with multiple relationships and schemas. Use Amazon Cloud Directory if you need a highly scalable directory store for your application’s hierarchical data. You cannot use it to establish trust relationships with other domains on the on-premises infrastructure. Therefore, this option is not correct.
+## Active_Directory_Connector
+- Use AD Connector if you only need to allow your on-premises users to log in to AWS applications and services with their Active Directory credentials. AD Connector simply connects your existing on-premises Active Directory to AWS. You cannot use it to run directory-aware workloads on AWS, hence this option is not correct.
+## AWS_Directory_Service
+AWS Directory Service provides multiple ways to use **Amazon Cloud Directory** and **Microsoft Active Directory (AD)** with other AWS services.
+- AWS Directory Service for Microsoft Active Directory (aka AWS Managed Microsoft AD) is powered by an actual Microsoft Windows Server Active Directory (AD), managed by AWS.
+- With AWS Managed Microsoft AD, you can run directory-aware workloads in the AWS Cloud such as SQL Server-based applications. 
+- You can also configure a trust relationship between AWS Managed Microsoft AD in the AWS Cloud and your existing on-premises Microsoft Active Directory, providing users and groups with access to resources in either domain, using single sign-on (SSO).
 
 ## DocumentDB
 - Aurora is an "AWS-IMplementation" of PostgreSQL/SQL
@@ -1139,7 +1221,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
    -  Apache HBase
    -  Apache Flink
    -  Apache Hudi
-   -  and Presto. 
+   -  Presto. 
 - Amazon EMR uses Hadoop, an open-source framework, to distribute your data and processing across a resizable cluster of EC2s
   
 - Stand for Elastic MapReduce
@@ -1155,6 +1237,13 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   - Reserverd
   - Spot Intances
 
+## DMS
+![](https://d1.awsstatic.com/product-marketing/DMS/product-page-diagram-AWS-DMS_continuous-data-replication.a0e3bd328d2a4bd9b40a83e767199dcc13cf678f.png)
+- **AWS Database Migration Service** helps you migrate databases to AWS quickly and securely. 
+- The source database remains fully operational during the migration, minimizing downtime to applications that rely on the database. 
+- Continuously replicate your data with high availability and consolidate databases into a petabyte-scale data warehouse by streaming data to *Amazon Redshift* and *Amazon S3*.
+
+
 ## 250 Quick Sight
 - Severless machine learning BI Service create interative Dashboar
 - Use cases:
@@ -1166,7 +1255,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - In-memory computation using SPICE engine if data is imported into QuickSight
 - Enterprise edition: Possibility to setup Column-Level security (CLS)
 
-## Glue
+## glue
 ![](https://d1.awsstatic.com/Products/product-name/diagrams/product-page-diagram_Glue_Event-driven-ETL-Pipelines.e24d59bb79a9e24cdba7f43ffd234ec0482a60e2.png)
 - Serverless ETL service
 - Prepare vs Tranform data for analytics
