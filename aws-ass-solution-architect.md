@@ -17,6 +17,13 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - SCPs aren't available if your organization has enabled only the consolidated billing features. 
 - Attaching an SCP to an AWS Organizations entity (root, OU, or account) defines a guardrail for what actions the principals can perform. 
 
+- In service control policy (SCP), you can restrict which AWS services, resources, and individual API actions the users and roles in each member account can access. You can also define conditions for when to restrict access to AWS services, resources, and API actions. *These restrictions even override the administrators of member accounts in the organization.*
+
+*Please note the following effects on permissions vis-a-vis the service control policy (SCP)*:
+  - If a user or role has an IAM permission policy that grants access to an action that is either not allowed or explicitly denied by the applicable service control policy (SCP), the user or role can't perform that action.
+  - Service control policy (SCP) affects all users and roles in the member accounts, including root user of the member accounts.
+  - Service control policy (SCP) does not affect any service-linked role.
+
 
 
 ## IAM
@@ -86,6 +93,27 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - EFA devices provide all *Elastic Network Adapter (ENA)* devices functionalities plus a new OS bypass hardware interface that allows user-space applications to communicate directly with the hardware-provided reliable transport functionality.
 
 
+
+### EC2_instance_recover
+-https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-recover.htmld
+
+You can create an Amazon CloudWatch alarm to automatically recover the Amazon EC2 instance if it becomes impaired due to an underlying hardware failure or a problem that requires AWS involvement to repair. 
+- Terminated instances cannot be recovered. 
+- A recovered instance is identical to the original instance, including the instance ID, private IP addresses, Elastic IP addresses, and all instance metadata. 
+- If the impaired instance is in a placement group, the recovered instance runs in the placement group. 
+- If your instance has a public IPv4 address, it retains the public IPv4 address after recovery. 
+- During instance recovery, the instance is migrated during an instance reboot, and any data that is in-memory is lost.
+
+- If your instance fails a system status check, you can use *Amazon CloudWatch alarm* actions to automatically recover it. The recover option is available for over 90% of deployed customer Amazon EC2 instances.
+- The Amazon CloudWatch recovery option works only for system check failures, not for instance status check failures. Also, if you terminate your instance, then it can't be recovered.
+- You can create an *Amazon CloudWatch alarm* that monitors an Amazon EC2 instance and automatically recovers the instance if it becomes impaired due to an underlying hardware failure or a problem that requires AWS involvement to repair. 
+- Terminated instances cannot be recovered. d
+- The automatic recovery process attempts to recover your instance for up to three separate failures per day. 
+- Your instance may subsequently be retired if automatic recovery fails and a hardware degradation is determined to be the root cause for the original system status check failure.
+
+
+
+
 ### EC2_Default_Termination_Policy
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q65-i1.jpg)
 Following the order:
@@ -153,6 +181,7 @@ As Instance Store based volumes provide high random I/O performance at low cost 
 - Run in a virtual private cloud (VPC) on hardware that's dedicated to a single customer. 
 - Dedicated Instances that belong to different AWS accounts are physically isolated at a hardware level, even if those accounts are linked to a single-payer account. 
 - However, Dedicated Instances may share hardware with other instances from the same AWS account that are not Dedicated Instances.
+- Could share with instance in same account
 
 #### EC2_On_Demand
 
@@ -238,6 +267,12 @@ A Spot Instance is an unused Amazon EC2 instance that is available for less than
   - You can use the sticky session feature (also known as session affinity) to enable the load balancer to bind a user's session to a specific instance. 
   - This ensures that all requests from the user during the session are sent to the same instance. 
 ### ELB_CrossZoneLoadBalancing
+![](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/images/cross_zone_load_balancing_enabled.png)
+- If cross-zone load balancing is disabled:
+  + Each of the two targets in Availability Zone A receives 25% of the traffic.
+  + Each of the eight targets in Availability Zone B receives 6.25% of the traffic.
+This is because each load balancer node can route its 50% of the client traffic only to targets in its Availability Zone
+
   - The nodes for your load balancer distribute requests from clients to registered targets.
   -  When cross-zone load balancing is enabled, each load balancer node distributes traffic across the registered targets in all enabled Availability Zones (AZs). 
 ### EBL_Connection_Draining
@@ -245,10 +280,11 @@ A Spot Instance is an unused Amazon EC2 instance that is available for less than
 - This enables the load balancer to complete in-flight requests made to instances that are de-registering or unhealthy. 
 - The maximum timeout value can be set between 1 and 3,600 seconds (the default is 300 seconds). When the maximum time limit is reached, the load balancer forcibly closes connections to the de-registering instance.
 
-
 ### ALB
+
 - The Application Load Balancer (ALB) is best suited for load balancing HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
 - This is the correct option since the question has a specific requirement for content-based routing which can be configured via the Application Load Balancer. Different Availability Zones (AZs) provide high availability to the overall architecture and Auto Scaling group will help mask any instance failures.
+
 
 #### ALB_with_Cognito_User_Pools
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q17-i1.jpg)
@@ -309,6 +345,12 @@ A Spot Instance is an unused Amazon EC2 instance that is available for less than
    -  Specify resources
    -  Specify accounts. 
 -  RAM is available to you at no additional charge.
+### VPC_Sharing
+- VPC sharing (part of Resource Access Manager) allows multiple AWS accounts to create their application resources such as Amazon EC2 instances, Amazon RDS databases, Amazon Redshift clusters, and AWS Lambda functions, into shared and centrally-managed Amazon Virtual Private Clouds (VPCs). 
+- To set this up, the account that owns the VPC (owner) shares one or more subnets with other accounts (participants) that belong to the same organization from AWS Organizations. A
+- fter a subnet is shared, the participants can view, create, modify, and delete their application resources in the subnets shared with them. Participants cannot view, modify, or delete resources that belong to other participants or the VPC owner.
+
+You can share Amazon VPCs to leverage the implicit routing within a VPC for applications that require a high degree of interconnectivity and are within the same trust boundaries. This reduces the number of VPCs that you create and manage while using separate accounts for billing and access control.
 
 ## AWS_DataSync
 ![DataSync](https://d1.awsstatic.com/Digital%20Marketing/House/Editorial/products/DataSync/Product-Page-Diagram_AWS-DataSync_On-Premises-to-AWS%402x.8769b9dea1615c18ee0597b236946cbe0103b2da.png)
@@ -736,6 +778,14 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   1. *Standard queues* offer maximum throughput, best-effort ordering, and at-least-once delivery. 
   2. *FIFO queues* are designed to guarantee that messages are processed exactly once, in the exact order that they are sent.
 
+### Visibility_timeout
+- Visibility timeout is a period during which Amazon SQS prevents other consumers from receiving and processing a given message. The default visibility timeout for a message is 30 seconds. The minimum is 0 seconds. The maximum is 12 hours. You cannot use visibility timeout to postpone the delivery of new messages to the queue for a few seconds.
+### dead_letter_queue
+ Dead-letter queues can be used by other queues (source queues) as a target for messages that can't be processed (consumed) successfully. Dead-letter queues are useful for debugging your application or messaging system because they let you isolate problematic messages to determine why their processing doesn't succeed. You cannot use dead-letter queues to postpone the delivery of new messages to the queue for a few seconds
+### SQS_Delay_queue
+-[](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/images/sqs-delay-queues-diagram.png)
+- Delay queues let you postpone the delivery of new messages to a queue for several seconds, for example, when your consumer application needs additional time to process messages. If you create a delay queue, any messages that you send to the queue remain invisible to consumers for the duration of the delay period. The default (minimum) delay for a queue is 0 seconds. The maximum is 15 minutes.
+
 
 ### SQS_Fifo_queue
 - Limited throughput : 300 msg/s without batching, max: 10 message per operation = 3000 msg/s
@@ -746,6 +796,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 ## Kinesis_Agent
 - a stand-alone Java software application that offers an easy way to collect and send data to Amazon Kinesis Data Streams or Amazon Kinesis Firehose.
 ## Kinesis_Data_Stream
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q46-i1.jpg)
 -  Is a massively scalable and durable real-time data streaming service. 
 -  The throughput of an Amazon Kinesis data stream is designed to scale without limits via increasing the number of shards within a data stream.
 -  KDS can continuously capture gigabytes of data per second from hundreds of thousands of sources such as website clickstreams, database event streams, financial transactions, social media feeds, IT logs, and location-tracking events. 
@@ -800,6 +851,27 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 AWS Config is a service that enables you to assess, audit, and evaluate the configurations of your AWS resources. With Config, you can review changes in configurations and relationships between AWS resources, dive into detailed resource configuration histories, and determine your overall compliance against the configurations specified in your internal guidelines. You can use Config to answer questions such as - “What did my AWS resource look like at xyz point in time?”
 
 ## VPC
+### vpc_internet_gateway
+- *An Internet Gateway* is a horizontally scaled, redundant, and highly available VPC component that allows communication between your VPC and the internet.
+- *An Internet Gateway serves two purposes*: 
+  - to provide a target in your VPC route tables for internet-routable traffic 
+  - perform network address translation (NAT) for instances that have been assigned public IPv4 addresses.
+- Additionally, an Internet Gateway supports IPv4 and IPv6 traffic. It does not cause availability risks or bandwidth constraints on your network traffic
+- *Attach an Internet gateway to your VPC*.
+  - Add a route to your subnet's route table that directs internet-bound traffic to the internet gateway. If a subnet is associated with a route table that has a route to an internet gateway, it's known as a public subnet. If a subnet is associated with a route table that does not have a route to an internet gateway, it's known as a private subnet.
+  - Ensure that instances in your subnet have a globally unique IP address (public IPv4 address, Elastic IP address, or IPv6 address).
+  - Ensure that your network access control lists and security group rules allow the relevant traffic to flow to and from your instance.
+### vpc_nat_gateway
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q62-i1.jpg)
+
+You can use a network address translation (NAT) gateway to enable instances in a private subnet to connect to the internet or other AWS services, but prevent the internet from initiating a connection with those instances.
+
+To create a NAT gateway, you must specify the public subnet in which the NAT gateway should reside. You must also specify an Elastic IP address to associate with the NAT gateway when you create it. The Elastic IP address cannot be changed after you associate it with the NAT Gateway. After you've created a NAT gateway, you must update the route table associated with one or more of your private subnets to point internet-bound traffic to the NAT gateway. This enables instances in your private subnets to communicate with the internet.
+
+Each NAT gateway is created in a specific Availability Zone and implemented with redundancy in that zone.
+
+If you have resources in multiple Availability Zones and they share one NAT gateway, and if the NAT gateway’s Availability Zone is down, resources in the other Availability Zones lose internet access. To create an Availability Zone-independent architecture, create a NAT gateway in each Availability Zone and configure your routing to ensure that resources use the NAT gateway in the same Availability Zone.
+
 ### Elastic Network Adapter (ENA)
 - Elastic Network Adapter (ENA) devices support enhanced networking via single root I/O virtualization (SR-IOV) to provide high-performance networking capabilities. 
 
@@ -1032,7 +1104,17 @@ With an Aurora global database, you can choose from two different approaches to 
 - If the writer instance becomes unavailable, automatically promotes one of the reader instances to take its place as the new write
 - Up to 15 Aurora Replicas xacross the Availability Zones (AZs) tha DB cluster spans within an AWS Region.
 
-## Amazone Elasticache - Summanry
+
+## Elasticache
+![](https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/images/ElastiCache-Caching.png)
+
+
+- Amazon ElastiCache allows you to run in-memory data stores in the AWS cloud. Amazon ElastiCache is a popular choice for real-time use cases like Caching, Session Stores, Gaming, Geospatial Services, Real-Time Analytics, and Queuing.
+
+- Amazon ElastiCache can be used to significantly improve latency and throughput for many read-heavy application workloads (such as social networking, gaming, media sharing, leaderboard, and Q&A portals) or compute-intensive workloads (such as a recommendation engine) by allowing you to store the objects that are often read in the cache.
+- Overview of Amazon ElastiCache features: 
+  - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q33-i2.jpg)
+
 
 - Managed Redis / Memchaed
 - In-memory datastore, sub-milisecond latency
@@ -1072,7 +1154,6 @@ With an Aurora global database, you can choose from two different approaches to 
 - Monitoring and observability service built for DevOps engineers, developers, site reliability engineers (SREs), and IT managers. 
 - Provides you with data and actionable insights to monitor your applications, respond to system-wide performance changes, optimize resource utilization, and get a unified view of operational health. 
 - Allows you to monitor AWS cloud resources and the applications you run on AWS.
-
 
 
 ## SNS
@@ -1242,7 +1323,8 @@ AWS Directory Service provides multiple ways to use **Amazon Cloud Directory** a
 - **AWS Database Migration Service** helps you migrate databases to AWS quickly and securely. 
 - The source database remains fully operational during the migration, minimizing downtime to applications that rely on the database. 
 - Continuously replicate your data with high availability and consolidate databases into a petabyte-scale data warehouse by streaming data to *Amazon Redshift* and *Amazon S3*.
-
+### heterogeneous_migrations
+![](https://d1.awsstatic.com/product-marketing/DMS/product-page-diagram_AWS-DMS_heterogeneous-database-migrations-2.3616bac30ab86d4310ddadfdec5d6e6ba4d8b81d.png)
 
 ## 250 Quick Sight
 - Severless machine learning BI Service create interative Dashboar
