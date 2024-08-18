@@ -495,3 +495,324 @@ Which of the following options support the case for using Amazon ElastiCache to 
 - Use Amazon ElastiCache to improve latency and throughput for write-heavy application workloads
 
 ## Question 24
+- An e-commerce company runs its web application on *Amazon EC2 instances* in an *Auto Scaling group* 
+- Handle consumer orders in an *Amazon Simple Queue Service (Amazon SQS)* queue for downstream processing. 
+- The DevOps team has observed that the performance of the application goes down in case of a sudden spike in orders received.
+
+As a solutions architect, which of the following solutions would you recommend to address this use-case?
+**Solution**
+- Use a [target tracking scaling](aws-ass-solution-architect.md#target_tracking_scaling_policy) policy based on a custom Amazon SQS queue metric
+
+**Wrong**
+- Use a [simple scaling policy](aws-ass-solution-architect.md#simple_scaling_policy) based on a custom Amazon SQS queue metric
+- Use a [scheduled scaling policy](aws-ass-solution-architect.md#scheduled_scaling_policy) based on a custom Amazon SQS queue metric
+- Use a [step scaling policy](aws-ass-solution-architect.md#step_scaling_policy) based on a custom Amazon SQS queue metric
+
+## 25
+The DevOps team at an IT company has recently migrated to AWS and they are configuring security groups for their two-tier application with public web servers and private database servers.
+- The team wants to understand the allowed configuration options for an inbound rule for a security group.
+
+As a solutions architect, which of the following would you identify as an INVALID option for setting up such a configuration?
+
+**Solution**
+You can use an Internet Gateway ID as the custom source for the inbound rule
+  - [security_group](aws-ass-solution-architect.md#security_group)
+  - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q65-i1.jpg)
+**Wrong**
+
+You can use a security group as the custom source for the inbound rule
+
+You can use an IP address as the custom source for the inbound rule
+
+You can use a range of IP addresses in CIDR block notation as the custom source for the inbound rule
+
+## 26
+An IT company hosts windows based applications on its on-premises data center. 
+The company is looking at moving the business to the AWS Cloud.
+The cloud solution should offer shared storage space that multiple applications can access without a need for replication.
+Also, the solution should integrate with the company's self-managed *Active Directory* domain.
+
+Which of the following solutions addresses these requirements with the minimal integration effort?
+
+
+
+**Solution**
+
+Use Amazon FSx for Windows File Server as a shared storage solution
+  - [](aws-ass-solution-architect.md#amazon_fsx_for_windows_file_server)
+**Wrong**
+Use Amazon FSx for Lustre as a shared storage solution with millisecond latencies
+  - [Fsx for lustre](aws-ass-solution-architect.md#amazon-fsx-for-lustre)
+
+Use Amazon Elastic File System (Amazon EFS) as a shared storage solution
+  - [EFS](aws-ass-solution-architect.md#efs)
+
+Use File Gateway of AWS Storage Gateway to create a hybrid storage solution
+  - [AWS Storage Gateway](aws-ass-solution-architect.md#aws_storage_gateway)
+
+## 27
+- A media streaming company is looking to migrate its on-premises infrastructure into the AWS Cloud. 
+- The engineering team is looking for a fully managed NoSQL persistent data store with in-memory caching to maintain low latency that is critical for real-time scenarios such as video streaming and interactive content. 
+- The team expects the number of concurrent users to touch up to a million so the database should be able to scale elastically.
+
+As a solutions architect, which of the following AWS services would you recommend for this use-case?
+
+**Solution**
+[Amazon DynamoDB](aws-ass-solution-architect.md#dynamodb)
+
+**Wrong**
+[Amazon DocumentDB](aws-ass-solution-architect.md#dynamodb)
+[Amazon ElastiCache](aws-ass-solution-architect.md#elasticache)
+[Amazon RDS](aws-ass-solution-architect.md#rds)
+
+## 28
+Question 28
+Skipped
+The DevOps team at a multi-national company is helping its subsidiaries standardize Amazon EC2 instances by using the same Amazon Machine Image (AMI). Some of these subsidiaries are in the same AWS region but use different AWS accounts whereas others are in different AWS regions but use the same AWS account as the parent company. The DevOps team has hired you as a solutions architect for this project.
+
+Which of the following would you identify as CORRECT regarding the capabilities of an Amazon Machine Image (AMI)? (Select three)
+
+**Solution**
+You can share an Amazon Machine Image (AMI) with another AWS account
+Copying an Amazon Machine Image (AMI) backed by an encrypted snapshot cannot result in an unencrypted target snapshot
+You can copy an Amazon Machine Image (AMI) across AWS Regions
+**Wrong**
+You cannot copy an Amazon Machine Image (AMI) across AWS Regions
+
+Copying an Amazon Machine Image (AMI) backed by an encrypted snapshot results in an unencrypted target snapshot
+You cannot share an Amazon Machine Image (AMI) with another AWS account
+
+## 29
+- A company has set up AWS Organizations to manage several departments running their own AWS accounts. 
+- The departments operate from different countries and are spread across various AWS Regions. 
+- The company wants to set up a consistent resource provisioning process across departments so that each resource follows pre-defined configurations such as using a specific type of Amazon EC2 instances, specific IAM roles for AWS Lambda functions, etc.
+
+As a solutions architect, which of the following options would you recommend for this use-case?
+
+**Solution**
+Use AWS CloudFormation StackSets to deploy the same template across AWS accounts and regions
+  - [AWS CloudFormation StackSets](aws-ass-solution-architect.md#aws_cloudformation_stacksets)
+
+**Wrong**
+Use AWS Resource Access Manager (AWS RAM) to deploy the same template across AWS accounts and regions
+  - AWS Resource Access Manager (AWS RAM) is a service that enables you to easily and securely share AWS resources with any AWS account or within your AWS Organization. Resource Access Manager cannot be used to deploy the same template across AWS accounts and regions.
+Use AWS CloudFormation templates to deploy the same template across AWS accounts and regions
+  - [CloudFormation templates](aws-ass-solution-architect.md#aws_cloudformation_template)
+Use AWS CloudFormation stacks to deploy the same template across AWS accounts and regions
+  - [AWS CloudFormation stacks](aws-ass-solution-architect.md#aws_cloudformation_stack)
+
+## 30
+- A financial services company wants to move the Windows file server clusters out of their datacenters. 
+They are looking for cloud file storage offerings that provide full Windows compatibility.
+- Can you identify the AWS storage services that provide highly reliable file storage that is accessible over the industry-standard Server Message Block (SMB) protocol compatible with Windows systems? (Select two)
+
+**Solution**
+Amazon FSx for Windows File Server
+  - [Amazon FSx for Windows File Server](aws-ass-solution-architect.md#amazon_fsx_for_windows_file_server)
+File Gateway Configuration of AWS Storage Gateway
+  - Depending on the use case, AWS Storage Gateway provides 3 types of storage interfaces for on-premises applications: File, Volume, and Tape. The File Gateway enables you to store and retrieve objects in Amazon S3 using file protocols such as Network File System (NFS) and Server Message Block (SMB).
+  - [AWS_Storage_gateway](aws-ass-solution-architect.md#aws_storage_gateway)
+**Wrong**
+Amazon Elastic File System (Amazon EFS)
+  - Amazon EFS is a file storage service for use with Amazon EC2. Amazon EFS provides a file system interface, file system access semantics, and concurrently-accessible storage for up to thousands of Amazon EC2 instances. Amazon EFS uses the Network File System protocol. EFS does not support SMB protocol.
+Amazon Simple Storage Service (Amazon S3)
+  - Amazon EBS is a block-level storage service for use with Amazon EC2. Amazon EBS can deliver performance for workloads that require the lowest latency access to data from a single EC2 instance. EBS does not support SMB protocol.
+Amazon Elastic Block Store (Amazon EBS)
+  - Amazon Simple Storage Service (Amazon S3) is an object storage service that offers industry-leading scalability, data availability, security, and performance. Amazon S3 provides a simple, standards-based REST web services interface that is designed to work with any Internet-development toolkit. S3 does not support SMB protocol.
+
+## Question 31
+- A video conferencing application is hosted on a fleet of EC2 instances which are part of an Auto Scaling group. 
+- The Auto Scaling group uses a Launch Template (LT1) with "dedicated" instance tenancy but the VPC (V1) used by the Launch Template LT1 has the instance tenancy set to default. 
+- Later the DevOps team creates a new Launch Template (LT2) with shared (default) instance tenancy but the VPC (V2) used by the Launch Template LT2 has the instance tenancy set to dedicated.
+
+Which of the following is correct regarding the instances launched via Launch Template LT1 and Launch Template LT2?
+**Solution**
+- The instances launched by both Launch Template LT1 and Launch Template LT2 will have default instance tenancy
+  - [Launch Template](aws-ass-solution-architect.md#ec2_launch_template)
+**Wrong**
+- The instances launched by Launch Template LT1 will have default instance tenancy while the instances launched by the Launch Template LT2 will have dedicated instance tenancy
+  - If either Launch Template Tenancy or VPC Tenancy is set to dedicated, then the instance tenancy is also dedicated. Therefore, this option is incorrect.
+- The instances launched by both Launch Template LT1 and Launch Template LT2 will have dedicated instance tenancy
+  - If either Launch Template Tenancy or VPC Tenancy is set to dedicated, then the instance tenancy is also dedicated. Therefore, this option is incorrect.
+
+- The instances launched by Launch Template LT1 will have dedicated instance tenancy while the instances launched by the Launch Template LT2 will have shared (default) instance tenancy
+  - If either Launch Template Tenancy or VPC Tenancy is set to dedicated, then the instance tenancy is also dedicated. Therefore, this option is incorrect.
+- https://docs.aws.amazon.com/autoscaling/ec2/userguide/advanced-settings-for-your-launch-template.html
+
+## Question 32
+An online gaming application has a large chunk of its traffic coming from users who download static assets such as historic leaderboard reports and the game tactics for various games. 
+The current infrastructure and design are unable to cope up with the traffic and application freezes on most of the pages.
+
+Which of the following is a cost-optimal solution that does not need provisioning of infrastructure?
+
+**Solution**
+**Wrong**
+
+Configure AWS Lambda with an Amazon RDS database to provide a serverless architecture
+
+Use Amazon CloudFront with Amazon S3 as the storage solution for the static assets
+
+Use AWS Lambda with Amazon ElastiCache and Amazon RDS for serving static assets at high speed and low latency
+Question 32
+Skipped
+An online gaming application has a large chunk of its traffic coming from users who download static assets such as historic leaderboard reports and the game tactics for various games. The current infrastructure and design are unable to cope up with the traffic and application freezes on most of the pages.
+
+Which of the following is a cost-optimal solution that does not need provisioning of infrastructure?
+
+**Solution**
+
+Use Amazon CloudFront with Amazon S3 as the storage solution for the static assets
+  - [Amazon CloudFront with s3](aws-ass-solution-architect.md#cloudfront_with_s3)
+**Wrong**
+Configure AWS Lambda with an Amazon RDS database to provide a serverless architecture
+
+Use AWS Lambda with Amazon ElastiCache and Amazon RDS for serving static assets at high speed and low latency
+
+Use Amazon CloudFront with Amazon DynamoDB for greater speed and low latency access to static assets
+
+## Question 33
+A social media startup uses AWS Cloud to manage its IT infrastructure. 
+The engineering team at the startup wants to perform weekly database rollovers for a MySQL database server using a *serverless cron job* that typically takes about 5 minutes to execute the database rollover script written in Python. 
+The database rollover will archive the past week’s data from the production database to keep the database small while still keeping its data accessible.
+
+As a solutions architect, which of the following would you recommend as the MOST cost-efficient and reliable solution?
+
+**Solution**
+Schedule a weekly Amazon EventBridge event cron expression to invoke an AWS Lambda function that runs the database rollover job
+  - AWS Lambda lets you run code without provisioning or managing servers. You pay only for the compute time you consume. AWS Lambda supports standard rate and cron expressions for frequencies of up to once per minute.
+  - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q30-i1.jpg)
+**Wrong**
+
+Provision an Amazon EC2 spot instance to run the database rollover script to be run via an OS-based weekly cron expression
+
+Provision an Amazon EC2 scheduled reserved instance to run the database rollover script to be run via an OS-based weekly cron expression
+
+*Create a time-based schedule option within an AWS Glue job to invoke itself every week and run the database rollover script*
+  - AWS Glue job is meant to be used for batch ETL data processing and it's not the right fit for running a database rollover script. Although AWS Glue is also serverless, AWS Lambda is a more cost-effective option compared to AWS Glue.
+
+
+## Question 34
+- An e-commerce company has deployed its application on EC2 that are configured in a **private subnet** using IPv4. 
+- These EC2 read and write a huge volume of data to and from Amazon S3 in the same AWS region. 
+- The company has set up subnet routing to direct all the internet-bound traffic through a Network Address Translation gateway (NAT gateway). 
+- The company wants to build the most cost-optimal solution without impacting the application's ability to communicate with Amazon S3 or the internet.
+
+Which of the following would you recommend?
+
+**Solution**
+
+- Set up a *VPC gateway endpoint* for Amazon S3. Attach an endpoint policy to the endpoint. Update the route table to direct the S3-bound traffic to the VPC endpoint
+  - [VPC_Gateway_Endpoint](aws-ass-solution-architect.md#VPC_Gateway_Endpoint)
+**Wrong**
+
+- Set up a *Gateway Load Balancer (GWLB)* endpoint for Amazon S3. Update the route table in the private subnet to direct the S3-bound traffic via the Gateway Load Balancer (GWLB) endpoint
+  - [VPC_Gateway_Loadbalancer](aws-ass-solution-architect.md#vpc_gateway_loadbalancer)
+
+- Provision an *internet gateway*. Update the route table in the private subnet to route traffic to the internet gateway. Update the network ACL (NACL) to allow the S3-bound traffic
+  - If a subnet is associated with a route table that has a route to an internet gateway, it's known as a **public subnet**
+  - This option has been added as a distractor as adding a route to the internet gateway in the route table associated with the private subnet would make the subnet public.
+
+- Set up an *egress-only internet gateway* in the public subnet. Update the route table in the private subnet to route traffic to the internet gateway. Update the network ACL to allow the S3-bound traffic
+  - Egress use for IP6 -> Wrong 
+## Question 35
+A startup has created a new web application for users to complete a risk assessment survey for COVID-19 symptoms via a self-administered questionnaire. The startup has purchased the domain covid19survey.com using Amazon Route 53. The web development team would like to create Amazon Route 53 record so that all traffic for covid19survey.com is routed to www.covid19survey.com.
+
+As a solutions architect, which of the following is the MOST cost-effective solution that you would recommend to the web development team?
+
+**Solution**
+- Create an alias record for covid19survey.com that routes traffic to www.covid19survey.com
+  - [Alias Record](aws-ass-solution-architect.md#dns_alias_records)
+    - You can create an alias record at the top node of a DNS namespace, also known as the zone apex, however, you cannot create a CNAME record for the top node of the DNS namespace. So, if you register the DNS name covid19survey.com, the zone apex is covid19survey.com. You can't create a CNAME record for covid19survey.com, but you can create an alias record for covid19survey.com that routes traffic to www.covid19survey.com.
+
+**Wrong**
+- Create an MX record for covid19survey.com that routes traffic to www.covid19survey.com
+  - An MX record specifies the names of your mail servers and, if you have two or more mail servers, the priority order. It cannot be used to create Amazon Route 53 record to route traffic for the top node of the DNS namespace, so this option is incorrec
+- Create an NS record for covid19survey.com that routes traffic to www.covid19survey.com
+  - An NS record identifies the name servers for the hosted zone. It cannot be used to create Amazon Route 53 record to route traffic for the top node of the DNS namespace, so this option is incorrect.
+- Create a CNAME record for covid19survey.com that routes traffic to www.covid19survey.com
+  - [CNAME](##dns)
+  - You cannot create a CNAME record for the top node of the DNS namespace, so this option is incorrect.
+
+## Question 36
+- A company recently experienced a database outage in its on-premises data center. 
+- The company now wants to migrate to a reliable database solution on AWS that minimizes data loss and stores every transaction on at least two nodes.
+
+Which of the following solutions meets these requirements?
+
+**Solution**
+- Set up an Amazon RDS MySQL DB instance with **Multi-AZ** functionality enabled to **synchronously replicate** the data
+  - [RDS_Multi_AZ](aws-ass-solution-architect.md#rds_multi_az)
+**Wrong**
+- Set up an Amazon EC2 instance with a MySQL DB engine installed that triggers an AWS Lambda function to *synchronously* replicate the data to an Amazon RDS MySQL DB instance
+  - [RDS_Read_Replica](aws-ass-solution-architect.md#rds_read_replicas)
+- Set up an Amazon RDS MySQL DB instance and then create a read replica in another Availability Zone that *synchronously* replicates the data
+- Set up an Amazon RDS MySQL DB instance and then create a read replica in a separate AWS Region that *synchronously* replicates the data
+  - read replica sysnchorouly relicated the data - Trap
+
+## Question 37
+- The engineering team at a company wants to use Amazon Simple Queue Service (Amazon SQS) to decouple components of the underlying application architecture.
+- However, the team is concerned about the VPC-bound components accessing Amazon Simple Queue Service (Amazon SQS) over the public internet.
+
+As a solutions architect, which of the following solutions would you recommend to address this use-case?
+
+**Solution**
+
+- Use VPC endpoint to access Amazon SQS
+  - [VPC Enpoint](aws-ass-solution-architect.md#vpc_endpoint)
+**Wrong**
+- Use Internet Gateway to access Amazon SQS
+  - [Internet Gateway](aws-ass-solution-architect.md#vpc_internet_gateway)
+- Use Network Address Translation (NAT) instance to access Amazon SQS
+  - [NAT](aws-ass-solution-architect.md#vpc_nat_gateway)
+- Use VPN connection to access Amazon SQS
+  - [VPC](aws-ass-solution-architect.md#aws_site_to_site_vpn)
+
+## Question 38
+A retail company has connected its on-premises data center to the AWS Cloud via AWS Direct Connect.
+The company wants to be able to resolve Domain Name System (DNS) queries for any resources in the on-premises network from the AWS VPC and also resolve any DNS queries for resources in the AWS VPC from the on-premises network.
+
+As a solutions architect, which of the following solutions can be combined to address the given use case? (Select two)
+**Solution**
+- Create an *inbound endpoint* on Amazon Route 53 Resolver and then Amazon Route 53 Resolver can conditionally forward queries to resolvers on the on-premises network via this endpoint
+- Create an *outbound endpoint* on Amazon Route 53 Resolver and then Amazon Route 53 Resolver can conditionally forward queries to resolvers on the on-premises network via this endpoint
+    - [DNS](aws-ass-solution-architect.md#router_53_resolver) 
+**Wrong**
+- Create an *outbound endpoint* on Amazon Route 53 Resolver and then DNS resolvers on the on-premises network can forward DNS queries to Amazon Route 53 Resolver via this endpoint
+
+
+- Create a *universal endpoint* on Amazon Route 53 Resolver and then Amazon Route 53 Resolver can receive and forward queries to resolvers on the on-premises network via this endpoint
+- Create an *inbound endpoint* on Amazon Route 53 Resolver and then DNS resolvers on the on-premises network can forward DNS queries to Amazon Route 53 Resolver via this endpoint
+
+## Question 39
+Skipped
+- A company has hired you to help with redesigning a real-time data processor. 
+- The company wants to build custom applications that process and analyze the streaming data for its specialized needs.
+
+Which solution will you recommend to address this use-case?
+
+**Sollution**
+- Use [Amazon Kinesis Data Streams](aws-ass-solution-architect.md#kinesis_data_stream) to process the data streams as well as *decouple the producers and consumers for the real-time data processor*
+
+**Wrong**
+
+- Use Amazon Simple Notification Service (Amazon SNS) to process the data streams as well as decouple the producers and consumers for the real-time data processor
+
+- Use Amazon Simple Queue Service (Amazon SQS) to process the data streams as well as decouple the producers and consumers for the real-time data processor
+
+- Use Amazon Kinesis Data Firehose to process the data streams as well as decouple the producers and consumers for the real-time data processor
+  - [](aws-ass-solution-architect.md#firehose)
+  - Kinesis Firehose cannot be used to process and analyze the streaming data in custom applications. It can capture, transform, and load streaming data into Amazon S3, Amazon Redshift, Amazon Elasticsearch Service, and Splunk, enabling near real-time analytics.
+
+## Question 40
+A retail organization is moving some of its on-premises data to AWS Cloud. The DevOps team at the organization has set up an AWS Managed IPSec VPN Connection between their remote on-premises network and their Amazon VPC over the internet.
+
+Which of the following represents the correct configuration for the IPSec VPN Connection?
+
+**Solution**
+Create a virtual private gateway (VGW) on the AWS side of the VPN and a Customer Gateway on the on-premises side of the VPN
+  - [VPC](aws-ass-solution-architect.md#aws_site_to_site_vpn)
+**Wrong**
+- Create a virtual private gateway (VGW) on the on-premises side of the VPN and a Customer Gateway on the AWS side of the VPN
+- Create a virtual private gateway (VGW) on both the AWS side of the VPN as well as the on-premises side of the VPN
+- Create a Customer Gateway on both the AWS side of the VPN as well as the on-premises side of the VPN
+

@@ -93,7 +93,6 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - EFA devices provide all *Elastic Network Adapter (ENA)* devices functionalities plus a new OS bypass hardware interface that allows user-space applications to communicate directly with the hardware-provided reliable transport functionality.
 
 
-
 ### EC2_instance_recover
 -https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-recover.htmld
 
@@ -141,9 +140,17 @@ Previously attached data volumes are reattached and the instance retains its ins
 
 ### EC2_Launch_Template
 - A launch template is similar to a launch configuration, in that it specifies instance configuration information such as the ID of the Amazon Machine Image (AMI), the instance type, a key pair, security groups, and the other parameters that you use to launch EC2 instances. 
+
 - Also, defining a launch template instead of a launch configuration allows you to have multiple versions of a template.
 
 - With launch templates, you can provision capacity across multiple instance types using both On-Demand Instances and Spot Instances to achieve the desired scale, performance, and cost. 
+
+- When you create a Launch Template, the default value for the instance tenancy is shared and the instance tenancy is controlled by the tenancy attribute of the VPC. If you set the Launch Template Tenancy to shared (default) and the VPC Tenancy is set to dedicated, then the instances have dedicated tenancy. If you set the Launch Template Tenancy to dedicated and the VPC Tenancy is set to default, then again the instances have dedicated tenancy.
+
+Amazon EC2 provides three options for the tenancy of your EC2 instances:
+  1. *Shared (Shared)* – Multiple AWS accounts may share the same physical hardware. This is the default tenancy option when launching an instance.
+  2. *Dedicated instances (Dedicated)* – Your instance runs on single-tenant hardware. No other AWS customer shares the same physical server.
+  3. *Dedicated Hosts (Dedicated host)* – The instance runs on a physical server that is dedicated to your use. Using Dedicated Hosts makes it easier to bring your own licenses (BYOL) that have dedicated hardware requirements to EC2 and meet compliance use cases. If you choose this option, you must provide a host resource group for Tenancy host resource group.
 
 ### EC2_Placement_Group
 - Depending on the type of workload, you can create a placement group using one of the following placement strategies:
@@ -303,6 +310,14 @@ This is because each load balancer node can route its 50% of the client traffic 
 - Private Link is utilized to create a private connection between an application that is fronted by an NLB in an account, and an Elastic Network Interface (ENI) in another account, without the need of VPC peering, and allowing the connections between the two to remain within the AWS network.
 - Private Link is leveraged to create a private connection between an application that is fronted by an NLB in an account, and ENI in another account, without the need of VPC peering and allowing the connections between the two to remain within the AWS network.
 
+### VPC_Endpoint
+- VPC endpoints for Amazon SQS are powered by AWS PrivateLink, a highly available, scalable technology that enables you to privately connect your VPC to supported AWS services.
+- AWS customers can access Amazon Simple Queue Service (Amazon SQS) from their Amazon Virtual Private Cloud (Amazon VPC) using VPC endpoints, without using public IPs, and without needing to traverse the public internet
+- Amazon VPC endpoints are easy to configure. They also provide reliable connectivity to Amazon SQS without requiring an internet gateway, Network Address Translation (NAT) instance, VPN connection, or AWS Direct Connect connection. With VPC endpoints, the data between your Amazon VPC and Amazon SQS queue is transferred within the Amazon network, helping protect your instances from internet traffic.
+- AWS PrivateLink simplifies the security of data shared with cloud-based applications by eliminating the exposure of data to the public Internet. AWS PrivateLink provides private connectivity between VPCs, AWS services, and on-premises applications, securely on the Amazon network. AWS PrivateLink makes it easy to connect services across different accounts and VPCs to significantly simplify the network architecture.
+  
+
+
 ## AWS_Config
 - ![AWS_Config](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q9-i2.jpg)
 - provides a detailed view of the configuration of AWS resources in your AWS account. This includes how the resources are related to one another and how they were configured in the past so that you can see how the configurations and relationships change over time.
@@ -436,7 +451,7 @@ Features of Aurora
 
 
 
-* DNS Record Time:
+* DNS Record  Time:
 
 * Go to AWS Cloudshell
   * sudo yum install -y bind-utils
@@ -458,7 +473,20 @@ Features of Aurora
 ## Route_53
 - H highly available and scalable cloud Domain Name System (DNS) web service. 
 - It is designed to give developers and businesses an extremely reliable and cost-effective way to route end users to Internet applications by translating names like www.example.com into the numeric IP addresses like 192.0.2.1 that computers use to connect to each other. 
-- d
+### Router_53_Resolver
+- By default, Amazon Route 53 Resolver automatically answers DNS queries for local VPC domain names for Amazon EC2 instances. You can integrate DNS resolution between Resolver and DNS resolvers on your on-premises network by configuring forwarding rules.
+#### Router_53_Resolver_Inbound_Endpoint
+![](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/images/Resolver-inbound-endpoint.png)
+- To resolve any DNS queries for resources in the AWS VPC from the on-premises network, you can create an inbound endpoint on Amazon Route 53 Resolver and then DNS resolvers on the on-premises network can forward DNS queries to Amazon Route 53 Resolver via this endpoint.
+#### Router_53_Resolver_Outbound_Endpoint
+![](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/images/Resolver-outbound-endpoint.png)
+- To resolve DNS queries for any resources in the on-premises network from the AWS VPC, you can create an outbound endpoint on Amazon Route 53 Resolver and then Amazon Route 53 Resolver can conditionally forward queries to resolvers on the on-premises network via this endpoint. To conditionally forward queries, you need to create Resolver rules that specify the domain names for the DNS queries that you want to forward (such as example.com) and the IP addresses of the DNS resolvers on the on-premises network that you want to forward the queries to.
+
+### Record Type
+#### DNS_Alias_Records
+- **Alias** records provide Amazon Route 53–specific extension to DNS functionality. Alias records let you route traffic to selected AWS resources, such as Amazon CloudFront distributions and Amazon S3 buckets.
+- You can create an alias record at the top node of a DNS namespace, also known as the zone apex, however, you cannot create a CNAME record for the top node of the DNS namespace. So, if you register the DNS name covid19survey.com, the zone apex is covid19survey.com. You can't create a CNAME record for covid19survey.com, but you can create an alias record for covid19survey.com that routes traffic to www.covid19survey.com.
+- You should also note that Amazon Route 53 doesn't charge for alias queries to AWS resources but Route 53 does charge for CNAME queries. Additionally, an alias record can only redirect queries to selected AWS resources such as Amazon S3 buckets, Amazon CloudFront distributions, and another record in the same Amazon Route 53 hosted zone; however a CNAME record can redirect DNS queries to any DNS record. So, you can create a CNAME record that redirects queries from app.covid19survey.com to app.covid19survey.net.
 ### Routing_Policy
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q6-i1.jpg)
 #### Route53_Lantency_Routing
@@ -552,6 +580,34 @@ Features of Aurora
 4. *Client-Side Encryption with data encryption* 
 - Done on the client-side before sending it to Amazon S3. You can encrypt the data client-side and upload the encrypted data to Amazon S3. 
 - In this case, you manage the encryption process, the encryption keys, and related tools.
+
+
+## Auto_scale_group_ags
+#### Target_tracking_scaling_policy
+![](https://docs.aws.amazon.com/autoscaling/ec2/userguide/images/sqs-as-custom-metric-diagram.png)
+- If you use a target tracking scaling policy based on a custom Amazon SQS queue metric, dynamic scaling can adjust to the demand curve of your application more effectively. 
+- You may use an existing *CloudWatch Amazon SQS metric* like `ApproximateNumberOfMessagesVisible` for target tracking but you could still face an issue so that the number of messages in the queue might not change proportionally to the size of the Auto Scaling group that processes messages from the queue. The solution is to use a backlog per instance metric with the target value being the acceptable backlog per instance to maintain.
+
+To calculate your backlog per instance, divide the ApproximateNumberOfMessages queue attribute by the number of instances in the InService state for the Auto Scaling group. Then set a target value for the Acceptable backlog per instance.
+
+To illustrate with an example, let's say that the current ApproximateNumberOfMessages is 1500 and the fleet's running capacity is 10. If the average processing time is 0.1 seconds for each message and the longest acceptable latency is 10 seconds, then the acceptable backlog per instance is 10 / 0.1, which equals 100. This means that 100 is the target value for your target tracking policy. If the backlog per instance is currently at 150 (1500 / 10), your fleet scales out, and it scales out by five instances to maintain proportion to the target value.
+
+#### Simple_Scaling_Policy 
+- With simple scaling, you choose scaling metrics and threshold values for the *Amazon CloudWatch alarms* that trigger the scaling process. 
+- The main issue with simple scaling is that after a scaling activity is started, the policy must wait for the scaling activity or health check replacement to complete and the cooldown period to expire before responding to additional alarms. 
+- This implies that the application would not be able to react quickly to sudden spikes in orders.
+
+#### Step_Scaling_Policy
+- With step scaling, you choose scaling metrics and threshold values for the *Amazon CloudWatch alarms* that trigger the scaling process. 
+- When step adjustments are applied, they increase or decrease the current capacity of your Auto Scaling group, and the adjustments vary based on the size of the alarm breach. For the given use-case, step scaling would try to approximate the correct number of instances by increasing/decreasing the steps as per the policy. 
+- This is not as efficient as the target tracking policy where you can calculate the exact number of instances required to handle the spike in orders.
+
+#### scheduled_scaling_policy
+- Scheduled scaling allows you to set your scaling schedule.
+- For example, let's say that every week the traffic to your web application starts to increase on Wednesday, remains high on Thursday, and starts to decrease on Friday. 
+- You can plan your scaling actions based on the predictable traffic patterns of your web application. Scaling actions are performed automatically as a function of time and date. 
+- You cannot use scheduled scaling policies to address the sudden spike in orders.
+
 
 
 ## AWS_Systems_Manager_Parameter_Store
@@ -661,7 +717,14 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 - CloudFront points of presence (POPs) (edge locations) make sure popular content can be served quickly to your viewers.
 - has regional edge caches that bring more of your content closer to your viewers, even when the content is not popular enough to stay at a POP, to help improve performance for that content.
 - You can use different origins for different types of content on a single site – e.g. Amazon S3 for static objects, Amazon EC2 for dynamic content, and custom origins for third-party content.
+### cloudfront_with_s3
+When you put your content in an Amazon S3 bucket in the cloud, a lot of things become much easier. First, you don’t need to plan for and allocate a specific amount of storage space because Amazon S3 buckets scale automatically. As Amazon S3 is a serverless service, you don’t need to manage or patch servers that store files yourself; you just put and get your content. Finally, even if you require a server for your application (for example, because you have a dynamic application), the server can be smaller because it doesn’t have to handle requests for static content.
 
+Amazon CloudFront is a content delivery network (CDN) service that delivers static and dynamic web content, video streams, and APIs around the world, securely and at scale. By design, delivering data out of Amazon CloudFront can be more cost-effective than delivering it from Amazon S3 directly to your users. Amazon CloudFront serves content through a worldwide network of data centers called Edge Locations. Using edge servers to cache and serve content improves performance by providing content closer to where viewers are located.
+
+When a user requests content that you serve with Amazon CloudFront, their request is routed to a nearby Edge Location. If Amazon CloudFront has a cached copy of the requested file, CloudFront delivers it to the user, providing a fast (low-latency) response. If the file they’ve requested isn’t yet cached, CloudFront retrieves it from your origin – for example, the Amazon S3 bucket where you’ve stored your content. Then, for the next local request for the same content, it’s already cached nearby and can be served immediately.
+
+By caching your content in Edge Locations, Amazon CloudFront reduces the load on your Amazon S3 bucket and helps ensure a faster response for your users when they request content. Also, data transfer out for content by using Amazon CloudFront is often more cost-effective than serving files directly from Amazon S3, and there is no data transfer fee from Amazon S3 to Amazon CloudFront. You only pay for what is delivered to the internet from Amazon CloudFront, plus request fees.
 
 ### Origin failover feature
 
@@ -710,11 +773,50 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 ### AWS_Direct_Connect_VIFs: 
 ![AWS_Direct_Connect_VIFs](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q11-i1.jpg)
 
+## AMI
+- An Amazon Machine Image (AMI) provides the information required to launch an instance. 
+- An AMI includes the following:
+
+  + One or more Amazon EBS snapshots
+  + for instance-store-backed AMIs
+  + a template for the root volume of the instance.
+
+- Launch permissions that control which AWS accounts can use the AMI to launch instances.
+
+- A block device mapping that specifies the volumes to attach to the instance when it's launched.
+
+- You can copy an AMI within or across AWS Regions using the AWS Management Console, the AWS Command Line Interface or SDKs, or the Amazon EC2 API, all of which support the CopyImage action. 
+- You can copy both Amazon EBS-backed AMIs and instance-store-backed AMIs. 
+- You can copy AMIs with encrypted snapshots and also change encryption status during the copy process. Therefore, the option - "You can copy an AMI across AWS Regions" - is correct.
+
+- The following table shows encryption support for various AMI-copying scenarios. While it is possible to copy an unencrypted snapshot to yield an encrypted snapshot, you cannot copy an encrypted snapshot to yield an unencrypted one. Therefore, the option - "Copying an AMI backed by an encrypted snapshot cannot result in an unencrypted target snapshot" is correct.
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q55-i1.jpg)
+
+## CloudFormation
+
+### AWS_CloudFormation_Stack
+- AWS CloudFormation stack is a set of AWS resources that are created and managed as a single unit when AWS CloudFormation instantiates a template. A stack cannot be used to deploy the same template across AWS accounts and regions.
+
+### AWS_CloudFormation_Template
+-  AWS Cloudformation template is a JSON or YAML-format, text-based file that describes all the AWS resources you need to deploy to run your application. 
+-  A template acts as a blueprint for a stack. AWS CloudFormation templates cannot be used to deploy the same template across AWS accounts and regions.
+
+### AWS_CloudFormation_StackSets
+![](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/stack_set_conceptual_sv.png)
+AWS CloudFormation StackSet extends the functionality of stacks by enabling you to create, update, or delete stacks across multiple accounts and regions with a single operation. A stack set lets you create stacks in AWS accounts across regions by using a single AWS CloudFormation template. Using an administrator account of an "AWS Organization", you define and manage an AWS CloudFormation template, and use the template as the basis for provisioning stacks into selected target accounts of an "AWS Organization" across specified regions.
+
 ## AWS_Site_To_Site_VPN
+![](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/images/aws-managed-vpn.png)
 - Enables you to securely connect your **on-premises** network or branch office site to your Amazon VPC.
 - Utilizes protocol security(IPSec) to establish encrypted network connectivity between your intranet and Amazon VPC over the Internet.
 - VPN Connections are a good solution if you have an immediate need, have low to modest bandwidth requirements, and can tolerate the inherent variability in Internet-based connectivity.
 - However, Site-to-site VPN cannot provide low latency and high throughput connection, therefore this option is ruled out.
+- The following are the key concepts for a site-to-site VPN:
+  - Virtual private gateway: A virtual private gateway (VGW), also known as a VPN Gateway is the endpoint on the AWS VPC side of your VPN connection.
+  - VPN connection: A secure connection between your on-premises equipment and your VPCs.
+  - VPN tunnel: An encrypted link where data can pass from the customer network to or from AWS.
+  - Customer Gateway: An AWS resource that provides information to AWS about your Customer Gateway device.
+  - Customer Gateway device: A physical device or software application on the customer side of the Site-to-Site VPN connection.
 ## AWS Snow Family
 
 ### AWS_Snowball
@@ -741,6 +843,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - FSx for Lustre integrates with Amazon S3, making it easy to process data sets with the Lustre file system. When linked to an S3 bucket, an FSx for Lustre file system transparently presents S3 objects as files and allows you to write changed data back to S3.
 
 ## Amazon_FSx_for_Windows_File_Server
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q43-i1.jpg)
 - Provides fully managed, highly reliable file storage that is accessible over the industry-standard Service Message Block (SMB) protocol. 
 - It is built on Windows Server, delivering a wide range of administrative features such as user quotas, end-user file restore, and Microsoft Active Directory (AD) integration. 
 - The Distributed File System Replication (DFSR) service is a new multi-master replication engine that is used to keep folders synchronized on multiple servers. Amazon FSx supports the use of Microsoft’s Distributed File System (DFS) to organize shares into a single folder structure up to hundreds of PB in size.
@@ -763,6 +866,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - ~Ref~
   - [Link](https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html)
 
+- It is not suited to be used as a shared storage space that multiple applications can access in parallel.
 ### File gateway
 ![](https://d1.awsstatic.com/cloud-storage/Amazon%20FSx%20File%20Gateway%20How%20It%20Works%20Diagram.edbf58e4917d47d04e5a5c22132d44bd92733bf5.png)
 
@@ -851,6 +955,17 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 AWS Config is a service that enables you to assess, audit, and evaluate the configurations of your AWS resources. With Config, you can review changes in configurations and relationships between AWS resources, dive into detailed resource configuration histories, and determine your overall compliance against the configurations specified in your internal guidelines. You can use Config to answer questions such as - “What did my AWS resource look like at xyz point in time?”
 
 ## VPC
+### VPC_Gateway_Loadbalancer
+- **Gateway Load Balancers** use *Gateway Load Balancer endpoints* to securely exchange traffic across VPC boundaries. A Gateway Load Balancer endpoint is a VPC endpoint that provides private connectivity between virtual appliances in the service provider VPC and application servers in the service consumer VPC. You cannot set up a gateway load balancer endpoint to access Amazon S3
+
+### VPC_Gateway_Endpoint
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q47-i1.jpg)
+- **Gateway endpoints** provide reliable connectivity to Amazon S3 without requiring an internet gateway or a NAT device for your VPC. 
+- After you create the gateway endpoint, you can add it as a target in your route table for traffic destined from your VPC to Amazon S3. 
+- There is no additional charge for using gateway endpoints.
+- The **VPC endpoint policy** for the **gateway endpoint** controls access to Amazon S3 from the VPC through the endpoint. The default policy allows full access.
+- Using the VPC gateway endpoint allows the Amazon EC2 instances to reach Amazon S3 without using the public internet. Since the data transfer remains within the same AWS region, so there is no data transfer costs for ingress as well as egress traffic. Hence this is the most cost-optimal solution.
+
 ### vpc_internet_gateway
 - *An Internet Gateway* is a horizontally scaled, redundant, and highly available VPC component that allows communication between your VPC and the internet.
 - *An Internet Gateway serves two purposes*: 
@@ -1018,6 +1133,7 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 - Manual DB Snapshot for longer-term recoverry
 - Support IAM Authentication, integration with Secrets Manager
 ### RDS_Comparable
+![](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/images/read-and-standby-replica.png)
 ![CompareTable](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q8-i1.jpg)
 ### RDS_Read_Replicas
 - Amazon RDS Read Replicas provide enhanced performance and durability for RDS database (DB) instances.
@@ -1036,7 +1152,7 @@ If you have resources in multiple Availability Zones and they share one NAT gate
   4. You may use a read replica for disaster recovery of the source DB instance, either in the same AWS Region or in another Region.
 - ![Read Replicas Link](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q44-i1.jpg)
 - ![Compare](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q41-i1.jpg)
-### storage auto-scaling
+### storage_auto_scaling
 - If your workload is unpredictable, you can enable storage autoscaling for an Amazon RDS DB instance. 
 - When Amazon RDS detects that you are running out of free database space it automatically scales up your storage. 
 - Amazon RDS starts a storage modification for an autoscaling-enabled DB instance when these factors apply:
@@ -1044,6 +1160,10 @@ If you have resources in multiple Availability Zones and they share one NAT gate
   - The low-storage condition lasts at least five minutes.
   - At least six hours have passed since the last storage modification.
   - The maximum storage threshold is the limit that you set for autoscaling the DB instance. You can't set the maximum storage threshold for autoscaling-enabled instances to a value greater than the maximum allocated storage.
+### RDS_Multi_AZ
+![](https://d1.awsstatic.com/asset-repository/multi-az-deployments.bda9d7bf45a74103d0331a985baf2c5fb838a0fa.png)
+When you provision an RDS Multi-AZ DB Instance, Amazon RDS automatically creates a primary DB Instance and synchronously replicates the data to a standby instance in a different Availability Zone (AZ). Each AZ runs on its own physically distinct, independent infrastructure, and is engineered to be highly reliable. Running a DB instance with high availability can enhance availability during planned system maintenance, and help protect your databases against DB instance failure and Availability Zone disruption. In the event of a planned or unplanned outage of your DB instance, Amazon RDS automatically switches to a standby replica in another Availability Zone if you have enabled Multi-AZ. The time it takes for the failover to complete depends on the database activity and other conditions at the time the primary DB instance became unavailable. Failover times are typically 60–120 seconds.
+
 
 ## Aurora
 ![](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/images/AuroraArch001.png)
