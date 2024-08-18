@@ -862,7 +862,7 @@ Rules associated with Network ACLs should never be modified from command line. A
 
 IAM Role defined in the Security Group is different from the IAM Role that is given access in the Network ACLs
 
-Network ACLs are stateful, so allowing inbound traffic to the necessary ports enables the connection. Security Groups are stateless, so you must allow both inbound and outbound traffic
+Network ACLs are stateful, so allowing inbound traffic to the necessary ports enables the connection. Security Groups are 60, so you must allow both inbound and outbound traffic
 
 ## Question 44
 Skipped
@@ -994,13 +994,267 @@ Which of the following AWS services provides a highly available and fault-tolera
 Considering the company uses only IPv4 addressing and is looking for a fully managed service, which of the following would you suggest as an optimal solution?
 
 **Solution**
-- ddd
-**Wrong**
 - Configure a Network Address Translation gateway (NAT gateway) in the public subnet of the VPC
   - [NAT](aws-ass-solution-architect.md#vpc_nat_gateway)
+**Wrong**
 - Configure a Network Address Translation instance (NAT instance) in the public subnet of the VPC
   - NAT intance is manage by customer
 - Configure an Egress-only internet gateway for the resources in the private subnet of the VPC
   - It is IP4
 - Configure the Internet Gateway of the VPC to be accessible to the private subnet resources by changing the route tables
   - Internet Gateway cannot be used directly with a private subnet. It is not possible to set up this configuration, without a NAT instance or a NAT gateway in the public subnet.
+
+## 51
+A DevOps engineer at an IT company just upgraded an Amazon EC2 instance type from t2.nano (0.5G of RAM, 1 vCPU) to u-12tb1.metal (12.3 TB of RAM, 448 vCPUs). How would you categorize this upgrade?
+
+**Solution**
+This is a scale up example of vertical scalability
+
+**Wrong**
+This is an example of high availability
+This is a scale out example of vertical scalability
+This is a scale up example of horizontal scalability
+
+## 52
+- The database backend for a retail company's website is hosted on Amazon RDS for MySQL having a primary instance and three read replicas to support read scalability. 
+- The company has mandated that the *read replicas should lag no more than 1 second* behind the primary instance to provide the best possible user experience. 
+- The read replicas are falling further behind during periods of peak traffic spikes, resulting in a bad user experience as the searches produce inconsistent results.
+
+How to reduce the replication lag as much as possible with minimal changes to the application code or the effort required to manage the underlying resources.
+
+Which of the following will you recommend?
+**Solution**
+Set up database migration from Amazon RDS MySQL to Amazon Aurora MySQL. Swap out the MySQL read replicas with Aurora Replicas. Configure Aurora Auto Scaling
+  - [Aurora](aws-ass-solution-architect.md#aurora)
+  - Since Amazon Aurora Replicas share the same data volume as the primary instance in the same AWS Region, there is virtually no replication lag. The replica lag times are in the 10s of milliseconds (compared to the replication lag of seconds in the case of MySQL read replicas). Therefore, this is the right option to ensure that the read replicas lag no more than 1 second behind the primary instance.
+**Wrong**
+- Set up database migration from Amazon RDS MySQL to *Amazon DynamoDB*. Provision a large number of read capacity units (RCUs) to support the required throughput and enable Auto-Scaling
+  - This is no SQL
+- Set up an *Amazon ElastiCache* for Redis cluster in front of the MySQL database. Update the website to check the cache before querying the read replicas
+  - Introducing a caching layer would result in significant changes to the application code, so this option is incorrect.
+- Host the MySQL primary database on a memory-optimized Amazon EC2 instance. Spin up additional compute-optimized Amazon EC2 instances to host the read replicas
+  - Amazon EC2 instances would result in significant overhead to manage the underlying resources such as OS patching, database patching, etc. So this option is incorrect.
+
+## Question 53
+- A leading news aggregation company offers hundreds of digital products and services for customers ranging from law firms to banks to consumers. 
+- The company bills its clients based on per unit of *clickstream* data provided to the clients. 
+- As the company operates in a regulated industry, it needs to have the same ordered clickstream data available for auditing within a window of 7 days.
+
+As a solutions architect, which of the following AWS services provides the ability to run the billing process and auditing process on the given clickstream data in the same order?
+
+**Solution**
+- Amazon Kinesis Data Streams
+  - [kinesis_data_stream](aws-ass-solution-architect.md#kinesis_data_stream)
+**Wrong**
+- Amazon Simple Queue Service (SQS)
+  - [SQS](aws-ass-solution-architect.md#sqs)
+  - For Amazon SQS, you cannot have the same message being consumed by multiple consumers in the same order a few hours later, therefore this option is incorrect.
+- [Amazon Kinesis Data Analytics](aws-ass-solution-architect.md#kinesis_data_analytics)
+  
+- Amazon Kinesis Data Firehose
+  - [Firehose](aws-ass-solution-architect.md#firehose)
+  - As Amazon Kinesis Data Firehose is used to load streaming data into data stores , therefore this option is incorrect.
+
+## Question 54
+- A leading online gaming company is migrating its flagship application to AWS Cloud for delivering its online games to users across the world.
+- The company would like to use a Network Load Balancer to handle millions of requests per second. 
+- The engineering team has provisioned multiple instances in a *public subnet* and specified these instance IDs as the targets for the NLB.
+
+As a solutions architect, can you help the engineering team understand the correct routing mechanism for these target instances?
+
+**Solution**
+- Traffic is routed to instances using the *primary private IP address* specified in the primary network interface for the instance
+  - [NLB_Request_Routing_and_IP_Addresses](aws-ass-solution-architect.md#nlb_request_routing_and_ip_addresses)
+
+**Wrong**
+- Traffic is routed to instances using the *primary public IP address specified* in the primary network interface for the instance
+
+- Traffic is routed to instances using *the instance ID specified in the primary network interface* for the instance
+  -  - You cannot use instance ID to route traffic to the instance. 
+- Traffic is routed to instances using the *primary elastic IP address specified* in the primary network interface for the instance
+
+## 55 Question 55
+The DevOps team at an IT company is provisioning a two-tier application in a VPC with a public subnet and a private subnet. The team wants to use either a Network Address Translation (NAT) instance or a Network Address Translation (NAT) gateway in the public subnet to enable instances in the private subnet to initiate outbound IPv4 traffic to the internet but needs some technical assistance in terms of the configuration options available for the Network Address Translation (NAT) instance and the Network Address Translation (NAT) gateway.
+
+As a solutions architect, which of the following options would you identify as CORRECT? (Select three)
+
+**Solution**
+- NAT instance can be used as a bastion server
+- Security Groups can be associated with a NAT gateway
+- NAT instance supports port forwarding
+
+**Explain**
+- [NAT instance](aws-ass-solution-architect.md#vpc_nat_instance)
+- [Nat Gateway]()
+- A *NAT instance* or a *NAT Gateway* can be used in a public subnet in your VPC to enable instances in the private subnet to initiate outbound IPv4 traffic to the Internet.
+**Wrong**
+NAT gateway can be used as a bastion server
+NAT gateway supports port forwarding
+Security Groups can be associated with a NAT gateway
+
+## Question 56
+- An IT training company hosted its website on Amazon S3 a couple of years ago. 
+- Due to COVID-19 related travel restrictions, the training website has suddenly gained traction. 
+- With an almost 300% increase in the requests served per day, the company's AWS costs have sky-rocketed for just the Amazon S3 outbound data costs.
+
+As a Solutions Architect, can you suggest an alternate method to reduce costs while keeping the latency low?
+**Solution**
+- Configure Amazon CloudFront to distribute the data hosted on Amazon S3 cost-effectively
+  - [CloudFront](aws-ass-solution-architect.md#cloudfront) 
+  - By design, delivering data out of Amazon CloudFront can be more cost-effective than delivering it from Amazon S3 directly to your users.
+  - Also, data transfer out for content by using CloudFront is often more cost-effective than serving files directly from Amazon S3, and there is no data transfer fee from Amazon S3 to CloudFront. You only pay for what is delivered to the internet from Amazon CloudFront, plus request fees.
+**Wrong**
+
+- To reduce Amazon S3 cost, the data can be saved on an Amazon EBS volume connected to an Amazon EC2 instance that can host the application
+  - Amazon EBS volumes are fast and are relatively cheap (though Amazon S3 is still a cheaper alternative). But, Amazon EBS volumes are accessible only through Amazon EC2 instances and are bound to a specific region
+- Configure Amazon S3 Batch Operations to read data in bulk at one go, to reduce the number of calls made to Amazon S3 buckets
+  -  This statement is incorrect and given only as a distractor. You can use Amazon S3 Batch Operations to perform large-scale batch operations on Amazon S3 objects, and it has nothing to do with content distribution.
+- Use Amazon EFS service, as it provides a shared, scalable, fully managed elastic NFS file system for storing AWS Cloud or on-premises data
+  - Amazon EFS is a shareable file system that can be mounted onto Amazon EC2 instances. Amazon EFS is costlier than Amazon EBS and not a solution if the company is looking at reducing costs.
+
+## 57
+The engineering team at an e-commerce company wants to migrate from Amazon Simple Queue Service (Amazon SQS) Standard queues to FIFO (First-In-First-Out) queues with batching.
+
+As a solutions architect, which of the following steps would you have in the migration checklist? (Select three)
+
+**Solution**
+- Make sure that the throughput for the target FIFO (First-In-First-Out) queue does not exceed 3,000 messages per second
+- Make sure that the name of the FIFO (First-In-First-Out) queue ends with the .fifo suffix
+- Delete the existing standard queue and recreate it as a FIFO (First-In-First-Out) queue
+  - [SQS](aws-ass-solution-architect.md#sqs)
+**Wrong**
+- Convert the existing standard queue into a FIFO (First-In-First-Out) queue
+- Make sure that the name of the FIFO (First-In-First-Out) queue is the same as the standard queue
+- Make sure that the throughput for the target FIFO (First-In-First-Out) queue does not exceed 300 messages per second
+
+## Question 58
+A small business has been running its IT systems on the on-premises infrastructure but the business now plans to migrate to AWS Cloud for operational efficiencies.
+
+As a Solutions Architect, can you suggest a cost-effective serverless solution for its flagship application that has both static and dynamic content?
+
+**Solution**
+- Host the static content on Amazon S3 and use AWS Lambda with Amazon DynamoDB for the serverless web application that handles dynamic content. Amazon CloudFront will sit in front of AWS Lambda for distribution across diverse regions
+
+**Wrong**
+- Host both the static and dynamic content of the web application on Amazon EC2 with Amazon RDS as database. Amazon CloudFront should be configured to distribute the content across geographically disperse regions
+
+- Host the static content on Amazon S3 and use Amazon EC2 with Amazon RDS for generating the dynamic content. Amazon CloudFront can be configured in front of Amazon EC2 instance, to make global distribution easy
+- Host both the static and dynamic content of the web application on Amazon S3 and use Amazon CloudFront for distribution across diverse regions/countries
+
+## Question 59
+A financial services company is migrating their messaging queues from self-managed message-oriented middleware systems to Amazon Simple Queue Service (Amazon SQS). 
+The development team at the company wants to *minimize the costs* of using Amazon SQS.
+
+As a solutions architect, which of the following options would you recommend for the given use-case?
+**Solution**
+- Use SQS long polling to retrieve messages from your Amazon SQS queues
+  - [long polling](aws-ass-solution-architect.md#long_polling)
+**Wrong**
+
+- Use SQS short polling to retrieve messages from your Amazon SQS queues
+- Use SQS message timer to retrieve messages from your Amazon SQS queues
+- Use SQS visibility timeout to retrieve messages from your Amazon SQS queues
+
+## 60 
+- A healthcare company has deployed its web application on Amazon Elastic Container Service (Amazon ECS) container instances running behind an Application Load Balancer.
+- The website slows down when the traffic spikes and the website availability is also reduced. 
+- The development team has configured Amazon CloudWatch alarms to receive notifications whenever there is an availability constraint so the team can scale out resources. 
+- The company wants an automated solution to respond to such events.
+
+Which of the following addresses the given use case?
+
+**Solution**
+- Configure AWS Auto Scaling to scale out the Amazon ECS cluster when the ECS service's CPU utilization rises above a threshold
+  - You use the Amazon ECS first-run wizard to create a cluster and a service that runs behind an Elastic Load Balancing load balancer. Then you can configure a target tracking scaling policy that scales your service automatically based on the current application load as measured by the service's CPU utilization (from the ECS, ClusterName, and ServiceName category in CloudWatch).
+
+  - When the average CPU utilization of your service rises above 75% (meaning that more than 75% of the CPU that is reserved for the service is being used), a scale out alarm triggers Service Auto Scaling to add another task to your service to help out with the increased load. Conversely, when the average CPU utilization of your service drops below the target utilization for a sustained period, a scale-in alarm triggers a decrease in the service's desired count to free up those cluster resources for other tasks and services.
+**Wrong**
+- Configure AWS Auto Scaling to scale out the Amazon ECS cluster when the Application Load Balancer's CPU utilization rises above a threshold
+- Configure AWS Auto Scaling to scale out the Amazon ECS cluster when the CloudWatch alarm's CPU utilization rises above a threshold
+- Configure AWS Auto Scaling to scale out the Amazon ECS cluster when the Application Load Balancer's target group's CPU utilization rises above a threshold
+
+## 61
+A media company wants a low-latency way to distribute live sports results which are delivered via a proprietary application using UDP protocol.
+
+As a solutions architect, which of the following solutions would you recommend such that it offers the BEST performance for this use case?
+
+**Solution**
+
+Use AWS Global Accelerator to provide a low latency way to distribute live sports results
+  - [AWS_Global_Accelerator](aws-ass-solution-architect.md#AWS_Global_Accelerator)
+**Wrong**
+Use Auto Scaling group to provide a low latency way to distribute live sports results
+Use Elastic Load Balancing (ELB) to provide a low latency way to distribute live sports results
+Use Amazon CloudFront to provide a low latency way to distribute live sports results
+
+*Please note the differences between the capabilities of AWS Global Accelerator and Amazon CloudFront*
+- AWS Global Accelerator and Amazon CloudFront are separate services that use the AWS global network and its edge locations around the world. Amazon CloudFront improves performance for both cacheable content (such as images and videos) and dynamic content (such as API acceleration and dynamic site delivery). AWS Global Accelerator improves performance for a wide range of applications over TCP or UDP by proxying packets at the edge to applications running in one or more AWS Regions.
+
+- AWS Global Accelerator is a good fit for non-HTTP use cases, such as gaming (UDP), IoT (MQTT), or Voice over IP, as well as for HTTP use cases that specifically require static IP addresses or deterministic, fast regional failover. Both services integrate with AWS Shield for DDoS protection.
+
+## 62
+An IT company is looking to move its on-premises infrastructure to AWS Cloud. The company has a portfolio of applications with a few of them using server bound licenses that are valid for the next year. To utilize the licenses, the CTO wants to use dedicated hosts for a one year term and then migrate the given instances to default tenancy thereafter.
+
+As a solutions architect, which of the following options would you identify as CORRECT for changing the tenancy of an instance after you have launched it? (Select two)
+
+**Solution**
+
+- You can change the tenancy of an instance from dedicated to host
+- You can change the tenancy of an instance from host to dedicated
+- [Tenancy_Value](aws-ass-solution-architect.md#tenancy_value)
+
+**Wrong**
+- You can change the tenancy of an instance from default to dedicated
+- You can change the tenancy of an instance from dedicated to default
+- You can change the tenancy of an instance from default to host
+
+
+## 63
+- A legacy application is built using a tightly-coupled monolithic architecture.
+- Due to a sharp increase in the number of users, the application performance has degraded.
+-  The company now wants to decouple the architecture and adopt AWS microservices architecture. 
+-  Some of these microservices need to handle fast running processes whereas other microservices need to handle slower processes.
+
+Which of these options would you identify as the right way of connecting these microservices?
+
+**Solution**
+- Configure Amazon Simple Queue Service (Amazon SQS) queue to decouple microservices running faster processes from the microservices running slower ones
+**Wrong**
+- Use Amazon Simple Notification Service (Amazon SNS) to decouple microservices running faster processes from the microservices running slower ones
+- Add Amazon [EventBridge](aws-ass-solution-architect.md#event_bridge) to decouple the complex architecture
+- Configure Amazon Kinesis Data Streams to decouple microservices running faster processes from the microservices running slower ones
+
+## 64
+The development team at a retail company wants to optimize the cost of Amazon EC2 instances. The team wants to move certain nightly batch jobs to spot instances. The team has hired you as a solutions architect to provide the initial guidance.
+
+Which of the following would you identify as CORRECT regarding the capabilities of spot instances? (Select three)
+
+**Solution**
+- If a spot request is persistent, then it is opened again after your Spot Instance is interrupted
+  - [Spot Instance](aws-ass-solution-architect.md#ec2_spot_instances)
+- Spot Fleets can maintain target capacity by launching replacement instances after Spot Instances in the fleet are terminated
+- When you cancel an active spot request, it terminates the associated instance as well
+**Wrong**
+
+
+- Spot Fleets cannot maintain target capacity by launching replacement instances after Spot Instances in the fleet are terminated
+- When you cancel an active spot request, it does not terminate the associated instance
+- If a spot request is persistent, then it is opened again after you stop the Spot Instance
+
+## 65
+A big data analytics company is working on a real-time vehicle tracking solution. The data processing workflow involves both I/O intensive and throughput intensive database workloads. 
+The development team needs to store this real-time data in a NoSQL database hosted on an Amazon EC2 instance and needs to support up to 25,000 IOPS per volume.
+
+As a solutions architect, which of the following Amazon Elastic Block Store (Amazon EBS) volume types would you recommend for this use-case?
+
+**Solution**
+- Provisioned IOPS SSD (io1)
+  - Provisioned IOPS SSD (io1) is backed by solid-state drives (SSDs) and is a high-performance Amazon EBS storage option designed for critical, I/O intensive database and application workloads, as well as throughput-intensive database workloads. io1 is designed to deliver a consistent baseline performance of up to 50 IOPS/GB to a maximum of 64,000 IOPS and provide up to 1,000 MB/s of throughput per volume. Therefore, the io1 volume type would be able to meet the requirement of 25,000 IOPS per volume for the given use-case.
+**Faild**
+
+- Cold HDD (sc1)
+  -  sc1 is backed by hard disk drives (HDDs). It is ideal for less frequently accessed workloads with large, cold datasets. It supports max IOPS/Volume of 250.
+- General Purpose SSD (gp2)
+  - gp2 is backed by solid-state drives (SSDs) and is suitable for a broad range of transactional workloads, including dev/test environments, low-latency interactive applications, and boot volumes. It supports max IOPS/Volume of 16,000.
+- Throughput Optimized HDD (st1)
+  - st1 is backed by hard disk drives (HDDs) and is ideal for frequently accessed, throughput-intensive workloads with large datasets and large I/O sizes, such as MapReduce, Kafka, log processing, data warehouse, and ETL workloads. It supports max IOPS/Volume of 500.

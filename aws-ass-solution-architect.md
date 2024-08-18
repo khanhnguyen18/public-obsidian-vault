@@ -85,7 +85,11 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - You can also use AWS WAF preconfigured protections to block common attacks like SQL injection or cross-site scripting.
 - You can use AWS WAF with your Application Load Balancer to allow or block requests based on the rules in a web access control list (web ACL). Geographic (Geo) Match Conditions in AWS WAF allows you to use AWS WAF to restrict application access based on the geographic location of your viewers. With geo match conditions you can choose the countries from which AWS WAF should allow access.
 - Geo match conditions are important for many customers. For example, legal and licensing requirements restrict some customers from delivering their applications outside certain countries. These customers can configure a whitelist that allows only viewers in those countries. Other customers need to prevent the downloading of their encrypted software by users in certain countries. These customers can configure a blacklist so that end-users from those countries are blocked from downloading their software.
-## 31. EC2
+## Event_Bridge
+- This event-based service is extremely useful for connecting non-AWS SaaS (Software as a Service) services to AWS services. 
+- With Amazon Eventbridge, the downstream application would need to immediately process the events whenever they arrive, thereby making it a tightly coupled scenario.
+
+## EC2
 ### elastic-fabric-adapter-efa
 ![](https://d1.awsstatic.com/Product-Page-Diagram_Elastic-Fabric-Adapter_How-it-Works_updated.2a51303e17a203eb094ab098ebc31a61dab66365.png)
 - **A network device** that you can attach to your Amazon EC2 instance to accelerate High Performance Computing (HPC) and machine learning applications. 
@@ -175,7 +179,20 @@ Amazon EC2 provides three options for the tenancy of your EC2 instances:
 As Instance Store based volumes provide high random I/O performance at low cost (as the storage is part of the instance's usage cost) and the resilient architecture can adjust for the loss of any instance, therefore you should use Instance Store based EC2s for this use-case.
 - Instance store is ideal for the temporary storage of information that changes frequently such as buffers, caches, scratch data, and other temporary content, or for data that is replicated across a fleet of instances, such as a load-balanced pool of web servers
 
-### EC2 - Type of instace
+
+## Tenancy_Value
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q16-i1.jpg)
+By default, Amazon EC2 instances run on a shared-tenancy basis.
+- Dedicated Instances are Amazon EC2 instances that run in a virtual private cloud (VPC) on hardware that's dedicated to a single customer. Dedicated Instances that belong to different AWS accounts are physically isolated at the hardware level. However, Dedicated Instances may share hardware with other instances from the same AWS account that is not Dedicated Instances.
+
+- A Dedicated Host is also a physical server that's dedicated to your use. With a Dedicated Host, you have visibility and control over how instances are placed on the server.
+- You can only change the tenancy of an instance from dedicated to host, or from host to dedicated after you've launched 
+
+
+### EC2-Intancetype
+
+
+
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q35-i1.jpg)
 
 - https://aws.amazon.com/ec2/pricing/
@@ -195,10 +212,28 @@ As Instance Store based volumes provide high random I/O performance at low cost 
 #### EC2_Reserve_Instances
 
 #### EC2_Spot_Instances
-- A Spot Instance is an unused Amazon EC2 instance that is available for less than the On-Demand price. Your Spot Instance runs whenever capacity is available and the maximum price per hour for your request exceeds the Spot price. Any instance present with unused capacity will be allocated. Even though this is cost-effective, it does not fulfill the single-tenant hardware requirement of the client and hence is not the correct option.
+![](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/spot_lifecycle.png)
+- A Spot Instance is an unused Amazon EC2 instance that is available for less than the On-Demand price.
+-  Your Spot Instance runs whenever capacity is available and the maximum price per hour for your request exceeds the Spot price. 
+-  Any instance present with unused capacity will be allocated. Even though this is cost-effective, it does not fulfill the single-tenant hardware requirement of the client and hence is not the correct option.
+-  Because Spot Instances enable you to request unused Amazon EC2 instances at steep discounts, you can lower your Amazon EC2 costs significantly.
+-  The hourly price for a Spot Instance is called a Spot price
+- A Spot Instance request is either one-time or persistent. If the spot request is persistent, the request is opened again after your Spot Instance is interrupted. If the request is persistent and you stop your Spot Instance, the request only opens after you start your Spot Instance.
+ 
 
 #### EC2_Spot_Fleet
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q49-i1.jpg)
+- *Spot Fleets can maintain target capacity by launching replacement instances after Spot Instances in the fleet are terminated*
+  - A Spot Fleet is a set of Spot Instances and optionally On-Demand Instances that is launched based on criteria that you specify. T
+  - The Spot Fleet selects the Spot capacity pools that meet your needs and launches Spot Instances to meet the target capacity for the fleet. 
+  - By default, Spot Fleets are set to maintain target capacity by launching replacement instances after Spot Instances in the fleet are terminated. 
+  - You can submit a Spot Fleet as a one-time request, which does not persist after the instances have been terminated. You can include On-Demand Instance requests in a Spot Fleet request.
+- *When you cancel an active spot request, it does not terminate the associated instance*
+  - If your Spot Instance request is active and has an associated running Spot Instance, or your Spot Instance request is disabled and has an associated stopped Spot Instance, canceling the request does not terminate the instance; you must terminate the running Spot Instance manually. Moreover, to cancel a persistent Spot request and terminate its Spot Instances, you must cancel the Spot request first and then terminate the Spot Instances.
+- *If a spot request is persistent, then it is opened again after your Spot Instance is interrupted*
+  - A Spot Instance request is either one-time or persistent. If the spot request is persistent, the request is opened again after your Spot Instance is *interrupted*. If the request is persistent and you stop your Spot Instance, the request only opens after you start your Spot Instance.
+
+
 The Spot Fleet selects the Spot Instance pools that meet your needs and launches Spot Instances to meet the target capacity for the fleet. By default, Spot Fleets are set to maintain target capacity by launching replacement instances after Spot Instances in the fleet are terminated.
 
 A Spot Instance is an unused Amazon EC2 instance that is available for less than the On-Demand price. Spot Instances provide great cost efficiency, but we need to select an instance type in advance. In this case, we want to use the most cost-optimal option and leave the selection of the cheapest spot instance to a Spot Fleet request, which can be optimized with the lowestPrice strategy. So this is the correct option
@@ -287,6 +322,13 @@ This is because each load balancer node can route its 50% of the client traffic 
 - This enables the load balancer to complete in-flight requests made to instances that are de-registering or unhealthy. 
 - The maximum timeout value can be set between 1 and 3,600 seconds (the default is 300 seconds). When the maximum time limit is reached, the load balancer forcibly closes connections to the de-registering instance.
 
+### NLB
+- A Network Load Balancer functions at the fourth layer of the Open Systems Interconnection (OSI) model. 
+- It can handle millions of requests per second. After the load balancer receives a connection request, it selects a target from the target group for the default rule. 
+- It attempts to open a TCP connection to the selected target on the port specified in the listener configuration.
+#### NLB_Request_Routing_and_IP_Addresses:
+  - If you specify targets using an instance ID, traffic is routed to instances using the *primary private IP* address specified in the *primary network interface* for the instance. The load balancer rewrites the destination IP address from the data packet before forwarding it to the target instance.
+  - If you specify targets using *IP addresses*, you can route traffic to an instance using any *private IP address* from one or more network interfaces. This enables multiple applications on an instance to use the same port. Note that each network interface can have its security group. The load balancer rewrites the destination IP address before forwarding it to the target.
 ### ALB
 
 - The Application Load Balancer (ALB) is best suited for load balancing HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
@@ -586,6 +628,7 @@ Features of Aurora
 
 ## Auto_scale_group_ags
 #### Target_tracking_scaling_policy
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q15-i2.jpg)
 ![](https://docs.aws.amazon.com/autoscaling/ec2/userguide/images/sqs-as-custom-metric-diagram.png)
 - If you use a target tracking scaling policy based on a custom Amazon SQS queue metric, dynamic scaling can adjust to the demand curve of your application more effectively. 
 - You may use an existing *CloudWatch Amazon SQS metric* like `ApproximateNumberOfMessagesVisible` for target tracking but you could still face an issue so that the number of messages in the queue might not change proportionally to the size of the Auto Scaling group that processes messages from the queue. The solution is to use a backlog per instance metric with the target value being the acceptable backlog per instance to maintain.
@@ -720,11 +763,17 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 - has regional edge caches that bring more of your content closer to your viewers, even when the content is not popular enough to stay at a POP, to help improve performance for that content.
 - You can use different origins for different types of content on a single site – e.g. Amazon S3 for static objects, Amazon EC2 for dynamic content, and custom origins for third-party content.
 ### cloudfront_with_s3
-When you put your content in an Amazon S3 bucket in the cloud, a lot of things become much easier. First, you don’t need to plan for and allocate a specific amount of storage space because Amazon S3 buckets scale automatically. As Amazon S3 is a serverless service, you don’t need to manage or patch servers that store files yourself; you just put and get your content. Finally, even if you require a server for your application (for example, because you have a dynamic application), the server can be smaller because it doesn’t have to handle requests for static content.
+- A- mazon CloudFront is a content delivery network (CDN) service that delivers static and dynamic web content, video streams, and APIs around the world, securely and at scale. 
+- By design, delivering data out of Amazon CloudFront can be more cost-effective than delivering it from Amazon S3 directly to your users. 
+- Amazon CloudFront serves content through a worldwide network of data centers called Edge Locations. 
+- Using edge servers to cache and serve content improves performance by providing content closer to where viewers are located.
 
-Amazon CloudFront is a content delivery network (CDN) service that delivers static and dynamic web content, video streams, and APIs around the world, securely and at scale. By design, delivering data out of Amazon CloudFront can be more cost-effective than delivering it from Amazon S3 directly to your users. Amazon CloudFront serves content through a worldwide network of data centers called Edge Locations. Using edge servers to cache and serve content improves performance by providing content closer to where viewers are located.
+- When you put your content in an Amazon S3 bucket in the cloud, a lot of things become much easier. 
+- First, you don’t need to plan for and allocate a specific amount of storage space because Amazon S3 buckets scale automatically. 
+- As Amazon S3 is a serverless service, you don’t need to manage or patch servers that store files yourself; you just put and get your content. 
+- Finally, even if you require a server for your application (for example, because you have a dynamic application), the server can be smaller because it doesn’t have to handle requests for static content.
 
-When a user requests content that you serve with Amazon CloudFront, their request is routed to a nearby Edge Location. If Amazon CloudFront has a cached copy of the requested file, CloudFront delivers it to the user, providing a fast (low-latency) response. If the file they’ve requested isn’t yet cached, CloudFront retrieves it from your origin – for example, the Amazon S3 bucket where you’ve stored your content. Then, for the next local request for the same content, it’s already cached nearby and can be served immediately.
+- When a user requests content that you serve with Amazon CloudFront, their request is routed to a nearby Edge Location. If Amazon CloudFront has a cached copy of the requested file, CloudFront delivers it to the user, providing a fast (low-latency) response. If the file they’ve requested isn’t yet cached, CloudFront retrieves it from your origin – for example, the Amazon S3 bucket where you’ve stored your content. Then, for the next local request for the same content, it’s already cached nearby and can be served immediately.
 
 By caching your content in Edge Locations, Amazon CloudFront reduces the load on your Amazon S3 bucket and helps ensure a faster response for your users when they request content. Also, data transfer out for content by using Amazon CloudFront is often more cost-effective than serving files directly from Amazon S3, and there is no data transfer fee from Amazon S3 to Amazon CloudFront. You only pay for what is delivered to the internet from Amazon CloudFront, plus request fees.
 
@@ -739,6 +788,7 @@ By caching your content in Edge Locations, Amazon CloudFront reduces the load on
 * Distribution
 
 ## AWS_Global_Accelerator
+![](https://d1.awsstatic.com/r2018/b/ubiquity/global-accelerator-how-it-works.feb297eb78d8cc55205874a1691e0ea2bc8bdbf1.png)
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q45-i1.jpg)
 - AWS Global Accelerator is a networking service that sends your user’s traffic through Amazon Web Service’s global network infrastructure, improving your internet user performance by up to 60%. When the internet is congested, Global Accelerator’s automatic routing optimizations will help keep your packet loss, jitter, and latency consistently low.
 
@@ -894,7 +944,15 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - SQS offers two types of message queues. 
   1. *Standard queues* offer maximum throughput, best-effort ordering, and at-least-once delivery. 
   2. *FIFO queues* are designed to guarantee that messages are processed exactly once, in the exact order that they are sent.
-
+- By default, FIFO queues support up to 3,000 messages per second with batching, or up to 300 messages per second (300 send, receive, or delete operations per second) without batching. Therefore, using batching you can meet a throughput requirement of upto 3,000 messages per second.
+- The name of a FIFO queue must end with the .fifo suffix. The suffix counts towards the 80-character queue name limit. To determine whether a queue is FIFO, you can check whether the queue name ends with the suffix.
+- **Message Timer**: - You can use message timers to set an initial invisibility period for a message added to a queue. So, if you send a message with a 60-second timer, the message isn't visible to consumers for its first 60 seconds in the queue. The default (minimum) delay for a message is 0 seconds. The maximum is 15 minutes. You cannot use message timer to retrieve messages from your Amazon SQS queues. This option has been added as a distractor.
+### Short_Polling
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q34-i1.jpg)
+- Amazon SQS provides short polling and long polling to receive messages from a queue. By default, queues use short polling. With short polling, Amazon SQS sends the response right away, even if the query found no messages
+### Long_Polling
+- With long polling, Amazon SQS sends a response after it collects at least one available message, up to the maximum number of messages specified in the request.
+### Message_Timemer
 ### Visibility_timeout
 - Visibility timeout is a period during which Amazon SQS prevents other consumers from receiving and processing a given message. The default visibility timeout for a message is 30 seconds. The minimum is 0 seconds. The maximum is 12 hours. You cannot use visibility timeout to postpone the delivery of new messages to the queue for a few seconds.
 ### dead_letter_queue
@@ -921,7 +979,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - Enables real-time processing of streaming big data.
 - It provides ordering of records, as well as the ability to read and/or replay records in the same order to multiple Amazon Kinesis Applications.
 - The Amazon Kinesis Client Library (KCL) delivers all records for a given partition key to the same record processor, making it easier to build multiple applications reading from the same Amazon Kinesis data stream (for example, to perform counting, aggregation, and filtering).
-- ~Recomment~
+- **Recomment**
   1. *Routing related records to the same record processor* (as in streaming MapReduce). For example, counting and aggregation are simpler when all records for a given key are routed to the same record processor.
   2. *Ordering of records*. For example, you want to transfer log data from the application host to the processing/archival host while maintaining the order of log statements.
   3. *Ability for multiple applications to consume the same stream concurrently*. For example, you have one application that updates a real-time dashboard and another that archives data to Amazon Redshift. You want both applications to consume data from the same stream concurrently and independently.
@@ -929,12 +987,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 
 - Kinesis Data Streams cannot directly write the output to Amazon S3. Unlike Amazon Kinesis Data Firehose, KDS does not offer a ready-made integration via an intermediary AWS Lambda function to reliably dump data into Amazon S3
 
-- Ingest real-time data or streaming data at large scales.
-- KDS can continuously capture gigabytes of data per second from hundreds of thousands of sources.
-- The data collected is available in milliseconds, enabling real-time analytics.
-- KDS provides ordering of records, as well as the ability to read and/or replay records in the same order to multiple Amazon Kinesis Applications.
-
-- Only Cloudwatch and S3 buck could ingest data(not AWS CloudTrail)
+- Only Cloudwatch and S3 bucket could ingest data(not AWS CloudTrail)
 
 ## Firehose
 - the easiest way to **load streaming data** into 
@@ -948,17 +1001,17 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   -  Splunk
 - Enabling near real-time analytics
 - It is a fully managed service that automatically scales to match the throughput of your data and requires no ongoing administration.
-- It can also batch, compress, and encrypt the data before loading it
-  - -> minimizing the amount of storage used at the destination and increasing security.
+- It can also batch, compress, and encrypt the data before loading it -> minimizing the amount of storage used at the destination and increasing security.
 
 - When an Amazon Kinesis Data Stream is configured as the source of a Kinesis Firehose delivery stream, Firehose’s PutRecord and PutRecordBatch operations are disabled and Kinesis Agent cannot write to Kinesis Firehose Delivery Stream directly
   
 - ![Overview](https://d1.awsstatic.com/pdp-how-it-works-assets/product-page-diagram_Amazon-KDF_HIW-V2-Updated-Diagram@2x.6e531854393eabf782f5a6d6d3b63f2e74de0db4.png)
 ## Kinesis_Data_Analytics
-- Amazon Kinesis Data Analytics is the easiest way to analyze streaming data in real-time. Kinesis Data Analytics enables you to easily and quickly build queries and sophisticated streaming applications in three simple steps:
-- setup your streaming data sources
-- write your queries or streaming applications
-- set up your destination for processed data.
+- Amazon Kinesis Data Analytics is the easiest way to analyze streaming data in real-time.
+-  Kinesis Data Analytics enables you to easily and quickly build queries and sophisticated streaming applications in three simple steps:
+   1. setup your streaming data sources
+   2. write your queries or streaming applications
+   3. set up your destination for processed data.
 - Kinesis Data Analytics cannot directly ingest data from the source as it ingests data either from
   - Kinesis Data Streams
   - Kinesis Data Firehose
@@ -990,6 +1043,9 @@ AWS Config is a service that enables you to assess, audit, and evaluate the conf
   - Ensure that instances in your subnet have a globally unique IP address (public IPv4 address, Elastic IP address, or IPv6 address).
   - Ensure that your network access control lists and security group rules allow the relevant traffic to flow to and from your instance.
 ### vpc_nat_instance
+- Differenen NAT Gateway NAT instance
+  - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q12-i1.jpg)
+  -  https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html
 - You can use a network address translation (NAT) instance in a public subnet in your VPC to enable instances in *the private subnet* to initiate outbound IPv4 traffic to *the internet or other AWS services*, but prevent the instances from receiving inbound traffic initiated by someone on the internet.
 - NAT instances are not a managed service, it has to be managed and maintained by the customer.
 ### vpc_nat_gateway
