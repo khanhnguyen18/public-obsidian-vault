@@ -375,6 +375,8 @@ You can share Amazon VPCs to leverage the implicit routing within a VPC for appl
 - You can use AWS DataSync to migrate data located on-premises, at the edge, or in other clouds to Amazon S3, Amazon EFS, Amazon FSx for Windows File Server, Amazon FSx for Lustre, Amazon FSx for OpenZFS, and Amazon FSx for NetApp ONTAP.
 
 - Using task scheduling in AWS DataSync, you can periodically execute a transfer task from your source storage system to the destination. You can use the DataSync scheduled task to send the video files to the Amazon EFS file system every 24 hours.
+- AWS DataSync fully automates the data transfer. It comes with retry and network resiliency mechanisms, network optimizations, built-in task scheduling, monitoring via the DataSync API and Console, and Amazon CloudWatch metrics, events, and logs that provide granular visibility into the transfer process. AWS DataSync performs data integrity verification both during the transfer and at the end of the transfer.
+- 
 ## Auto_Scaling_Group
 
 
@@ -504,7 +506,7 @@ Features of Aurora
 - You cannot use geolocation routing to reduce latency, hence this option is incorrect.
 
 ## Network_ACL
-- To enable the connection to a service running on an instance, the associated network ACL must allow both inbound traffic on the port that the service is listening on as well as allow outbound traffic from ephemeral ports. When a client connects to a server, a random port from the ephemeral port range (1024-65535) becomes the client's source port.
+- To enable the connection to a service running on an instance, the associated network ACL *must allow both inbound traffic on the port* that the service is listening on as well as allow outbound traffic from ephemeral ports. When a client connects to a server, a random port from the ephemeral port range (1024-65535) becomes the client's source port.
 - By default, network ACLs allow all inbound and outbound traffic. If your network ACL is more restrictive, then you need to explicitly allow traffic from the ephemeral port range
 - If you accept traffic from the internet, then you also must establish a route through an internet gateway. If you accept traffic over VPN or AWS Direct Connect, then you must establish a route through a virtual private gateway.
 
@@ -681,7 +683,7 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 
 
 
-## S3 Transfer Acceleration(S3TA)
+## S3TA
 - enables fast, easy, and secure transfers of files over long distances between your client and an S3 bucket.
 - Takes advantage of Amazon CloudFront’s globally distributed edge locations.
 - As the data arrives at an edge location, data is routed to Amazon S3 over an optimized network path.
@@ -737,9 +739,13 @@ By caching your content in Edge Locations, Amazon CloudFront reduces the load on
 * Distribution
 
 ## AWS_Global_Accelerator
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q45-i1.jpg)
+- AWS Global Accelerator is a networking service that sends your user’s traffic through Amazon Web Service’s global network infrastructure, improving your internet user performance by up to 60%. When the internet is congested, Global Accelerator’s automatic routing optimizations will help keep your packet loss, jitter, and latency consistently low.
+
+- With AWS Global Accelerator, you are provided two global static customer-facing IPs to simplify traffic management. On the back end, add or remove your AWS application origins, such as Network Load Balancers, Application Load Balancers, elastic IP address (EIP), and Amazon EC2 Instances, without making user-facing changes. To mitigate endpoint failure, AWS Global Accelerator automatically re-routes your traffic to your nearest healthy available endpoint.
+
 - AWS Global Accelerator is a **network layer service** that directs traffic to optimal endpoints over the AWS global network, this improves *the availability and performance of your internet applications*. 
 - It provides *two static anycast IP addresse*s that act as a fixed entry point to your application endpoints in a single or multiple AWS Regions, such as your ALB, NLB, EIP or EC2, in a single or in multiple AWS regions.
-
 
 - Utilizes the Amazon global network, allowing you to improve the performance of your applications by:
   1. lowering first-byte latency(the round trip time for a packet to go from a client to your endpoint and back again)
@@ -817,6 +823,10 @@ AWS CloudFormation StackSet extends the functionality of stacks by enabling you 
   - VPN tunnel: An encrypted link where data can pass from the customer network to or from AWS.
   - Customer Gateway: An AWS resource that provides information to AWS about your Customer Gateway device.
   - Customer Gateway device: A physical device or software application on the customer side of the Site-to-Site VPN connection.
+### VPN_CloudPub
+- If you have multiple AWS Site-to-Site VPN connections, you can provide secure communication between sites using the AWS VPN CloudHub. This enables your remote sites to communicate with each other, and not just with the VPC. Sites that use AWS Direct Connect connections to the virtual private gateway can also be part of the AWS VPN CloudHub. The VPN CloudHub operates on a simple hub-and-spoke model that you can use with or without a VPC. This design is suitable if you have multiple branch offices and existing internet connections and would like to implement a convenient, potentially low-cost hub-and-spoke model for primary or backup connectivity between these remote office
+- Per the given use-case, the corporate headquarters has an AWS Direct Connect connection to the VPC and the branch offices have Site-to-Site VPN connections to the VPC. Therefore using the AWS VPN CloudHub, branch offices can send and receive data with each other as well as with their corporate headquarters.
+![](https://docs.aws.amazon.com/vpn/latest/s2svpn/images/AWS_VPN_CloudHub-diagram.png)
 ## AWS Snow Family
 
 ### AWS_Snowball
@@ -867,7 +877,10 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   - [Link](https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html)
 
 - It is not suited to be used as a shared storage space that multiple applications can access in parallel.
-### File gateway
+### Volume_Gateway
+- *With cached volumes*, the AWS Volume Gateway stores the full volume in its Amazon S3 service bucket, and just the recently accessed data is retained in the gateway’s local cache for low-latency access.
+- *With stored volumes*, your entire data volume is available locally in the gateway, for fast read access. Volume Gateway also maintains an asynchronous copy of your stored volume in the service’s Amazon S3 bucket. This does not fit the requirements per the given use-case, hence this option is not correct.
+### File_gateway
 ![](https://d1.awsstatic.com/cloud-storage/Amazon%20FSx%20File%20Gateway%20How%20It%20Works%20Diagram.edbf58e4917d47d04e5a5c22132d44bd92733bf5.png)
 
 - File Gateway does not support file shares in Amazon FSx for Windows File Server, so this option is incorrect.
@@ -941,7 +954,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - When an Amazon Kinesis Data Stream is configured as the source of a Kinesis Firehose delivery stream, Firehose’s PutRecord and PutRecordBatch operations are disabled and Kinesis Agent cannot write to Kinesis Firehose Delivery Stream directly
   
 - ![Overview](https://d1.awsstatic.com/pdp-how-it-works-assets/product-page-diagram_Amazon-KDF_HIW-V2-Updated-Diagram@2x.6e531854393eabf782f5a6d6d3b63f2e74de0db4.png)
-## Analytics
+## Kinesis_Data_Analytics
 - Amazon Kinesis Data Analytics is the easiest way to analyze streaming data in real-time. Kinesis Data Analytics enables you to easily and quickly build queries and sophisticated streaming applications in three simple steps:
 - setup your streaming data sources
 - write your queries or streaming applications
@@ -976,12 +989,19 @@ AWS Config is a service that enables you to assess, audit, and evaluate the conf
   - Add a route to your subnet's route table that directs internet-bound traffic to the internet gateway. If a subnet is associated with a route table that has a route to an internet gateway, it's known as a public subnet. If a subnet is associated with a route table that does not have a route to an internet gateway, it's known as a private subnet.
   - Ensure that instances in your subnet have a globally unique IP address (public IPv4 address, Elastic IP address, or IPv6 address).
   - Ensure that your network access control lists and security group rules allow the relevant traffic to flow to and from your instance.
+### vpc_nat_instance
+- You can use a network address translation (NAT) instance in a public subnet in your VPC to enable instances in *the private subnet* to initiate outbound IPv4 traffic to *the internet or other AWS services*, but prevent the instances from receiving inbound traffic initiated by someone on the internet.
+- NAT instances are not a managed service, it has to be managed and maintained by the customer.
 ### vpc_nat_gateway
-![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q62-i1.jpg)
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q44-i1.jpg)
 
-You can use a network address translation (NAT) gateway to enable instances in a private subnet to connect to the internet or other AWS services, but prevent the internet from initiating a connection with those instances.
+- You can use a NAT gateway to enable instances in a private subnet to connect to the internet or other AWS services, but prevent the internet from initiating a connection with those instances.
 
-To create a NAT gateway, you must specify the public subnet in which the NAT gateway should reside. You must also specify an Elastic IP address to associate with the NAT gateway when you create it. The Elastic IP address cannot be changed after you associate it with the NAT Gateway. After you've created a NAT gateway, you must update the route table associated with one or more of your private subnets to point internet-bound traffic to the NAT gateway. This enables instances in your private subnets to communicate with the internet.
+- To create a NAT gateway, you must specify the public subnet in which the NAT gateway should reside. 
+- You must also specify an Elastic IP address to associate with the NAT gateway when you create it.
+-  The Elastic IP address cannot be changed after you associate it with the NAT Gateway. 
+-  After you've created a NAT gateway, you must update the route table associated with one or more of your private subnets to point internet-bound traffic to the NAT gateway. 
+-  This enables instances in your private subnets to communicate with the internet.
 
 Each NAT gateway is created in a specific Availability Zone and implemented with redundancy in that zone.
 
@@ -1190,8 +1210,12 @@ When you provision an RDS Multi-AZ DB Instance, Amazon RDS automatically creates
 - Compatilbe API for Post
 - Store in 6 replica - 3 AZ
 - Cluster: Customer endopint for writer and reader DB instaces
-- Aurora Serverless
 - Aurora Machine Learning: Perfrm ML using SageMaker & Comprehend on Aurora
+### Aurora_Serverless
+- Amazon Aurora Serverless is an on-demand, auto-scaling configuration for Amazon Aurora (MySQL-compatible and PostgreSQL-compatible editions), where the database will automatically start-up, shut down, and scale capacity up or down based on your application's needs. 
+- It enables you to run your database in the cloud without managing any database instances. 
+- It's a simple, cost-effective option for infrequent, intermittent, or unpredictable workloads. 
+- You pay on a per-second basis for the database capacity you use when the database is active and migrate between standard and serverless configurations with a few clicks in the Amazon RDS Management Console.
 ### Aurora_Back_Up
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q52-i1.jpg)
 - Aurora backs up your cluster volume automatically and retains restore data for the length of the backup retention period. 
@@ -1249,6 +1273,7 @@ With an Aurora global database, you can choose from two different approaches to 
 - Event Processing: DynamoDB Streaam to integrate with AWS Lamda, or Kinesis Data Streams
 - Global Table feature: active-ative setup
 - Export to S3
+- DynamoDB can handle more than 10 trillion requests per day and can support peaks of more than 20 million requests per second
 ## DynamoDB_GlobalTable
 ![DynamoDB_GlobalTable](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q5-i2.jpg)
 - Global Tables builds upon DynamoDB’s global footprint to provide you with a fully managed, multi-region, and multi-master database that provides fast, local, read, and write performance for massively scaled, global applications. 

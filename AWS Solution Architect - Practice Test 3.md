@@ -816,3 +816,191 @@ Create a virtual private gateway (VGW) on the AWS side of the VPN and a Customer
 - Create a virtual private gateway (VGW) on both the AWS side of the VPN as well as the on-premises side of the VPN
 - Create a Customer Gateway on both the AWS side of the VPN as well as the on-premises side of the VPN
 
+## Question 41
+- A leading bank has moved its IT infrastructure to AWS Cloud and they have been using **Amazon EC2 Auto Scaling** for their web servers. 
+- This has helped them deal with traffic spikes effectively. 
+- But Their MySQL relational database has now become a bottleneck and they urgently need a fully managed auto scaling solution for their relational database to address any unpredictable changes in the traffic.
+
+Can you identify the AWS service that is best suited for this use-case?
+**Solution**
+[Amazon Aurora Serverless](aws-ass-solution-architect.md#Aurora_Serverless)
+  
+**Wrong**
+- [Amazon DynamoDB](aws-ass-solution-architect.md#dynamodb)
+  - NoSql
+- [Amazon Aurora](aws-ass-solution-architect.md#aurora)
+  - But, its not a complete auto scaling solution and neither is it fully managed like Aurora serverless. Hence is not the right fit for the given use-case.
+- [Amazon ElastiCache](aws-ass-solution-architect.md#elasticache)
+  - Cachinglayer
+## Question 42
+- A gaming company uses Application Load Balancers in front of Amazon EC2 instances for different services and microservices.
+- The architecture has now become complex with too many Application Load Balancers in multiple AWS Regions. Security updates, firewall configurations, and traffic routing logic have become complex with too many IP addresses and configurations.
+
+The company is looking at an easy and effective way to bring down the number of IP addresses allowed by the firewall and easily manage the entire network infrastructure. Which of these options represents an appropriate solution for this requirement?
+
+**Solution**
+- Launch AWS Global Accelerator and create endpoints for all the Regions. Register the Application Load Balancers of each Region to the corresponding endpoints
+  - [AWS Global Accelerator](aws-ass-solution-architect.md#aws_global_accelerator)
+**Wrong**
+- Assign an Elastic IP to an Auto Scaling Group (ASG), and set up multiple Amazon EC2 instances to run behind the Auto Scaling Groups, for each of the Regions
+  - You cannot assign an *elastic IP address* to an Auto Scaling Group (ASG), since ASG just manages a collection of Amazon EC2 instances.
+- Configure Elastic IPs for each of the Application Load Balancers in each Region
+  - An Application Load Balancer cannot be assigned *an Elastic IP address (static IP address)*.
+- Set up a Network Load Balancer with elastic IP address. Register the private IPs of all the Application Load Balancers as targets of this Network Load Balancer
+  - A Network Load Balancer can be configured to take an *Elastic IP address*. However, with hundreds of Application Load Balancers and Network Load Balancers, the solution will be equally cumbersome to manage.
+
+## Question 43
+- A developer has configured inbound traffic for the relevant ports in both the *Security Group* of the Amazon EC2 instance as well as the *Network Access Control List (Network ACL)* of the subnet for the Amazon EC2 instance. 
+- The developer is, however, unable to connect to the service running on the Amazon EC2 instance.
+
+As a solutions architect, how will you fix this issue?
+**Solution**
+Security Groups are stateful, so allowing inbound traffic to the necessary ports enables the connection. Network ACLs are , so you must allow both inbound and outbound traffic
+  - [Network ACLs](aws-ass-solution-architect.md#network_acl)
+**Wrong**
+Rules associated with Network ACLs should never be modified from command line. An attempt to modify rules from command line blocks the rule and results in an erratic behavior
+
+IAM Role defined in the Security Group is different from the IAM Role that is given access in the Network ACLs
+
+Network ACLs are stateful, so allowing inbound traffic to the necessary ports enables the connection. Security Groups are stateless, so you must allow both inbound and outbound traffic
+
+## Question 44
+Skipped
+- A media company has its corporate headquarters in `Los Angeles` with an on-premises data center using an *AWS Direct Connect* connection to the AWS VPC. 
+The branch offices in San `Francisco` and `Miami` use *AWS Site-to-Site VPN* connections to connect to the AWS VPC. 
+The company is looking for a solution to have the branch offices send and receive data with each other as well as with their corporate headquarters.
+
+As a solutions architect, which of the following AWS services would you recommend addressing this use-case?
+
+**Solution**
+AWS VPN CloudHub
+**Wrong**
+- Software VPN
+  - Amazon VPC offers you the flexibility to fully manage both sides of your Amazon VPC connectivity by creating a VPN connection between your remote network and a software VPN appliance running in your Amazon VPC network. Since Software VPN just handles connectivity between the remote network and Amazon VPC, therefore it cannot be used to send and receive data between the remote branch offices of the company.
+
+- [VPC Peering connection](aws-ass-solution-architect.md#vpc_peering)
+- VPC Endpoint
+  - [VPC Endpoint](aws-ass-solution-architect.md#vpc_endpoint)
+
+
+## Question 45
+Skipped
+A global pharmaceutical company wants to move most of the on-premises data into Amazon S3, Amazon Elastic File System (Amazon EFS), and Amazon FSx for Windows File Server easily, quickly, and cost-effectively.
+
+As a solutions architect, which of the following solutions would you recommend as the BEST fit to automate and accelerate *online data transfers* to these AWS storage services?
+
+**Solution**
+- Use AWS DataSync to automate and accelerate online data transfers to the given AWS storage services
+  - [](aws-ass-solution-architect.md#aws_datasync)
+- Use AWS Transfer Family to automate and accelerate online data transfers to the given AWS storage services
+  -  Amazon S3 and Amazon EFS. Therefore, it cannot support migration into the other AWS storage services mentioned in the given use-case (Amazon FSx for Windows File Server).
+- Use AWS Snowball Edge Storage Optimized device to automate and accelerate online data transfers to the given AWS storage services
+  - Offline
+- Use File Gateway to automate and accelerate online data transfers to the given AWS storage services
+  - S3
+  - Therefore, it cannot support migration into the other AWS storage services mentioned in the given use-case (Amazon FSx for Windows File Server).
+
+## 46
+- A company has a hybrid cloud structure for its on-premises data center and AWS Cloud infrastructure. 
+- The company wants to build a web log archival solution such that only the most frequently accessed logs are available as cached data locally while backing up all logs on Amazon S3.
+
+As a solutions architect, which of the following solutions would you recommend for this use-case?
+
+**Solution**
+Use AWS Volume Gateway - Cached Volume - to store the most frequently accessed logs locally for low-latency access while storing the full volume with all logs in its Amazon S3 service bucket
+  -[Volumne Gate Way](aws-ass-solution-architect.md#Volume_Gateway)
+
+**Wrong**
+Use AWS Direct Connect to store the most frequently accessed logs locally for low-latency access while storing the full backup of logs in an Amazon S3 bucket
+  - AWS Direct connect cannot be used to store the most frequently accessed logs locally for low-latency access.
+
+- Use AWS Snowball Edge Storage Optimized device to store the most frequently accessed logs locally for low-latency access while storing the full backup of logs in an Amazon S3 bucket
+  - Offline
+
+Use AWS Volume Gateway - Stored Volume - to store the most frequently accessed logs locally for low-latency access while storing the full volume with all logs in its Amazon S3 service bucket
+
+## 47
+- The engineering team at a company is moving the static content from the company's logistics website hosted on Amazon EC2 instances to an Amazon S3 bucket. 
+- The team wants to use an Amazon CloudFront distribution to deliver the static content. The security group used by the Amazon EC2 instances allows the website to be accessed by a limited set of IP ranges from the company's suppliers. 
+- Post-migration to Amazon CloudFront, access to the static content should only be allowed from the aforementioned IP addresses.
+
+Which options would you combine to build a solution to meet these requirements? (Select two)
+**Solution**
+- *Create an AWS WAF ACL and use an IP match condition to allow traffic only from those IPs that are allowed in the Amazon EC2 security group. Associate this new AWS WAF ACL with the Amazon CloudFront distribution*
+  - AWS WAF is a web application firewall that lets you monitor the HTTP and HTTPS requests that are forwarded to your protected web application resources. You can protect the following resource types:
+    - Amazon CloudFront distribution
+    - Amazon API Gateway REST API
+    - Application Load Balancer
+    - AWS AppSync GraphQL API
+    - Amazon Cognito user pool
+  - AWS WAF also lets you control access to your content. Based on conditions that you specify, such as the IP addresses that requests originate from or the values of query strings, your protected resource responds to requests either with the requested content, with an HTTP 403 status code (Forbidden), or with a custom response.
+  - If you want to allow or block web requests based on the IP addresses that the requests originate from, create one or more IP match conditions via your AWS WAF. An IP match condition lists up to 10,000 IP addresses or IP address ranges that your requests originate from.
+
+For the given use case, you should add those IP addresses that are allowed in the Amazon EC2 security group into the IP match condition.
+- *Configure an origin access identity (OAI) and associate it with the Amazon CloudFront distribution. Set up the permissions in the Amazon S3 bucket policy so that only the OAI can read the objects*
+  - When you use Amazon CloudFront with an Amazon S3 bucket as the origin, you can configure Amazon CloudFront and Amazon S3 in a way that provides the following benefits:
+  - Restricts access to the Amazon S3 bucket so that it's not publicly accessible
+  - Makes sure that viewers (users) can access the content in the bucket only through the specified Amazon CloudFront distribution—that is, prevents them from accessing the content directly from the bucket, or through an unintended CloudFront distribution.
+  - To do this, configure Amazon CloudFront to send authenticated requests to Amazon S3, and configure Amazon S3 to only allow access to authenticated requests from Amazon CloudFront.
+  - Amazon CloudFront provides two ways to send authenticated requests to an Amazon S3 origin: origin access control (OAC) and origin access identity (OAI).
+  - Exam Alert:
+    - Please note that AWS recommends using OAC because it supports:
+    - All Amazon S3 buckets in all AWS Regions, including opt-in Regions launched after December 2022
+    - Amazon S3 server-side encryption with AWS KMS (SSE-KMS)
+    - Dynamic requests (POST, PUT, etc.) to Amazon S3
+    - OAI doesn't work for the scenarios in the preceding list, or it requires extra workarounds in those scenarios. However, you will continue to see answers enlisting OAI as the preferred option in the actual exam as it takes about 6 months/1 year for a new feature to appear in the exam.
+
+**Wrong**
+- Create a new NACL that allows traffic from the same IPs as specified in the current Amazon EC2 security group. Associate this new NACL with the Amazon CloudFront distribution
+  - NACL is associated with a subnet within a VPC. Amazon CloudFront delivers your content through a worldwide network of data centers called edge locations. So a NACL cannot be associated with a Amazon CloudFront distribution.
+- Create an AWS Web Application Firewall (AWS WAF) ACL and use an IP match condition to allow traffic only from those IPs that are allowed in the Amazon EC2 security group. Associate this new AWS WAF ACL with the Amazon S3 bucket policy
+  - You cannot associate an AWS WAF ACL with an Amazon S3 bucket policy.
+- Create a new security group that allows traffic from the same IPs as specified in the current Amazon EC2 security group. Associate this new security group with the Amazon CloudFront distribution
+  - Amazon CloudFront delivers your content through a worldwide network of data centers called edge locations. So a security group cannot be associated with Amazon CloudFront distribution.
+## Question 48
+- A media startup is looking at hosting their web application on AWS Cloud. 
+- The application will be accessed by users from different geographic regions of the world to upload and download video files that can reach a maximum size of 10 gigabytes. 
+- The startup wants the solution to be cost-effective and scalable with the lowest possible latency for a great user experience.
+
+As a Solutions Architect, which of the following will you suggest as an optimal solution to meet the given requirements?
+
+**Solution**
+- Use Amazon S3 for hosting the web application and use Amazon S3 Transfer Acceleration (Amazon S3TA) to reduce the latency that geographically dispersed users might face
+  - [S3TA](aws-ass-solution-architect.md#s3-transfer-accelerations3ta)
+**Wrong**
+- Use Amazon S3 for hosting the web application and use Amazon CloudFront for faster distribution of content to geographically dispersed users
+  - The given use case has data larger than 1GB and hence S3 Transfer Acceleration is a better option.
+- Use Amazon EC2 with Amazon ElastiCache for faster distribution of content, while Amazon S3 can be used as a storage service
+
+- Use Amazon EC2 with AWS Global Accelerator for faster distribution of content, while using Amazon S3 as storage service
+
+## 49
+Which of the following AWS services provides a highly available and fault-tolerant solution to capture the clickstream events from the source and then provide a concurrent feed of the data stream to the downstream applications?
+**Solution**
+- [Amazon Kinesis Data Streams](aws-ass-solution-architect.md#kinesis_data_stream)
+  
+**Wrong**
+
+- [Amazon Simple Queue Service (Amazon SQS)](aws-ass-solution-architect.md#sqs)
+- [Amazon Kinesis Data Firehose](aws-ass-solution-architect.md#firehose)
+  -  As Kinesis Data Firehose is used to load streaming data into data stores, therefore this option is incorrect.
+- [Amazon Kinesis Data Analytics](aws-ass-solution-architect.md#Kinesis_Data_Analytics)
+  - As Kinesis Data Analytics is used to build SQL queries and sophisticated Java applications, therefore this option is incorrect.
+
+## 50 
+- A company has its application servers in the public subnet that connect to the Amazon RDS instances in the private subnet. 
+- For regular maintenance, the Amazon RDS instances need patch fixes that need to be downloaded from the internet.
+
+Considering the company uses only IPv4 addressing and is looking for a fully managed service, which of the following would you suggest as an optimal solution?
+
+**Solution**
+- ddd
+**Wrong**
+- Configure a Network Address Translation gateway (NAT gateway) in the public subnet of the VPC
+  - [NAT](aws-ass-solution-architect.md#vpc_nat_gateway)
+- Configure a Network Address Translation instance (NAT instance) in the public subnet of the VPC
+  - NAT intance is manage by customer
+- Configure an Egress-only internet gateway for the resources in the private subnet of the VPC
+  - It is IP4
+- Configure the Internet Gateway of the VPC to be accessible to the private subnet resources by changing the route tables
+  - Internet Gateway cannot be used directly with a private subnet. It is not possible to set up this configuration, without a NAT instance or a NAT gateway in the public subnet.
