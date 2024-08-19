@@ -246,6 +246,14 @@ A Spot Instance is an unused Amazon EC2 instance that is available for less than
   1. Solid state drive (SSD) backed volumes optimized for transactional workloads involving frequent read/write operations with small I/O size, where the dominant performance attribute is IOPS.
   2. Hard disk drive (HDD) backed volumes optimized for large streaming workloads where throughput (measured in MiB/s) is a better performance measure than IOPS.
 - You can't use st1 or sc1 EBS volumes as root volumes.
+
+### Volume Type
+- Provisioned *IOPS SSD (io1)* volumes are designed to meet the needs of I/O-intensive workloads, particularly database workloads, that are sensitive to storage performance and consistency
+- Unlike *gp2*, which uses a bucket and credit model to calculate performance, an io1 volume allows you to specify a consistent IOPS rate when you create the volume, and Amazon EBS delivers the provisioned performance 99.9 percent of the time.
+
+- *General Purpose SSD (gp2)* volumes offer cost-effective storage that is ideal for a broad range of workloads. These volumes deliver single-digit millisecond latencies and the ability to burst to 3,000 IOPS for an extended duration. Between a minimum of 100 IOPS (at 33.33 GiB and below) and a maximum of 16,000 IOPS (at 5,334 GiB and above), baseline performance scales linearly at 3 IOPS per GiB of volume size. AWS designs gp2 volumes to deliver a provisioned performance of 99% uptime. A gp2 volume can range in size from 1 GiB to 16 TiB.
+
+Therefore, gp2 is the right choice as it is more cost-effective than io1, and it also allows a burst in performance when needed.
 ## EFS
 ![](https://d1.awsstatic.com/r2018/b/EFS/product-page-diagram-Amazon-EFS-Launch_How-It-Works.cf947858f0ef3557b9fc14077bdf3f65b3f9ff43.png)
 - Provides a simple, scalable, fully managed *Elastic NFS file system* for use with
@@ -332,7 +340,10 @@ This is because each load balancer node can route its 50% of the client traffic 
   - If you specify targets using an instance ID, traffic is routed to instances using the *primary private IP* address specified in the *primary network interface* for the instance. The load balancer rewrites the destination IP address from the data packet before forwarding it to the target instance.
   - If you specify targets using *IP addresses*, you can route traffic to an instance using any *private IP address* from one or more network interfaces. This enables multiple applications on an instance to use the same port. Note that each network interface can have its security group. The load balancer rewrites the destination IP address before forwarding it to the target.
 ### ALB
-
+- n Application Load Balancer functions at the application layer, the seventh layer of the Open Systems Interconnection (OSI) model. 
+- After the load balancer receives a request, it evaluates the listener rules in priority order to determine which rule to apply, and then selects a target from the target group for the rule action. 
+- You can configure listener rules to route requests to different target groups based on the content of the application traffic. 
+  
 - The Application Load Balancer (ALB) is best suited for load balancing HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. 
 - Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
 - Provide high availability to the overall architecture and Auto Scaling group will help mask any instance failures.
@@ -591,6 +602,22 @@ Features of Aurora
 * Default encrytiokn
   * SSE-S3
   * KMS
+### S3_Batch_Replication
+- Amazon S3 Batch Replication provides you a way to replicate objects that existed before a replication configuration was in place, objects that have previously been replicated, and objects that have failed replication. This is done through the use of a Batch Operations job.
+- You should note that batch replication differs from *live replication* which continuously and automatically replicates new objects across Amazon S3 buckets. You cannot directly use the AWS S3 console to configure cross-Region replication for existing objects. By default, replication only supports copying new Amazon S3 objects after it is enabled using the AWS S3 console. Replication enables automatic, asynchronous copying of objects across Amazon S3 buckets. Buckets that are configured for object replication can be owned by the same AWS account or by different accounts. Object may be replicated to a single destination bucket or multiple destination buckets. Destination buckets can be in different AWS Regions or within the same Region as the source bucket. Once done, you can delete the replication configuration, as it ensures that batch replication is only used for this one-time data copy operation.
+- If you want to enable live replication for existing objects for your bucket, you must contact AWS Support and raise a support ticket. This is required to ensure that replication is configured correctly.
+### S3_Sync_command
+- The aws S3 sync command uses the CopyObject APIs to copy objects between Amazon S3 buckets. 
+- The sync command lists the source and target buckets to identify objects that are in the source bucket but that aren't in the target bucket. 
+- The command also identifies objects in the source bucket that have different LastModified dates than the objects that are in the target bucket. 
+- The sync command on a versioned bucket copies only the current version of the object—previous versions aren't copied. 
+- By default, this preserves object metadata, but the access control lists (ACLs) are set to FULL_CONTROL for your AWS account, which removes any additional ACLs. 
+- If the operation fails, you can run the sync command again without duplicating previously copied objects.
+
+You can use the command like so:
+```shell
+aws s3 sync s3://DOC-EXAMPLE-BUCKET-SOURCE s3://DOC-EXAMPLE-BUCKET-TARGET
+```
 ### S3_LifeCycle
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q34-i1.jpg)
 
@@ -1027,6 +1054,7 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
   
 - ![Overview](https://d1.awsstatic.com/pdp-how-it-works-assets/product-page-diagram_Amazon-KDF_HIW-V2-Updated-Diagram@2x.6e531854393eabf782f5a6d6d3b63f2e74de0db4.png)
 ## Kinesis_Data_Analytics
+- ![](https://d1.awsstatic.com/architecture-diagrams/Product-Page-Diagram_Amazon-Kinesis-Data-Analytics_HIW.82e3aa53a5c87db03c766218b3d51f1a110c60eb.png)
 - Amazon Kinesis Data Analytics is the easiest way to analyze streaming data in real-time.
 -  Kinesis Data Analytics enables you to easily and quickly build queries and sophisticated streaming applications in three simple steps:
    1. setup your streaming data sources
@@ -1131,23 +1159,7 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 - Amazon ElastiCache for Memcached is an ideal front-end for data stores like Amazon RDS or Amazon DynamoDB, providing a high-performance middle tier for applications with extremely high request rates and/or low latency requirements
 
 
-## 225. Dynamodb Advanced Features
 
-### DynamoDB Accelerator(DAX)
-- Amazon DynamoDB Accelerator (DAX) is a fully managed, highly available, in-memory cache for DynamoDB that delivers up to a 10x performance improvement – from milliseconds to microseconds – even at millions of requests per second.
-- DAX does all the heavy lifting required to add in-memory acceleration to your DynamoDB tables, without requiring developers to manage cache invalidation, data population, or cluster management. Therefore, this is a correct option.
-  ![](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/images/dax_high_level.png)
-
-* in- memory cache for DynamoDB
-* Help solve read congestion by caching
-* Microseconds latency for cached data
-* Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
-* 5 minutes TTL for cache (default)
-
-
-### DynamoDB - Stream Processing
-
-* Same Kinesis
 
 
 ### Global table
@@ -1166,10 +1178,11 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 * Use cases: reduce stored data by keeping only current items, adhere to regulatory obligations, web session handling...
 
 
-## API GATEWAY
+## Api_Gateway
 - Amazon API Gateway to create, publish, maintain, monitor, and secure APIs at any scale.
 - APIs act as the front door for applications to access data, business logic, or functionality from your backend services.
 - Using API Gateway, you can create RESTful APIs and WebSocket APIs that enable real-time two-way communication applications.
+- API Gateway supports containerized and serverless workloads, as well as web applications.
 
 * Endpoint Type:
   * Edge-Optimize(default): For global clients
@@ -1180,6 +1193,14 @@ If you have resources in multiple Availability Zones and they share one NAT gate
   * Cognito
   * Custom Authorize(Lamda)
 * How to API gateway work:
+### Api_Gateway_Caching
+- You can enable Amazon API caching in Amazon API Gateway to cache your endpoint's responses. 
+- With caching, you can reduce the number of calls made to your endpoint and also improve the latency of requests to your API. 
+- When you enable caching for a stage, API Gateway caches responses from your endpoint for a specified time-to-live (TTL) period, in seconds. 
+- Amazon API Gateway then responds to the request by looking up the endpoint response from the cache instead of requesting your endpoint. 
+- The default TTL value for API caching is 300 seconds. 
+- The maximum TTL value is 3600 seconds. TTL=0 means caching is disabled. 
+- Using API Gateway Caching feature is the answer for the use case, as we can accept stale data for about 24 hours.
 
 ## Choosing right database
 - RDBMS (SQL/OLTP) - Great for joins
@@ -1382,10 +1403,28 @@ With an Aurora global database, you can choose from two different approaches to 
 - Global Table feature: active-ative setup
 - Export to S3
 - DynamoDB can handle more than 10 trillion requests per day and can support peaks of more than 20 million requests per second
-## DynamoDB_GlobalTable
+- Sample Amazon DynamoDB solution for *Real time applications*: 
+  - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q10-i1.jpg)
+### DynamoDB_GlobalTable
 ![DynamoDB_GlobalTable](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q5-i2.jpg)
 - Global Tables builds upon DynamoDB’s global footprint to provide you with a fully managed, multi-region, and multi-master database that provides fast, local, read, and write performance for massively scaled, global applications. 
 - Global Tables replicates your Amazon DynamoDB tables automatically across your choice of AWS region
+
+### DynamoDB Accelerator(DAX)
+- Amazon DynamoDB Accelerator (DAX) is a fully managed, highly available, in-memory cache for DynamoDB that delivers up to a 10x performance improvement – from milliseconds to microseconds – even at millions of requests per second.
+- DAX does all the heavy lifting required to add in-memory acceleration to your DynamoDB tables, without requiring developers to manage cache invalidation, data population, or cluster management. Therefore, this is a correct option.
+  ![](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/images/dax_high_level.png)
+
+* in- memory cache for DynamoDB
+* Help solve read congestion by caching
+* Microseconds latency for cached data
+* Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
+* 5 minutes TTL for cache (default)
+
+### DynamoDB_Streams
+- Amazon DynamoDB stream is an ordered flow of information about changes to items in Amazon DynamoDB table. - When you enable a stream on a table, DynamoDB captures information about every modification to data items in the table. 
+- Whenever an application creates, updates, or deletes items in the table, DynamoDB Streams writes a stream record with the primary key attributes of the items that were modified. 
+- A stream record contains information about a data modification to a single item in a DynamoDB table
 
 ## S3 - Lifecycle transtion
 [- ![alt text](image-74.png)](https://docs.aws.amazon.com/images/AmazonS3/latest/userguide/images/lifecycle-transitions-v4.png)
@@ -1471,9 +1510,10 @@ AWS Directory Service provides multiple ways to use **Amazon Cloud Directory** a
 - Automatically scales to workloads
 
 ## Neptune
+
 - Amazon Neptune is a fast, reliable, fully-managed graph database service that makes it easy to build and run applications that work with highly connected datasets. The core of Amazon Neptune is a purpose-built, high-performance graph database engine optimized for storing billions of relationships and querying the graph with milliseconds latency.
 -  Amazon Neptune is highly available, with read replicas, point-in-time recovery, continuous backup to Amazon S3, and replication across Availability Zones. Neptune is secure with support for HTTPS encrypted client connections and encryption at rest. Amazon Neptune is fully managed, so you no longer need to worry about database management tasks such as hardware provisioning, software patching, setup, configuration, or backups.
--  
+-  Amazon Neptune can quickly and easily process large sets of user-profiles and interactions to build social networking applications. Neptune enables highly interactive graph queries with high throughput to bring social features into your applications. For example, if you are building a social feed into your application, you can use Neptune to provide results that prioritize showing your users the latest updates from
 - Fully managed graph database
 - Higly available with repliactions across multiple AZs
 - Great for
@@ -1481,7 +1521,8 @@ AWS Directory Service provides multiple ways to use **Amazon Cloud Directory** a
   - Fraud detection
   - Recommedation egnines
 
-
+- Example Use cases of Amazon Neptune: ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q10-i3.jpg)
+  
 ## Keyspace
 - For apache Casandra
 - Using
@@ -1531,7 +1572,7 @@ AWS Directory Service provides multiple ways to use **Amazon Cloud Directory** a
 - EC2 -> Redshift by JDBC Driver
 - Reshift Spectrum: Query data is already in S3 without loading it.
 
-## 248 Open Search
+## Open_Search
 - Amazon OpenSearch Service is a managed service that makes it easy for you to perform interactive log analytics, real-time application monitoring, website search, and more. OpenSearch is an open source, distributed search and analytics suite derived from Elasticsearch. It cannot be used as a caching layer for Amazon DynamoDB.
 -
 - Succesor to Elastic Search
@@ -1579,8 +1620,8 @@ AWS Directory Service provides multiple ways to use **Amazon Cloud Directory** a
 ### heterogeneous_migrations
 ![](https://d1.awsstatic.com/product-marketing/DMS/product-page-diagram_AWS-DMS_heterogeneous-database-migrations-2.3616bac30ab86d4310ddadfdec5d6e6ba4d8b81d.png)
 
-## 250 Quick Sight
-- Severless machine learning BI Service create interative Dashboar
+## QuickSight
+- Severless machine learning BI Service create interative Dashboard
 - Use cases:
   - Business analytics
   - Building visualizations
