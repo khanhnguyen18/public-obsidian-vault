@@ -33,10 +33,29 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - Policies is define permission of user
 - Apply least previledge principle
 
+### IAM_Policy_Types
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q65-i2.jpg)
 ### IAM_Permissions_Boundaries
-- AWS supports permissions boundaries for IAM entities (users or roles). A permissions boundary is an advanced feature for using a managed policy to set the maximum permissions that an identity-based policy can grant to an IAM entity. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies and its permissions boundaries. Here we have to use an IAM permission boundary. They can only be applied to roles or users, not IAM groups.
+- AWS supports permissions boundaries for IAM entities (users or roles). 
+- A permissions boundary is an advanced feature for using a managed policy to set the maximum permissions that an identity-based policy can grant to an IAM entity. 
+- An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies and its permissions boundaries. 
+- Here we have to use an IAM permission boundary. They can only be applied to roles or users, not IAM groups.
 - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q39-i1.jpg)
 
+### IAM_ACL
+- Access control list (ACL) - Access control lists (ACLs) are service policies that allow you to control which principals *in another account* can access a resource. 
+- ACLs cannot be used to control access for a principal within the same account. Amazon S3, AWS WAF, and Amazon VPC are examples of services that support ACLs.
+
+### IAM_SCP
+- AWS Organizations Service Control Policies (SCP) - If you enable all features of AWS organization, then you can apply service control policies (SCPs) to any or all of your accounts. 
+- SCPs are JSON policies that specify the maximum permissions for an organization or organizational unit (OU). 
+- The SCP limits permissions for entities in member accounts, including each AWS account root user. 
+- An explicit deny in any of these policies overrides the allow.
+### IAM_Trust_Policy
+- Trust policies define which principal entities (accounts, users, roles, and federated users) can assume the role. 
+- An IAM role is both an identity and a resource that supports resource-based policies. 
+- For this reason, you must attach both a trust policy and an identity-based policy to an IAM role. 
+- The IAM service supports only one type of resource-based policy called a role trust policy, which is attached to an IAM role.
 ### IAM_Role
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q3-i1.jpg)
 
@@ -172,7 +191,7 @@ Amazon EC2 provides three options for the tenancy of your EC2 instances:
   ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q12-i3.jpg)
 - More information: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html
 
-  ### EC2 - Intance store
+### EC2_Intance_store
 - Provides temporary block-level storage for your instance.
 - This storage is located on disks that are physically attached to the host instance.
 - Instance store is ideal for the temporary storage of information that changes frequently such as buffers, caches, scratch data, and other temporary content, or for data that is replicated across a fleet of instances, such as a load-balanced pool of web servers.
@@ -336,6 +355,7 @@ This is because each load balancer node can route its 50% of the client traffic 
 - A Network Load Balancer functions at the fourth layer of the Open Systems Interconnection (OSI) model. 
 - It can handle millions of requests per second. After the load balancer receives a connection request, it selects a target from the target group for the default rule. 
 - It attempts to open a TCP connection to the selected target on the port specified in the listener configuration.
+- Using a single Network Load Balancer is not possible across AWS regions since an Network Load Balancer is Region bound. Multiple Network Load Balancers have to be registered for the on-premises firewall.
 #### NLB_Request_Routing_and_IP_Addresses:
   - If you specify targets using an instance ID, traffic is routed to instances using the *primary private IP* address specified in the *primary network interface* for the instance. The load balancer rewrites the destination IP address from the data packet before forwarding it to the target instance.
   - If you specify targets using *IP addresses*, you can route traffic to an instance using any *private IP address* from one or more network interfaces. This enables multiple applications on an instance to use the same port. Note that each network interface can have its security group. The load balancer rewrites the destination IP address before forwarding it to the target.
@@ -353,6 +373,16 @@ This is because each load balancer node can route its 50% of the client traffic 
   - IP addresses
   - Lambda functions based on the content of the request. 
 - Ideal for advanced load balancing of HTTP and HTTPS traffic, Application Load Balancer provides advanced request routing targeted at delivery of modern application architectures, including microservices and container-based applications.
+
+#### ALB_Security_Group_Vs_Health_Check
+- An Application Load Balancer periodically sends requests to its registered targets to test their status. These tests are called health checks.
+
+- Each load balancer node routes requests only to the healthy targets in the enabled Availability Zones (AZs) for the load balancer. Each load balancer node checks the health of each target, using the health check settings for the target groups with which the target is registered. If a target group contains only unhealthy registered targets, the load balancer nodes route requests across its unhealthy targets.
+
+- You must ensure that your load balancer can communicate with registered targets on both the listener port and the health check port. Whenever you add a listener to your load balancer or update the health check port for a target group used by the load balancer to route requests, you must verify that the security groups associated with the load balancer allow traffic on the new port in both directions.
+
+Application Load Balancer Configuration for Security Groups and Health Check Routes: 
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q26-i1.jpg)
 
 #### ALB_with_Cognito_User_Pools
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q17-i1.jpg)
@@ -388,15 +418,8 @@ This is because each load balancer node can route its 50% of the client traffic 
 - SSL/TLS certificates are used to secure network communications and establish the identity of websites over the Internet as well as resources on private networks.
 
 ## AWS_Transit_Gateway
-
 - Is a service that enables customers to connect their Amazon Virtual Private Clouds (VPCs) and their on-premises networks to a single gateway
-
-
-- Without AWS Transit Gateway 
-![](https://d1.awsstatic.com/product-marketing/transit-gateway/tgw-before.7f287b3bf00bbc4fbdeadef3c8d5910374aec963.png)
-- With AWS Transit Gateway:
-  ![](https://d1.awsstatic.com/product-marketing/transit-gateway/tgw-after.d85d3e2cb67fd2ed1a3be645d443e9f5910409fd.png)
-
+- ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q28-i1.jpg)
 - Cannot establish a low latency and high throughput connection between a data center and AWS Cloud.
 
 ## VPC_Peering
@@ -588,6 +611,11 @@ Features of Aurora
 
 - [ec2-security-groups](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html)
 
+
+## AWS_Trust_Advisor
+- AWS Trusted Advisor checks for Amazon EC2 Reserved Instances that are scheduled to expire within the next 30 days or have expired in the preceding 30 days.
+- Reserved Instances do not renew automatically; you can continue using an Amazon EC2 instance covered by the reservation without interruption, but you will be charged On-Demand rates. 
+- AWS Trusted advisor does not have a feature to auto-renew Reserved Instances.
 ## S3
 - It is an object storage service that offers industry-leading scalability, data availability, security, and performance.
 -  Your applications can easily achieve thousands of transactions per second in request performance when uploading and retrieving storage from Amazon S3.
@@ -602,6 +630,13 @@ Features of Aurora
 * Default encrytiokn
   * SSE-S3
   * KMS
+### S3_Object_Lock
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q64-i1.jpg)
+- Amazon S3 Object Lock is an Amazon S3 feature that allows you to store objects using a write once, read many (WORM) model. You can use WORM protection for scenarios where it is imperative that data is not changed or deleted after it has been written. Whether your business has a requirement to satisfy compliance regulations in the financial or healthcare sector, or you simply want to capture a golden copy of business records for later auditing and reconciliation, Amazon S3 Object Lock is the right tool for you. Object Lock can help prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely.
+### S3_Analytics_Storage_Class_Analysis
+- By using Amazon S3 Analytics Storage Class analysis you can analyze storage access patterns to help you decide when to transition the right data to the right storage class. 
+- This new Amazon S3 analytics feature observes data access patterns to help you determine when to transition less frequently accessed STANDARD storage to the STANDARD_IA (IA, for infrequent access) storage class. 
+- Storage class analysis does not give recommendations for transitions to the ONEZONE_IA or S3 Glacier storage classes.
 ### S3_Batch_Replication
 - Amazon S3 Batch Replication provides you a way to replicate objects that existed before a replication configuration was in place, objects that have previously been replicated, and objects that have failed replication. This is done through the use of a Batch Operations job.
 - You should note that batch replication differs from *live replication* which continuously and automatically replicates new objects across Amazon S3 buckets. You cannot directly use the AWS S3 console to configure cross-Region replication for existing objects. By default, replication only supports copying new Amazon S3 objects after it is enabled using the AWS S3 console. Replication enables automatic, asynchronous copying of objects across Amazon S3 buckets. Buckets that are configured for object replication can be owned by the same AWS account or by different accounts. Object may be replicated to a single destination bucket or multiple destination buckets. Destination buckets can be in different AWS Regions or within the same Region as the source bucket. Once done, you can delete the replication configuration, as it ensures that batch replication is only used for this one-time data copy operation.
@@ -830,7 +865,8 @@ By caching your content in Edge Locations, Amazon CloudFront reduces the load on
 ## AWS_Global_Accelerator
 ![](https://d1.awsstatic.com/r2018/b/ubiquity/global-accelerator-how-it-works.feb297eb78d8cc55205874a1691e0ea2bc8bdbf1.png)
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q45-i1.jpg)
-- AWS Global Accelerator is a networking service that sends your user’s traffic through Amazon Web Service’s global network infrastructure, improving your internet user performance by up to 60%. When the internet is congested, Global Accelerator’s automatic routing optimizations will help keep your packet loss, jitter, and latency consistently low.
+- AWS Global Accelerator is a networking service that sends your user’s traffic through Amazon Web Service’s global network infrastructure, improving your internet user performance by up to 60%. 
+- When the internet is congested, Global Accelerator’s automatic routing optimizations will help keep your packet loss, jitter, and latency consistently low.
 
 - With AWS Global Accelerator, you are provided two global static customer-facing IPs to simplify traffic management. On the back end, add or remove your AWS application origins, such as Network Load Balancers, Application Load Balancers, elastic IP address (EIP), and Amazon EC2 Instances, without making user-facing changes. To mitigate endpoint failure, AWS Global Accelerator automatically re-routes your traffic to your nearest healthy available endpoint.
 
@@ -1068,37 +1104,62 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 ![](https://d1.awsstatic.com/Products/product-name/diagrams/product-page-diagram-Config_how-it-works.bd28728a9066c55d7ee69c0a655109001462e25b.png)
 AWS Config is a service that enables you to assess, audit, and evaluate the configurations of your AWS resources. With Config, you can review changes in configurations and relationships between AWS resources, dive into detailed resource configuration histories, and determine your overall compliance against the configurations specified in your internal guidelines. You can use Config to answer questions such as - “What did my AWS resource look like at xyz point in time?”
 
+## AWS_MQ
+- Amazon MQ is a managed message broker service for Apache ActiveMQ that makes it easy to set up and operate message brokers in the cloud. 
+- Message brokers allow different software systems–often using different programming languages, and on different platforms–to communicate and exchange information. 
+- If an organization is using messaging with existing applications and wants to move the messaging service to the cloud quickly and easily, AWS recommends Amazon MQ for such a use case. 
+- Connecting your current applications to Amazon MQ is easy because it uses industry-standard APIs and protocols for messaging, including JMS, NMS, AMQP, STOMP, MQTT, and WebSocket.
+
 ## VPC
 ### VPC_Gateway_Loadbalancer
 - **Gateway Load Balancers** use *Gateway Load Balancer endpoints* to securely exchange traffic across VPC boundaries. A Gateway Load Balancer endpoint is a VPC endpoint that provides private connectivity between virtual appliances in the service provider VPC and application servers in the service consumer VPC. You cannot set up a gateway load balancer endpoint to access Amazon S3
 
 ### VPC_Gateway_Endpoint
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q47-i1.jpg)
+- A VPC endpoint enables you to privately connect your VPC to supported AWS services and VPC endpoint services powered by AWS PrivateLink without requiring an internet gateway, NAT device, VPN connection, or AWS Direct Connect connection. Instances in your VPC do not require public IP addresses to communicate with resources in the service. Traffic between your VPC and the other service does not leave the Amazon network.
+
+- Endpoints are virtual devices. They are horizontally scaled, redundant, and highly available VPC components. They allow communication between instances in your VPC and services without imposing availability risks or bandwidth constraints on your network traffic.
+
+- A Gateway Endpoint is a gateway that you specify as a target for a route in your route table for traffic destined to a supported AWS service. The following AWS services are supported: Amazon S3 and Amazon DynamoDB.
+  
+- You can use two types of VPC endpoints to access Amazon S3: 
+  - *Gateway endpoints*: A gateway endpoint is a gateway that you specify in your route table to access Amazon S3 from your VPC over the AWS network
+  - *Interface endpoints* extend the functionality of gateway endpoints by using private IP addresses to route requests to Amazon S3 from within your VPC, on premises, or from a VPC in another AWS Region using VPC peering or AWS Transit Gateway.
+
+
 - **Gateway endpoints** provide reliable connectivity to Amazon S3 without requiring an internet gateway or a NAT device for your VPC. 
 - After you create the gateway endpoint, you can add it as a target in your route table for traffic destined from your VPC to Amazon S3. 
 - There is no additional charge for using gateway endpoints.
 - The **VPC endpoint policy** for the **gateway endpoint** controls access to Amazon S3 from the VPC through the endpoint. The default policy allows full access.
 - Using the VPC gateway endpoint allows the Amazon EC2 instances to reach Amazon S3 without using the public internet. Since the data transfer remains within the same AWS region, so there is no data transfer costs for ingress as well as egress traffic. Hence this is the most cost-optimal solution.
 
+### VPC_Egress_Only_internet_gateway
+- An Egress-Only Internet Gateway is a horizontally scaled, redundant, and highly available VPC component that allows outbound communication over IPv6 from instances in your VPC to the Internet, and prevents the Internet from initiating an IPv6 connection with your instances.
 ### vpc_internet_gateway
 - *An Internet Gateway* is a horizontally scaled, redundant, and highly available VPC component that allows communication between your VPC and the internet.
 - *An Internet Gateway serves two purposes*: 
   - to provide a target in your VPC route tables for internet-routable traffic 
   - perform network address translation (NAT) for instances that have been assigned public IPv4 addresses.
 - Additionally, an Internet Gateway supports IPv4 and IPv6 traffic. It does not cause availability risks or bandwidth constraints on your network traffic
+- To enable access to or from the internet for instances in a subnet in a VPC, you must do the following: 
+  - 1. Attach an internet gateway to your VPC. 
+  - 2. Add a route to your subnet's route table that directs internet-bound traffic to the internet gateway.
+  - 3. Ensure that instances in your subnet have a globally unique IP address 
+  - 4. Ensure that your network access control lists and security group rules allow the relevant traffic to flow to and from your instance.
+
 - *Attach an Internet gateway to your VPC*.
   - Add a route to your subnet's route table that directs internet-bound traffic to the internet gateway. If a subnet is associated with a route table that has a route to an internet gateway, it's known as a public subnet. If a subnet is associated with a route table that does not have a route to an internet gateway, it's known as a private subnet.
   - Ensure that instances in your subnet have a globally unique IP address (public IPv4 address, Elastic IP address, or IPv6 address).
   - Ensure that your network access control lists and security group rules allow the relevant traffic to flow to and from your instance.
+- 
 ### vpc_nat_instance
-- Differenen NAT Gateway NAT instance
+- Differenen NAT Gateway vs NAT instance
   - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q12-i1.jpg)
   -  https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html
 - You can use a network address translation (NAT) instance in a public subnet in your VPC to enable instances in *the private subnet* to initiate outbound IPv4 traffic to *the internet or other AWS services*, but prevent the instances from receiving inbound traffic initiated by someone on the internet.
 - NAT instances are not a managed service, it has to be managed and maintained by the customer.
 ### vpc_nat_gateway
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q44-i1.jpg)
-
 - You can use a NAT gateway to enable instances in a private subnet to connect to the internet or other AWS services, but prevent the internet from initiating a connection with those instances.
 
 - To create a NAT gateway, you must specify the public subnet in which the NAT gateway should reside. 
@@ -1122,7 +1183,9 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 ### Fully_meshed_VPC_Peering
 - -This approach creates multiple peering connections to facilitate the sharing of information between resources in different VPCs. This design connects multiple VPCs in a fully meshed configuration, with peering connections between each pair of VPCs. With this configuration, each VPC has access to the resources in all other VPCs. Each peering connection requires modifications to all the other VPCs’ route tables and, as the number of VPCs grows, this can be difficult to maintain. And keep in mind that AWS recommends a maximum of 125 peering connections per VPC. It's complex to manage and isn't a right fit for the current scenario.
 ### Transit_VPC
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q28-i2.jpg)
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q21-i2.jpg)
+- The Transit VPC can be used to enable connectivity between various VPC’s in different regions and customer data centers. You can use this to connect multiple VPCs that are geographically disparate and/or running in separate AWS accounts, to a common VPC that serves as a global network transit center. This network topology simplifies network management and minimizes the number of connections that you need to set up.
 - Transit VPC uses customer-managed Amazon EC2 VPN instances in a dedicated transit VPC with an Internet gateway. 
 - This design requires the customer to deploy, configure, and manage EC2-based VPN appliances, which will result in additional EC2, and potentially third-party product and licensing charges.
 -  Note that this design will generate additional data transfer charges for traffic traversing the transit VPC: data is charged when it is sent from a spoke VPC to the transit VPC, and again from the transit VPC to the on-premises network or a different AWS Region. Transit VPC is not the right choice here.
@@ -1311,7 +1374,10 @@ If you have resources in multiple Availability Zones and they share one NAT gate
   - Data-loss potential - Low. Multi-AZ provides fault tolerance for every scenario, including hardware-related issues.
   - Performance impact - Low. Of the available options, Multi-AZ provides the fastest time to recovery, because there is no manual procedure to follow after the process is implemented.
   - Cost - Low to high. Multi-AZ is the lowest-cost option. Use Multi-AZ when you can't risk losing data because of hardware failure or you can't afford the downtime required by other options in your response to an outage.
-
+- Amazon RDS supports Multi-AZ deployments for Microsoft SQL Server by using either SQL Server Database Mirroring (DBM) or Always On Availability Groups (AGs). Amazon RDS monitors and maintains the health of your Multi-AZ deployment. If problems occur, Amazon RDS automatically repairs unhealthy database instances, reestablishes synchronization, and initiates failovers.
+- Multi-AZ deployments provide increased availability, data durability, and fault tolerance for database instances. In the event of planned database maintenance or unplanned service disruption, Amazon RDS automatically fails over to the up-to-date secondary database instance. 
+- This functionality lets database operations resume quickly without manual intervention. 
+- The primary and standby instances use the same endpoint, whose physical network address transitions to the secondary replica as part of the failover process. You don't have to reconfigure your application when a failover occurs.
 
 
 ## Aurora
@@ -1405,10 +1471,38 @@ With an Aurora global database, you can choose from two different approaches to 
 - DynamoDB can handle more than 10 trillion requests per day and can support peaks of more than 20 million requests per second
 - Sample Amazon DynamoDB solution for *Real time applications*: 
   - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q10-i1.jpg)
+### DynamoDB_Global_Secondary_Index
+- A global secondary index (GSI) is an index with a partition key and a sort key that can be different from those on the base table. 
+- A global secondary index is considered "global" because queries on the index can span all of the data in the base table, across all partitions. 
+- A global secondary index is stored in its own partition space away from the base table and scales separately from the base table.
+### DynamoDB_Auto_Scaling
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q62-i1.jpg)
+### DynamoDB_Capacity_Mode
+- Amazon DynamoDB has two read/write capacity modes for processing reads and writes on your tables:
+  1. On-demand:
+    - Is a flexible billing option capable of serving thousands of requests per second without capacity planning. DynamoDB on-demand offers pay-per-request pricing for read and write requests so that you pay only for what you use.
+    - Good for:
+      - You create new tables with unknown workloads.
+      - You have unpredictable application traffic.
+      - You prefer the ease of paying for only what you use.
+    - With on-demand, Amazon DynamoDB instantly allocates capacity as it is needed. 
+    - There is no concept of provisioned capacity, and there is no delay waiting for Amazon CloudWatch thresholds or the subsequent table updates. 
+    - On-demand is ideal for bursty, new, or unpredictable workloads whose traffic can spike in seconds or minutes, and when underprovisioned capacity would impact the user experience. 
+    - On-demand is a perfect solution if your team is moving to a NoOps or serverless environment.
+  2. Provisioned mode:
+    - you specify the number of reads and writes per second that you require for your application. 
+    - You can use auto-scaling to adjust your table’s provisioned capacity automatically in response to traffic changes. 
+    - This helps you govern your DynamoDB use to stay at or below a defined request rate to obtain cost predictability.
+    - Provisioned mode is a good option if any of the following are true:
+      - You have predictable application traffic.
+      - You run applications whose traffic is consistent or ramps gradually.
+      - You can forecast capacity requirements to control costs.
+
 ### DynamoDB_GlobalTable
 ![DynamoDB_GlobalTable](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q5-i2.jpg)
 - Global Tables builds upon DynamoDB’s global footprint to provide you with a fully managed, multi-region, and multi-master database that provides fast, local, read, and write performance for massively scaled, global applications. 
 - Global Tables replicates your Amazon DynamoDB tables automatically across your choice of AWS region
+- Global tables eliminate the difficult work of replicating data between Regions and resolving update conflicts, enabling you to focus on your application's business logic. In addition, global tables enable your applications to stay highly available even in the unlikely event of isolation or degradation of an entire Region.
 
 ### DynamoDB Accelerator(DAX)
 - Amazon DynamoDB Accelerator (DAX) is a fully managed, highly available, in-memory cache for DynamoDB that delivers up to a 10x performance improvement – from milliseconds to microseconds – even at millions of requests per second.
@@ -1438,7 +1532,17 @@ With an Aurora global database, you can choose from two different approaches to 
 - One Zone-IA is ideal for customers want a lower-cost option for infrequently accessed and re-creatable data but do not require the availability and resilience of Standard or Standard-IA.
 - The minimum storage duration is 30 days before you can transition objects from Standard to One Zone-IA.
 
+## AWS_Cost_Explorer
+- AWS Cost Explorer helps you identify under-utilized Amazon EC2 instances that may be downsized on an instance by instance basis within the same instance family, and also understand the potential impact on your AWS bill by taking into account your Reserved Instances and Savings Plans.
+
+## AWS_Compute_Optimizer 
+- AWS Compute Optimizer recommends optimal AWS Compute resources for your workloads to reduce costs and improve performance by using machine learning to analyze historical utilization metrics. 
+- Compute Optimizer helps you choose the optimal Amazon EC2 instance types, including those that are part of an Amazon EC2 Auto Scaling group, based on your utilization data.
+- Compute Optimizer helps you choose the optimal Amazon EC2 instance types, including those that are part of an Amazon EC2 Auto Scaling group, based on your utilization data. It does not recommend instance purchase options
 ## AWS_System_Manager
+- AWS Systems Manager gives you visibility and control of your infrastructure on AWS. S
+- ystems Manager provides a unified user interface so you can view operational data from multiple AWS services and allows you to automate operational tasks across your AWS resources. 
+
 - Using AWS Systems Manager, you can group resources, like Amazon EC2 instances, Amazon S3 buckets, or Amazon RDS instances, by application, view operational data for monitoring and troubleshooting, and take action on your groups of resources
 - 
 ## Cloudwatch

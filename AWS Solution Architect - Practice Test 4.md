@@ -356,3 +356,292 @@ As a Solutions Architect, which of the following options can be used to accompli
 
 - Copy data from the source Amazon S3 bucket to a target Amazon S3 bucket using the S3 console
 - Set up Amazon S3 Transfer Acceleration (Amazon S3TA) to copy objects across Amazon S3 buckets in different Regions using S3 console
+
+
+## 21
+- A company has recently created a new department to handle their services workload. 
+- An IT team has been asked to create a custom VPC to isolate the resources created in this new department. 
+- They have set up the public subnet and [internet gateway (IGW)](aws-ass-solution-architect.md#vpc_internet_gateway). 
+- However, they are not able to ping the Amazon EC2 instances with elastic IP address (EIP) launched in the newly created VPC.
+
+As a Solutions Architect, the team has requested your help. How will you troubleshoot this scenario? (Select two)
+
+**Solution**
+- Check if the security groups allow ping from the source
+  - [security_group](aws-ass-solution-architect.md#security_group)
+- Check if the route table is configured with internet gateway
+**Wrong**
+- Contact AWS support to map your VPC with subnet
+- Create a secondary internet gateway to attach with public subnet and move the current internet gateway to private and write route tables
+- Disable Source / Destination check on the Amazon EC2 instance
+  - The Source/Destination Check attribute controls whether source/destination checking is enabled on the instance. Disabling this attribute enables an instance to handle network traffic that isn't specifically destined for the instance. For example, instances running services such as network address translation, routing, or a firewall should set this value to disabled. The default value is enabled. Source/Destination Check is not relevant to the question and it has been added as a distractor.
+
+
+## Question 22
+- The engineering team at a company is running batch workloads on AWS Cloud. 
+- The team has embedded Amazon RDS database connection strings within each web server hosting the flagship application. 
+- After failing a security audit, the team is looking at a different approach to store the database secrets securely and automatically rotate the database credentials.
+
+Which of the following solutions would you recommend to meet this requirement?
+
+**Solution**
+- AWS Secrets Manager
+
+**Wrong**
+Question 22
+Skipped
+The engineering team at a company is running batch workloads on AWS Cloud. The team has embedded Amazon RDS database connection strings within each web server hosting the flagship application. After failing a security audit, the team is looking at a different approach to store the database secrets securely and automatically rotate the database credentials.
+
+Which of the following solutions would you recommend to meet this requirement?
+
+**Solution**
+- AWS Secrets Manager
+  - [AWS_Secrets_Manager](aws-ass-solution-architect.md#aws_secrets_manager)
+
+**Wrong**
+- [AWS Systems Manager Parameter Store](aws-ass-solution-architect.md#aws_systems_manager_parameter_store)
+  - Not support automatically rotate DB Credential
+- AWS Key Management Service (KMS)
+  - Cannot store secrets
+- [AWS Systems Manager](aws-ass-solution-architect.md#aws_system_manager)
+  - AWS Systems Manager cannot be used to store your secrets securely and automatically rotate the database credentials.
+
+## 23
+A startup's cloud infrastructure consists of a few *Amazon EC2 instances*, *Amazon RDS instances* and *Amazon S3 storage*. A year into their business operations, the startup is incurring costs that seem too high for their business requirements.
+
+Which of the following options represents a valid cost-optimization solution?
+
+**Solution**
+- Use [AWS Cost Explorer](aws-ass-solution-architect.md#aws_cost_explorer) Resource Optimization to get a report of Amazon EC2 instances that are either idle or have low utilization and use [AWS Compute Optimizer](aws-ass-solution-architect.md#aws_compute_optimizer) to look at instance type recommendations
+
+**Wrong**
+- Use [Amazon S3 Storage class analysis](aws-ass-solution-architect.md#s3_analytics_storage_class_analysis) to get recommendations for transitions of objects to Amazon S3 Glacier storage classes to reduce storage costs. You can also automate moving these objects into lower-cost storage tier using Lifecycle Policies
+  -By using Amazon S3 Analytics Storage Class analysis you can analyze storage access patterns to help you decide when to transition the right data to the right storage class 
+  - Help you determine when to transition less frequently accessed STANDARD storage to the STANDARD_IA (IA, for infrequent access) storage class. 
+  - Storage class analysis does not give recommendations for transitions to the ONEZONE_IA or S3 Glacier storage classes.
+- Use AWS Compute Optimizer recommendations to help you choose the optimal Amazon EC2 purchasing options and help reserve your instance capacities at reduced costs
+  - AWS Compute Optimizer recommends optimal AWS Compute resources for your workloads to reduce costs and improve performance by using machine learning to analyze historical utilization metrics. Over-provisioning compute can lead to unnecessary infrastructure cost and under-provisioning compute can lead to poor application performance. Compute Optimizer helps you choose the optimal Amazon EC2 instance types, including those that are part of an Amazon EC2 Auto Scaling group, based on your utilization data. It does not recommend instance purchase options.
+- Use [AWS Trusted Advisor](aws-ass-solution-architect.md#aws_trust_advisor) checks on Amazon EC2 Reserved Instances to automatically renew reserved instances (RI). AWS Trusted advisor also suggests Amazon RDS idle database instances
+  - AWS Trusted advisor does not have a feature to auto-renew Reserved Instances.
+
+## 24
+- A ride-sharing company wants to use an Amazon DynamoDB table for data storage. 
+- The table will not be used during the night hours whereas the read and write traffic will often be unpredictable during day hours. 
+- When traffic spikes occur they will happen very quickly.
+
+Which of the following will you recommend as the best-fit solution?
+
+**Solution**
+- Set up Amazon DynamoDB table in the on-demand capacity mode
+  - [DynamoDB_Capacity_Mode](aws-ass-solution-architect.md#dynamodb_capacity_mode)
+  - The given use case clearly states that when the traffic spikes occur they happen very quickly, thereby implying an unpredictable traffic pattern, therefore the on-demand capacity mode is the correct option for the given use case.
+
+**Wrong**
+- Set up A[mazon DynamoDB global table](aws-ass-solution-architect.md#dynamodb_globaltable) in the provisioned capacity mode
+  - Amazon DynamoDB global table cannot be used to handle an unpredictable load on a Amazon DynamoDB table.
+- Set up Amazon DynamoDB table in the provisioned capacity mode with auto-scaling enabled
+- Set up Amazon DynamoDB table with a [global secondary index](aws-ass-solution-architect.md#dynamodb_global_secondary_index)
+     - GSI cannot be used to handle an unpredictable load on a DynamoDB table.
+
+## 25
+- An e-commerce company wants to migrate its on-premises application to AWS. 
+- The application consists of application servers and a Microsoft SQL Server database. 
+- The solution should result in the maximum possible availability for the database layer while minimizing operational and management overhead.
+
+As a solutions architect, which of the following would you recommend to meet the given requirements?
+
+**Solution**
+- Migrate the data to Amazon RDS for SQL Server database in a Multi-AZ deployment
+  - [RDS_Multi_AZ](aws-ass-solution-architect.md#rds_multi_az)
+  - This option provides the maximum possible availability for the database layer while minimizing operational and management overhead.
+
+**Wrong**
+- Migrate the data to Amazon RDS for SQL Server database in a cross-region read-replica configuration
+  - Amazon RDS Read Replicas enable you to create one or more read-only copies of your database instance within the same AWS Region or in a different AWS Region. Read replicas are used to enhance the read scalability of a database. You cannot use read replicas to improve the availability of a database. Therefore this option is incorrect.
+- Migrate the data to Amazon RDS for SQL Server database in a cross-region Multi-AZ deployment
+  - Amazon RDS Multi-AZ deployments provide enhanced availability for database instances within a single AWS Region
+- Migrate the data to Amazon EC2 instance hosted SQL Server database. Deploy the Amazon EC2 instances in a Multi-AZ configuration
+
+
+## 26
+- A company wants to grant access to an Amazon S3 bucket to users in its own AWS account as well as to users in another AWS account. 
+- Which of the following options can be used to meet this requirement?
+
+**Solution**
+- Use a bucket policy to grant permission to users in its account as well as to users in another account
+  - [S3_Bucket_Policy](aws-ass-solution-architect.md#s3_bucket_policy)
+  - [IAM_Policy_type](aws-ass-solution-architect.md#iam_policy_types)
+**Wrong**
+- Use either a bucket policy or a user policy to grant permission to users in its account as well as to users in another account
+  - If an AWS account that owns a bucket wants to grant permission to users in its own AWS account, it can use either a bucket policy or a user policy. The user policies are for managing permissions for users in their own AWS account and NOT for users in other AWS accounts. Therefore both these options are incorrect.
+- Use permissions boundary to grant permission to users in its account as well as to users in another account
+- Use a user policy to grant permission to users in its account as well as to users in another account
+  - If an AWS account that owns a bucket wants to grant permission to users in its own AWS account, it can use either a bucket policy or a user policy. The user policies are for managing permissions for users in their own AWS account and NOT for users in other AWS accounts. Therefore both these options are incorrect.
+
+
+## 27
+- A company uses Application Load Balancers in multiple AWS Regions. 
+- The Application Load Balancers receive inconsistent traffic that varies throughout the year.
+- The engineering team at the company needs to allow the IP addresses of the Application Load Balancers in the on-premises firewall to enable connectivity.
+
+Which of the following represents the MOST scalable solution with minimal configuration changes?
+
+**Solution**
+- Set up AWS Global Accelerator. Register the Application Load Balancers in different Regions to the AWS Global Accelerator. Configure the on-premises firewall's rule to allow static IP addresses associated with the AWS Global Accelerator
+  - [AWS Global Accelerator](aws-ass-solution-architect.md#aws_global_accelerator)
+  - It provides static IP addresses that provide a fixed entry point to your applications and eliminate the complexity of managing specific IP addresses for different AWS Regions and Availability Zones.
+  - Associate the static IP addresses provided by AWS Global Accelerator to regional AWS resources or endpoints, such as Network Load Balancers, Application Load Balancers, Amazon EC2 Instances, and Elastic IP addresses. The IP addresses are anycast from AWS edge locations so they provide onboarding to the AWS global network close to your users.
+
+**Wrong**
+- Set up a Network Load Balancer in one Region. Register the private IP addresses of the Application Load Balancers in different Regions with the Network Load Balancer. Configure the on-premises firewall's rule to allow the Elastic IP address attached to the Network Load Balancer
+  - Using a single Network Load Balancer is not possible across AWS regions since an Network Load Balancer is Region bound. Multiple Network Load Balancers have to be registered for the on-premises firewall.
+- Migrate all Application Load Balancers in different Regions to the [Network Load Balancers](aws-ass-solution-architect.md#NLB). Configure the on-premises firewall's rule to allow the Elastic IP addresses of all the Network Load Balancers
+  - Although you could potentially migrate the Application Load Balancers to Network Load Balancers, this option requires changes to the on-premises firewall's configuration rules, hence this is not the right fit for the given use-case. It is more optimal to manage the two static IPs provided by the AWS Global Accelerator for configuring the firewall.
+- Develop an AWS Lambda script to get the IP addresses of the Application Load Balancers in different Regions. Configure the on-premises firewall's rule to allow the IP addresses of the Application Load Balancers
+  -  This option requires on-going changes to the on-premises firewall's configuration rules because the IP addresses of the Application Load Balancers would keep changing. Hence this is not the right fit for the given use-case. It is more optimal to configure the firewall with a one-time change for the two static IPs provided by the AWS Global Accelerator.
+## 28
+A company wants to adopt a hybrid cloud infrastructure where it uses some AWS services such as Amazon S3 alongside its on-premises data center. 
+The company wants a dedicated private connection between the on-premise data center and AWS. 
+In case of failures though, the company needs to guarantee uptime and is willing to use the public internet for an encrypted connection.
+
+What do you recommend? (Select two)
+
+**Solution**
+
+- Use [AWS Direct Connect connection](aws-ass-solution-architect.md#aws_direct_connect) as a primary connection
+  - AWS Direct Connect does not involve the Internet; instead, it uses dedicated, private network connections between your intranet and Amazon VPC.
+  - AWS Direct Connect as a primary connection guarantees great performance and security (as the connection is private)
+- Use [AWS Site-to-Site VPN](aws-ass-solution-architect.md#aws_site_to_site_vpn) as a backup connection
+  - As we don't mind going over the public internet (which is reliable, but less secure as connections are going over the public route), we should use a Site to Site VPN which offers an encrypted connection to handle failover scenarios.
+
+**Wrong**
+
+- Use AWS Site-to-Site VPN as a primary connection
+- Use [Egress Only Internet Gateway](aws-ass-solution-architect.md#vpc_egress_only_internet_gateway) as a backup connection
+  - Egress-Only Internet Gateway cannot be used to connect on-premises data centers to AWS Cloud.
+- Use AWS Direct Connect connection as a backup connection
+
+## 29
+
+A Pharmaceuticals company is looking for a simple solution to connect its VPCs and on-premises networks through a central hub.
+As a Solutions Architect, which of the following would you suggest as the solution that requires the LEAST operational overhead?
+
+**Solution**
+- Use AWS Transit Gateway to connect the Amazon VPCs to the on-premises networks
+  - [](aws-ass-solution-architect.md#aws_transit_gateway)
+**Wronf**
+- Use Transit VPC Solution to connect the Amazon VPCs to the on-premises networks
+  - [Transit VPC Solution](aws-ass-solution-architect.md#transit_vpc)
+  - Transit VPC is not the right solution for this use-case as Transit Gateway provides several advantages over Transit VPC:
+    - 1. Transit Gateway abstracts away the complexity of maintaining VPN connections with hundreds of VPCs.
+    - 2. Transit Gateway removes the need to manage and scale Amazon EC2 based software appliances. AWS is responsible for managing all resources needed to route traffic. 
+    - 3. Transit Gateway removes the need to manage high availability by providing a highly available and redundant Multi-AZ infrastructure. 
+    - 4. Transit Gateway improves bandwidth for inter-VPC communication to burst speeds of 50 Gbps per Availability Zone (AZ). 
+    - 5. Transit Gateway streamlines user costs to a simple per hour per/GB transferred model.
+    - 6. Transit Gateway decreases latency by removing Amazon EC2 proxies and the need for VPN encapsulation.
+- [Fully meshed VPC peering](aws-ass-solution-architect.md#fully_meshed_vpc_peering) can be used to connect the Amazon VPCs to the on-premises networks
+- Partially meshed VPC peering can be used to connect the Amazon VPCs to the on-premises networks
+
+## 30
+- A company's business logic is built on several microservices that are running in the on-premises data center. 
+- They currently communicate using a message broker that supports the MQTT protocol. 
+- The company is looking at migrating these applications and the message broker to AWS Cloud without changing the application logic.
+
+Which technology allows you to get a managed message broker that supports the MQTT protocol?
+
+**Solution**
+- [Amazon MQ](aws-ass-solution-architect.md#aws_mq)
+
+**Wrong**
+- Amazon Simple Queue Service (Amazon SQS)
+- Amazon Simple Notification Service (Amazon SNS)
+- Amazon Kinesis Data Streams
+
+## 31
+- A systems administrator is creating IAM policies and attaching them to IAM identities. 
+- After creating the necessary identity-based policies, the administrator is now creating resource-based policies.
+
+Which is the only resource-based policy that the IAM service supports?
+
+**Solution**
+
+- Trust policy
+  - [iam_trust_policy](aws-ass-solution-architect.md#iam_trust_policy)
+**Wrong**
+
+- Permissions boundary
+  - [iam_permissions_boundaries](aws-ass-solution-architect.md#iam_permissions_boundaries)
+- Access control list (ACL)
+- AWS Organizations Service Control Policies (SCP)
+
+## Question 32
+- For security purposes, a development team has decided to deploy the Amazon EC2 instances in a private subnet. 
+- The team plans to use VPC endpoints so that the instances can access some AWS services securely. 
+- The members of the team would like to know about the two AWS services that support Gateway Endpoints.
+
+As a solutions architect, which of the following services would you suggest for this requirement? (Select two)
+
+**Solution**
+
+- Amazon DynamoDB
+- Amazon S3
+  - [Gateway Endpoint](aws-ass-solution-architect.md#vpc_gateway_endpoint)
+
+
+**Wrong**
+- Amazon Simple Queue Service (Amazon SQS)
+- Amazon Simple Notification Service (Amazon SNS)
+- Amazon Kinesis
+
+## Question 33
+
+Question 33
+- As a Solutions Architect, you are tasked to design a distributed application that will run on various Amazon EC2 instances. 
+- This application needs to have the highest performance local disk to cache data.
+- Also, data is copied through an Amazon EC2 to EC2 replication mechanism. 
+- It is acceptable if the instance loses its data when stopped or terminated.
+
+Which storage solution do you recommend?
+
+**Solution**
+- [Instance Store](aws-ass-solution-architect.md#EC2_Intance_store)
+
+**Wrong**
+- Amazon Simple Storage Service (Amazon S3)
+- Amazon Elastic File System (Amazon EFS)
+- Amazon Elastic Block Store (EBS)
+
+
+## Question 34
+- A healthcare company is evaluating storage options on Amazon S3 to meet regulatory guidelines. 
+- The data should be stored in such a way on Amazon S3 that it cannot be deleted until the regulatory time period has expired.
+As a solutions architect, which of the following would you recommend for the given requirement?
+
+
+**Solution**
+- Use Amazon S3 Object Lock
+**Wrong**
+- Activate AWS Multi-Factor Authentication (AWS MFA) delete on the Amazon S3 bucket
+- Use Amazon S3 Glacier Vault Lock
+  - A vault is a container for storing archives on Glacier. When you create a vault, you specify a vault name and the AWS Region in which you want to create the vault. Since Vault Lock is only for Glacier and not for Amazon S3, so it cannot be used for the given use-case.
+- Use Amazon S3 cross-region replication (S3 CRR)
+  - Only the root account can enable MFA delete. MFA delete cannot be used for the given use case because it just represents an additional security layer and can be disabled by anyone having access to the root account credentials.
+
+## Question 35
+- An Elastic Load Balancer has marked all the Amazon EC2 instances in the target group as unhealthy.
+- Surprisingly, when a developer enters the IP address of the Amazon EC2 instances in the web browser, he can access the website.
+
+What could be the reason the instances are being marked as unhealthy? (Select two)
+
+**Solution**
+- The route for the health check is misconfigured
+- The security group of the Amazon EC2 instance does not allow for traffic from the security group of the Application Load Balancer
+  - [ALB_Security_Group_Vs_Health_Check](aws-ass-solution-architect.md#alb_security_group_vs_health_check)
+
+**Wrong**
+- The Amazon Elastic Block Store (Amazon EBS) volumes have been improperly mounted
+  - You can access the website using the IP address which means there is no issue with the Amazon EBS volumes. So this option is not correct.
+- Your web-app has a runtime that is not supported by the Application Load Balancer
+  - There is no connection between a web app runtime and the application load balancer.
+- You need to attach elastic IP address (EIP) to the Amazon EC2 instances
+  - This option is a distractor as Elastic IPs do not need to be assigned to Amazon EC2 instances while using an Application Load Balancer.
