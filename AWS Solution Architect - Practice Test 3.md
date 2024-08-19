@@ -7,18 +7,16 @@ The company is looking to *migrate* these workflows from their on-premises infra
 As a solutions architect, which of the following networking components would you recommend on the Amazon EC2 instances running these HPC workflows?
 
 **Solution**
-4. Elastic Fabric Adapter (EFA)
-- [EFA](aws-ass-solution-architect.md#elastic-fabric-adapter-efa)
-  **Wrong**
-1. Elastic Network Interface (ENI)
-- [Elastic_Network_Interface_ENI](##Elastic_Network_Interface_ENI)
-- Elastic_Network_Interface_ENI
-2. Elastic IP Address (EIP)
-- [Elastic IP Address (EIP)](aws-ass-solution-architect.md#elastic_ip_address_eip)
-- It is not a networking device that can be used to facilitate HPC workflows.
-3. Elastic Network Adapter (ENA)
-- [Elastic Network Adapter (ENA)](aws-ass-solution-architect.md#elastic-network-adapter-ena)
-- Although enhanced networking provides higher bandwidth, higher packet per second (PPS) performance, and consistently lower inter-instance latencies, still EFA is a better fit for the given use-case because the EFA device provides all the functionality of an ENA device, plus hardware support for applications to communicate directly with the EFA device without involving the instance kernel (OS-bypass communication) using an extended programming interface.
+
+4. [EFA](aws-ass-solution-architect.md#elastic-fabric-adapter-efa)
+
+**Wrong**
+
+1.[Elastic_Network_Interface_ENI](aws-ass-solution-architect.md#elastic_network_interface_eni)
+2.[Elastic IP Address (EIP)](aws-ass-solution-architect.md#elastic_ip_address_eip)
+  - It is not a networking device that can be used to facilitate HPC workflows.
+3. [Elastic Network Adapter (ENA)](aws-ass-solution-architect.md#elastic-network-adapter-ena)
+   - Although enhanced networking provides higher bandwidth, higher packet per second (PPS) performance, and consistently lower inter-instance latencies, still EFA is a better fit for the given use-case because the EFA device provides all the functionality of an ENA device, plus hardware support for applications to communicate directly with the EFA device without involving the instance kernel (OS-bypass communication) using an extended programming interface.
 
 ## 2 Config history
 - A financial services company has recently migrated from on-premises infrastructure to AWS Cloud.

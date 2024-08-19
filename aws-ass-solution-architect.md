@@ -86,9 +86,11 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - You can use AWS WAF with your Application Load Balancer to allow or block requests based on the rules in a web access control list (web ACL). Geographic (Geo) Match Conditions in AWS WAF allows you to use AWS WAF to restrict application access based on the geographic location of your viewers. With geo match conditions you can choose the countries from which AWS WAF should allow access.
 - Geo match conditions are important for many customers. For example, legal and licensing requirements restrict some customers from delivering their applications outside certain countries. These customers can configure a whitelist that allows only viewers in those countries. Other customers need to prevent the downloading of their encrypted software by users in certain countries. These customers can configure a blacklist so that end-users from those countries are blocked from downloading their software.
 ## Event_Bridge
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q35-i1.jpg)
 - This event-based service is extremely useful for connecting non-AWS SaaS (Software as a Service) services to AWS services. 
 - With Amazon Eventbridge, the downstream application would need to immediately process the events whenever they arrive, thereby making it a tightly coupled scenario.
-
+- Further, Amazon EventBridge uses a defined JSON-based structure for events and allows you to create rules that are applied across the entire event body to select events to forward to a target.
+-  At launch, Amazon EventBridge is has limited throughput (see Service Limits) which can be increased upon request, and typical latency of around half a second.
 ## EC2
 ### elastic-fabric-adapter-efa
 ![](https://d1.awsstatic.com/Product-Page-Diagram_Elastic-Fabric-Adapter_How-it-Works_updated.2a51303e17a203eb094ab098ebc31a61dab66365.png)
@@ -331,9 +333,15 @@ This is because each load balancer node can route its 50% of the client traffic 
   - If you specify targets using *IP addresses*, you can route traffic to an instance using any *private IP address* from one or more network interfaces. This enables multiple applications on an instance to use the same port. Note that each network interface can have its security group. The load balancer rewrites the destination IP address before forwarding it to the target.
 ### ALB
 
-- The Application Load Balancer (ALB) is best suited for load balancing HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
-- This is the correct option since the question has a specific requirement for content-based routing which can be configured via the Application Load Balancer. Different Availability Zones (AZs) provide high availability to the overall architecture and Auto Scaling group will help mask any instance failures.
-
+- The Application Load Balancer (ALB) is best suited for load balancing HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. 
+- Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.Operating at the individual request level (Layer 7), the Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
+- Provide high availability to the overall architecture and Auto Scaling group will help mask any instance failures.
+- operates at the request level (layer 7), routing traffic to targets:
+  – Amazon EC2 instances
+  - containers
+  - IP addresses
+  - Lambda functions based on the content of the request. 
+- Ideal for advanced load balancing of HTTP and HTTPS traffic, Application Load Balancer provides advanced request routing targeted at delivery of modern application architectures, including microservices and container-based applications.
 
 #### ALB_with_Cognito_User_Pools
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q17-i1.jpg)
@@ -381,6 +389,7 @@ This is because each load balancer node can route its 50% of the client traffic 
 - Cannot establish a low latency and high throughput connection between a data center and AWS Cloud.
 
 ## VPC_Peering
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q45-i1.jpg)
 - A networking connection between two VPCs that enables you to route traffic between them using private IPv4 addresses or IPv6 addresses. 
 - Instances in either VPC can communicate with each other as if they are within the same network. 
 - You can create a VPC peering connection between your VPCs, or with a VPC in another AWS account. 
@@ -561,10 +570,10 @@ Features of Aurora
 - When you launch an instance, you can specify one or more security groups; otherwise -> default security group.
 - Add rules to each security group that allows traffic to or from its associated instances.
 - Modify the rules for a security group at any time; the new rules -> applied to all instances that are associated with the security group. 
-*The following are the characteristics of security group rules*:
-- By default, security groups allow all outbound traffic.
-- Security group rules are always permissive; you can't create rules that deny access.
-- Security groups are stateful
+- *The following are the characteristics of security group rules*:
+  1. By default, security groups allow all outbound traffic.
+  2. Security group rules are always permissive; you can't create rules that deny access.
+  3. Security groups are stateful
 
 - [ec2-security-groups](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html)
 
@@ -760,9 +769,13 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 ## Cloudfront
 - CDN service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment.
 - CloudFront points of presence (POPs) (edge locations) make sure popular content can be served quickly to your viewers.
-- has regional edge caches that bring more of your content closer to your viewers, even when the content is not popular enough to stay at a POP, to help improve performance for that content.
-- You can use different origins for different types of content on a single site – e.g. Amazon S3 for static objects, Amazon EC2 for dynamic content, and custom origins for third-party content.
-### cloudfront_with_s3
+- CloudFront has regional edge caches that bring more of your content closer to your viewers, even when the content is not popular enough to stay at a POP, to help improve performance for that content.
+- You can use different origins for different types of content on a single site – e.g:
+  - Amazon S3 for static objects
+  - Amazon EC2 for dynamic content
+  - Custom origins for third-party content.
+- **Regional edge caches** help with all types of content, particularly content that tends to become less popular over time. Examples include user-generated content, such as video, photos, or artwork; e-commerce assets such as product photos and videos; and news and event-related content that might suddenly find new popularity.
+### Cloudfront_With_S3
 - A- mazon CloudFront is a content delivery network (CDN) service that delivers static and dynamic web content, video streams, and APIs around the world, securely and at scale. 
 - By design, delivering data out of Amazon CloudFront can be more cost-effective than delivering it from Amazon S3 directly to your users. 
 - Amazon CloudFront serves content through a worldwide network of data centers called Edge Locations. 
@@ -831,8 +844,11 @@ By caching your content in Edge Locations, Amazon CloudFront reduces the load on
 
 ## AMI
 - An Amazon Machine Image (AMI) provides the information required to launch an instance. 
+- You must specify an AMI when you launch an instance
+- You can launch multiple instances from a single AMI when you need multiple instances with the same configuration
+- You can use different AMIs to launch instances when you need instances with different configurations.
+- For the current use case, you need to create an AMI such that the application stack is already set up. But AMIs are bound to the Region they are created in. So, you need to copy the AMI across Regions for disaster recovery readiness.
 - An AMI includes the following:
-
   + One or more Amazon EBS snapshots
   + for instance-store-backed AMIs
   + a template for the root volume of the instance.
@@ -848,6 +864,13 @@ By caching your content in Edge Locations, Amazon CloudFront reduces the load on
 - The following table shows encryption support for various AMI-copying scenarios. While it is possible to copy an unencrypted snapshot to yield an encrypted snapshot, you cannot copy an encrypted snapshot to yield an unencrypted one. Therefore, the option - "Copying an AMI backed by an encrypted snapshot cannot result in an unencrypted target snapshot" is correct.
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt4-q55-i1.jpg)
 
+### AMI_Cross_Region_Copying
+Copying a source AMI results in an identical but distinct target AMI with its own unique identifier. In the case of an Amazon EBS-backed AMI, each of its backing snapshots is, by default, copied to an identical but distinct target snapshot. (The sole exceptions are when you choose to encrypt or re-encrypt the snapshot.) You can change or deregister the source AMI with no effect on the target AMI. The reverse is also true. There are no charges for copying an AMI. However, standard storage and data transfer rates apply. If you copy an Amazon EBS-backed AMI, you will incur charges for the storage of any additional Amazon EBS snapshots.
+
+AWS does not copy launch permissions, user-defined tags, or Amazon S3 bucket permissions from the source AMI to the new AMI. After the copy operation is complete, you can apply launch permissions, user-defined tags, and Amazon S3 bucket permissions to the new AMI.
+
+AMIs Cross-Region copying:
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q5-i1.jpg)
 ## CloudFormation
 
 ### AWS_CloudFormation_Stack
@@ -915,15 +938,12 @@ Makes it easy and cost-effective to launch and run the world’s most popular hi
 - ![](https://d1.awsstatic.com/r2018/b/FSx-Windows/FSx_Windows_File_Server_How-it-Works.9396055e727c3903de991e7f3052ec295c86f274.png)
 ## AWS_Storage_gateway
 - A hybrid cloud storage service that gives you on-premises access to virtually unlimited cloud storage.
-- types of gateways
-  - Tape Gateway
-    - allows moving tape backups to the cloud.
-  - File Gateway
-    - offer ~~SMB~~ or ~~NFs~~ in S3 with local catching
-  - Volume Gateway
-    - Present cloud-based iSCSI block storage volumes to your on-premises applications.
-- that seamlessly connect on-premises applications to cloud storage, caching data locally for low-latency access.
-- ~Ref~
+- Types of gateways
+  - Tape Gateway: Allows moving tape backups to the cloud.
+  - File Gateway: offer *SMB* or *NFs* in S3 with local catching
+  - Volume Gateway: Present cloud-based iSCSI block storage volumes to your on-premises applications.
+- That seamlessly connect on-premises applications to cloud storage, caching data locally for low-latency access.
+- Ref
   - [Link](https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html)
 
 - It is not suited to be used as a shared storage space that multiple applications can access in parallel.
@@ -1183,6 +1203,25 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 - Ledger: Amazone Quantum Ledger Database
 - Time series: AmazonTimestream
 
+## Disaster_recovery_strategy
+- **Pilot Light**
+  - The term pilot light is often used to describe a DR scenario in which a minimal version of an environment is always running in the cloud. 
+  - The idea of the pilot light is an analogy that comes from the gas heater. In a gas heater, a small flame that’s always on can quickly ignite the entire furnace to heat up a house. This scenario is similar to a backup-and-restore scenario. 
+  - For example, with AWS you can maintain a pilot light by configuring and running the most critical core elements of your system in AWS. When the time comes for recovery, you can rapidly provision a full-scale production environment around the critical core.
+- **Warm Standby**
+  - The term warm standby is used to describe a DR scenario in which a scaled-down version of a fully functional environment is always running in the cloud. 
+  - A warm standby solution extends the pilot light elements and preparation. 
+  - It further decreases the recovery time because some services are always running. 
+  - By identifying your business-critical systems, you can fully duplicate these systems on AWS and have them always on.
+- **Backup and Restore** 
+  - In most traditional environments, data is backed up to tape and sent off-site regularly.
+  - If you use this method, it can take a long time to restore your system in the event of a disruption or disaster.
+  - Amazon S3 is an ideal destination for backup data that might be needed quickly to perform a restore. Transferring data to and from Amazon S3 is typically done through the network, and is therefore accessible from any location. 
+  - Many commercial and open-source backup solutions integrate with Amazon S3.
+
+- **Multi Site** 
+  - A multi-site solution runs in AWS as well as on your existing on-site infrastructure, in an active-active configuration. 
+  - The data replication method that you employ will be determined by the recovery point that you choose.
 ## RDS
 - RDS makes it easy to set up, operate, and scale a relational database in the cloud. 
 - It provides cost-efficient and resizable capacity while automating time-consuming administration tasks such as hardware provisioning, database setup, patching, and backups. 
@@ -1208,6 +1247,10 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 - Auotmated Backup with Point in time restore feature(35 days)
 - Manual DB Snapshot for longer-term recoverry
 - Support IAM Authentication, integration with Secrets Manager
+### RDS_SSL
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q31-i1.jpg)
+- You can use Secure Socket Layer / Transport Layer Security (SSL/TLS) connections to encrypt data in transit. Amazon RDS creates an SSL certificate and installs the certificate on the DB instance when the instance is provisioned. 
+- For MySQL, you launch the MySQL client using the --ssl_ca parameter to reference the public key to encrypt connections. Using SSL, you can encrypt a PostgreSQL connection between your applications and your PostgreSQL DB instances. You can also force all connections to your PostgreSQL DB instance to use SSL.
 ### RDS_Comparable
 ![](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/images/read-and-standby-replica.png)
 ![CompareTable](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q8-i1.jpg)
@@ -1238,7 +1281,16 @@ If you have resources in multiple Availability Zones and they share one NAT gate
   - The maximum storage threshold is the limit that you set for autoscaling the DB instance. You can't set the maximum storage threshold for autoscaling-enabled instances to a value greater than the maximum allocated storage.
 ### RDS_Multi_AZ
 ![](https://d1.awsstatic.com/asset-repository/multi-az-deployments.bda9d7bf45a74103d0331a985baf2c5fb838a0fa.png)
-When you provision an RDS Multi-AZ DB Instance, Amazon RDS automatically creates a primary DB Instance and synchronously replicates the data to a standby instance in a different Availability Zone (AZ). Each AZ runs on its own physically distinct, independent infrastructure, and is engineered to be highly reliable. Running a DB instance with high availability can enhance availability during planned system maintenance, and help protect your databases against DB instance failure and Availability Zone disruption. In the event of a planned or unplanned outage of your DB instance, Amazon RDS automatically switches to a standby replica in another Availability Zone if you have enabled Multi-AZ. The time it takes for the failover to complete depends on the database activity and other conditions at the time the primary DB instance became unavailable. Failover times are typically 60–120 seconds.
+- When you provision an RDS Multi-AZ DB Instance, Amazon RDS automatically creates a primary DB Instance and synchronously replicates the data to a standby instance in a different Availability Zone (AZ). 
+- Each AZ runs on its own physically distinct, independent infrastructure, and is engineered to be highly reliable. 
+- Running a DB instance with high availability can enhance availability during planned system maintenance, and help protect your databases against DB instance failure and Availability Zone disruption. 
+- In the event of a planned or unplanned outage of your DB instance, Amazon RDS automatically switches to a standby replica in another Availability Zone if you have enabled Multi-AZ. The time it takes for the failover to complete depends on the database activity and other conditions at the time the primary DB instance became unavailable. Failover times are typically 60–120 seconds.
+
+- Multi-AZ is the best option when data retention, minimal downtime, and application performance are a priority
+  - Data-loss potential - Low. Multi-AZ provides fault tolerance for every scenario, including hardware-related issues.
+  - Performance impact - Low. Of the available options, Multi-AZ provides the fastest time to recovery, because there is no manual procedure to follow after the process is implemented.
+  - Cost - Low to high. Multi-AZ is the lowest-cost option. Use Multi-AZ when you can't risk losing data because of hardware failure or you can't afford the downtime required by other options in your response to an outage.
+
 
 
 ## Aurora
