@@ -32,6 +32,7 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - Root account use
 - Policies is define permission of user
 - Apply least previledge principle
+- You manage access in AWS by creating policies and attaching them to IAM identities (users, groups of users, or roles) or AWS resources. A policy is an object in AWS that, when associated with an identity or resource, defines their permissions. AWS evaluates these policies when an IAM principal (user or role) makes a request. Permissions in the policies determine whether the request is allowed or denied. Most policies are stored in AWS as JSON documents. AWS supports six types of policies: identity-based policies, resource-based policies, permissions boundaries, AWS Organizations service control policy (SCP), access control list (ACL), and session policies.
 
 ### IAM_Policy_Types
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q65-i2.jpg)
@@ -58,7 +59,6 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - The IAM service supports only one type of resource-based policy called a role trust policy, which is attached to an IAM role.
 ### IAM_Role
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q3-i1.jpg)
-
 - Applications that run on an EC2 must include AWS credentials in their AWS API requests.
   - Could store AWS credentials directly within the EC2 and allow applications in that instance to use those credentials.
   -  But have to manage the credentials and ensure that they securely pass the credentials to each instance and update each EC2 when it's time to rotate the credentials.
@@ -110,6 +110,12 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - With Amazon Eventbridge, the downstream application would need to immediately process the events whenever they arrive, thereby making it a tightly coupled scenario.
 - Further, Amazon EventBridge uses a defined JSON-based structure for events and allows you to create rules that are applied across the entire event body to select events to forward to a target.
 -  At launch, Amazon EventBridge is has limited throughput (see Service Limits) which can be increased upon request, and typical latency of around half a second.
+
+## Elastic Inference accelerator
+- Amazon Elastic Inference accelerators are GPU-powered hardware devices that are designed to work with any Amazon EC2 instance, Amazon Sagemaker instance, or Amazon ECS task to accelerate deep learning inference workloads at a low cost. 
+- They are for workloads that need deep learning. 
+- Also, AWS PrivateLink VPC Endpoints are needed for Elastic Inference accelerators, which makes it unsuitable for the current scenario.
+
 ## EC2
 ### elastic-fabric-adapter-efa
 ![](https://d1.awsstatic.com/Product-Page-Diagram_Elastic-Fabric-Adapter_How-it-Works_updated.2a51303e17a203eb094ab098ebc31a61dab66365.png)
@@ -352,14 +358,17 @@ This is because each load balancer node can route its 50% of the client traffic 
 - The maximum timeout value can be set between 1 and 3,600 seconds (the default is 300 seconds). When the maximum time limit is reached, the load balancer forcibly closes connections to the de-registering instance.
 
 ### NLB
+- Network Load Balancer is best suited for use-cases involving low latency and high throughput workloads that involve scaling to millions of requests per second. Network Load Balancer operates at the connection level (Layer 4), routing connections to targets - Amazon EC2 instances, microservices, and containers – within Amazon Virtual Private Cloud (Amazon VPC) based on IP protocol data
 - A Network Load Balancer functions at the fourth layer of the Open Systems Interconnection (OSI) model. 
 - It can handle millions of requests per second. After the load balancer receives a connection request, it selects a target from the target group for the default rule. 
 - It attempts to open a TCP connection to the selected target on the port specified in the listener configuration.
 - Using a single Network Load Balancer is not possible across AWS regions since an Network Load Balancer is Region bound. Multiple Network Load Balancers have to be registered for the on-premises firewall.
 #### NLB_Request_Routing_and_IP_Addresses:
-  - If you specify targets using an instance ID, traffic is routed to instances using the *primary private IP* address specified in the *primary network interface* for the instance. The load balancer rewrites the destination IP address from the data packet before forwarding it to the target instance.
-  - If you specify targets using *IP addresses*, you can route traffic to an instance using any *private IP address* from one or more network interfaces. This enables multiple applications on an instance to use the same port. Note that each network interface can have its security group. The load balancer rewrites the destination IP address before forwarding it to the target.
+- If you specify targets using an instance ID, traffic is routed to instances using the *primary private IP* address specified in the *primary network interface* for the instance. The load balancer rewrites the destination IP address from the data packet before forwarding it to the target instance.
+- If you specify targets using *IP addresses*, you can route traffic to an instance using any *private IP address* from one or more network interfaces. This enables multiple applications on an instance to use the same port. Note that each network interface can have its security group. The load balancer rewrites the destination IP address before forwarding it to the target.
+- Network Load Balancers expose a *fixed IP* to the *public web*, therefore allowing your application to be predictably reached using this IP, while allowing you to scale your application behind the Network Load Balancer using an ASG.
 ### ALB
+
 - n Application Load Balancer functions at the application layer, the seventh layer of the Open Systems Interconnection (OSI) model. 
 - After the load balancer receives a request, it evaluates the listener rules in priority order to determine which rule to apply, and then selects a target from the target group for the rule action. 
 - You can configure listener rules to route requests to different target groups based on the content of the application traffic. 
@@ -373,7 +382,12 @@ This is because each load balancer node can route its 50% of the client traffic 
   - IP addresses
   - Lambda functions based on the content of the request. 
 - Ideal for advanced load balancing of HTTP and HTTPS traffic, Application Load Balancer provides advanced request routing targeted at delivery of modern application architectures, including microservices and container-based applications.
+#### ALB_SNI
+- You can host multiple TLS secured applications, each with its own TLS certificate, behind a single load balancer. To use SNI, all you need to do is bind multiple certificates to the same secure listener on your load balancer. ALB will automatically choose the optimal TLS certificate for each client.
 
+- ALB’s smart certificate selection goes beyond SNI. In addition to containing a list of valid domain names, certificates also describe the type of key exchange and cryptography that the server supports, as well as the signature algorithm (SHA2, SHA1, MD5) used to sign the certificate.
+
+- With SNI support AWS makes it easy to use more than one certificate with the same ALB. The most common reason you might want to use multiple certificates is to handle different domains with the same load balancer. It’s always been possible to use wildcard and subject-alternate-name (SAN) certificates with ALB, but these come with limitations. Wildcard certificates only work for related subdomains that match a simple pattern and while SAN certificates can support many different domains, the same certificate authority has to authenticate each one. That means you have to reauthenticate and reprovision your certificate every time you add a new domain.
 #### ALB_Security_Group_Vs_Health_Check
 - An Application Load Balancer periodically sends requests to its registered targets to test their status. These tests are called health checks.
 
@@ -558,10 +572,11 @@ Features of Aurora
 * CName not for apex record
 
 ## Route_53
-- H highly available and scalable cloud Domain Name System (DNS) web service. 
+- Highly available and scalable cloud Domain Name System (DNS) web service. 
 - It is designed to give developers and businesses an extremely reliable and cost-effective way to route end users to Internet applications by translating names like www.example.com into the numeric IP addresses like 192.0.2.1 that computers use to connect to each other. 
 ### Router_53_Resolver
-- By default, Amazon Route 53 Resolver automatically answers DNS queries for local VPC domain names for Amazon EC2 instances. You can integrate DNS resolution between Resolver and DNS resolvers on your on-premises network by configuring forwarding rules.
+- By default, Amazon Route 53 Resolver automatically answers DNS queries for local VPC domain names for Amazon EC2 instances. 
+- You can integrate DNS resolution between Resolver and DNS resolvers on your on-premises network by configuring forwarding rules.
 #### Router_53_Resolver_Inbound_Endpoint
 ![](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/images/Resolver-inbound-endpoint.png)
 - To resolve any DNS queries for resources in the AWS VPC from the on-premises network, you can create an inbound endpoint on Amazon Route 53 Resolver and then DNS resolvers on the on-premises network can forward DNS queries to Amazon Route 53 Resolver via this endpoint.
@@ -570,9 +585,21 @@ Features of Aurora
 - To resolve DNS queries for any resources in the on-premises network from the AWS VPC, you can create an outbound endpoint on Amazon Route 53 Resolver and then Amazon Route 53 Resolver can conditionally forward queries to resolvers on the on-premises network via this endpoint. To conditionally forward queries, you need to create Resolver rules that specify the domain names for the DNS queries that you want to forward (such as example.com) and the IP addresses of the DNS resolvers on the on-premises network that you want to forward the queries to.
 
 ### Record Type
+#### Alias Record
+- Amazon Route 53 also offers alias records, which are an Amazon Route 53-specific extension to DNS. 
+- Alias records let you route traffic to selected AWS resources, such as Amazon CloudFront distributions and Amazon S3 buckets. 
+- They also let you route traffic from one record in a hosted zone to another record. Unlike a CNAME record, you can create an alias record at the top node of a DNS namespace, also known as the zone apex. 
+- For example, if you register the DNS name example.com, the zone apex is example.com. You can't create a CNAME record for example.com, but you can create an alias record for example.com that routes traffic to www.example.com
+#### CNAME
+- CNAME record can redirect DNS queries to any DNS record. For example, you can create a CNAME record that redirects queries from acme.example.com to zenith.example.com or to acme.example.org. You don't need to use Amazon Route 53 as the DNS service for the domain that you're redirecting queries to.
+### DNS_Hosted_Zones
+- DNS **hostnames** and **DNS resolution** are required settings for private hosted zones. DNS queries for private hosted zones can be resolved by the Amazon-provided VPC DNS server only. As a result, these options must be enabled for your private hosted zone to work.
+- DNS hostnames: For non-default virtual private clouds that aren't created using the Amazon VPC wizard, this option is disabled by default. If you create a private hosted zone for a domain and create records in the zone without enabling DNS hostnames, private hosted zones aren't enabled. To use a private hosted zone, this option must be enabled.
+  DNS resolution: Private hosted zones accept DNS queries only from a VPC DNS server. The IP address of the VPC DNS server is the reserved IP address at the base of the VPC IPv4 network range plus two. Enabling DNS resolution allows you to use the VPC DNS server as a Resolver for performing DNS resolution. Keep this option disabled if you're using a custom DNS server in the DHCP Options set, and you're not using a private hosted zone.
+
 #### DNS_Alias_Records
-- **Alias** records provide Amazon Route 53–specific extension to DNS functionality. Alias records let you route traffic to selected AWS resources, such as Amazon CloudFront distributions and Amazon S3 buckets.
-- You can create an alias record at the top node of a DNS namespace, also known as the zone apex, however, you cannot create a CNAME record for the top node of the DNS namespace. So, if you register the DNS name covid19survey.com, the zone apex is covid19survey.com. You can't create a CNAME record for covid19survey.com, but you can create an alias record for covid19survey.com that routes traffic to www.covid19survey.com.
+- Alias records provide Amazon Route 53–specific extension to DNS functionality. Alias records let you **route traffic to selected AWS resources**, such as Amazon CloudFront distributions and Amazon S3 buckets.
+- *You can create an alias record at the top node of a DNS namespace*, also known as the zone apex, however, you cannot create a CNAME record for the top node of the DNS namespace. So, if you register the DNS name covid19survey.com, the zone apex is covid19survey.com. You can't create a CNAME record for covid19survey.com, but you can create an alias record for covid19survey.com that routes traffic to www.covid19survey.com.
 - You should also note that Amazon Route 53 doesn't charge for alias queries to AWS resources but Route 53 does charge for CNAME queries. Additionally, an alias record can only redirect queries to selected AWS resources such as Amazon S3 buckets, Amazon CloudFront distributions, and another record in the same Amazon Route 53 hosted zone; however a CNAME record can redirect DNS queries to any DNS record. So, you can create a CNAME record that redirects queries from app.covid19survey.com to app.covid19survey.net.
 ### Routing_Policy
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q6-i1.jpg)
@@ -581,6 +608,10 @@ Features of Aurora
 - To use latency-based routing, you create latency records for your resources in multiple AWS Region
 - When Amazon Route 53 receives a DNS query for your domain or subdomain (example.com or acme.example.com), it determines which AWS Regions you've created latency records for, determines which region gives the user the lowest latency, and then selects a latency record for that region.
 - Route 53 responds with the value from the selected record, such as the IP address for a web server.
+#### Weighted routing
+- Weighted routing lets you associate multiple resources with a single domain name (example.com) or subdomain name (acme.example.com) and choose how much traffic is routed to each resource. This can be useful for a variety of purposes, including load balancing and testing new versions of software.
+
+To configure weighted routing, you create records that have the same name and type for each of your resources. You assign each record a relative weight that corresponds with how much traffic you want to send to each resource. Amazon Route 53 sends traffic to a resource based on the weight that you assign to the record as a proportion of the total weight for all records in the group.
 #### Failover_Routing
 - Failover routing lets you route traffic to a resource when the resource is healthy or to a different resource when the first resource is unhealthy. 
 - The primary and secondary records can route traffic to anything from an Amazon S3 bucket that is configured as a website to a complex tree of records. 
@@ -589,6 +620,18 @@ Features of Aurora
 - For example, you might want all queries from Europe to be routed to an ELB load balancer in the Frankfurt region. 
 - You can also use geolocation routing to restrict the distribution of content to only the locations in which you have distribution rights. 
 - You cannot use geolocation routing to reduce latency, hence this option is incorrect.
+
+#### Geoproximity routing
+- Geoproximity routing lets Amazon Route 53 route traffic to your resources based on the geographic location of your users and your resources.
+- You can also optionally choose to route more traffic or less to a given resource by specifying a value, known as a bias.
+- A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource.
+
+- To optionally change the size of the geographic region from which Amazon Route 53 routes traffic to a resource, specify the applicable value for the bias: 
+  - 1. To expand the size of the geographic region from which Amazon Route 53 routes traffic to a resource, specify a positive integer from 1 to 99 for the bias. Amazon Route 53 shrinks the size of adjacent regions.
+
+To shrink the size of the geographic region from which Amazon Route 53 routes traffic to a resource, specify a negative bias of -1 to -99. Amazon Route 53 expands the size of adjacent regions.
+
+
 
 ## Network_ACL
 - To enable the connection to a service running on an instance, the associated network ACL *must allow both inbound traffic on the port* that the service is listening on as well as allow outbound traffic from ephemeral ports. When a client connects to a server, a random port from the ephemeral port range (1024-65535) becomes the client's source port.
@@ -600,11 +643,12 @@ Features of Aurora
 - DNS hostnames: For non-default virtual private clouds that aren't created using the Amazon VPC wizard, this option is disabled by default. If you create a private hosted zone for a domain and create records in the zone without enabling DNS hostnames, private hosted zones aren't enabled. To use a private hosted zone, this option must be enabled.
   DNS resolution: Private hosted zones accept DNS queries only from a VPC DNS server. The IP address of the VPC DNS server is the reserved IP address at the base of the VPC IPv4 network range plus two. Enabling DNS resolution allows you to use the VPC DNS server as a Resolver for performing DNS resolution. Keep this option disabled if you're using a custom DNS server in the DHCP Options set, and you're not using a private hosted zone.
 ## Security_Group
+
 - A security group acts as a virtual firewall that controls the traffic for one or more instances. 
 - When you launch an instance, you can specify one or more security groups; otherwise -> default security group.
 - Add rules to each security group that allows traffic to or from its associated instances.
 - Modify the rules for a security group at any time; the new rules -> applied to all instances that are associated with the security group. 
-- *The following are the characteristics of security group rules*:
+- The following are the *characteristics* of security group rules:
   1. By default, security groups allow all outbound traffic.
   2. Security group rules are always permissive; you can't create rules that deny access.
   3. Security groups are stateful
@@ -630,6 +674,11 @@ Features of Aurora
 * Default encrytiokn
   * SSE-S3
   * KMS
+### S3_IA_OneZone 
+- Amazon S3 Standard-IA is for data that is accessed less frequently but requires rapid access when needed. Amazon S3 Standard-IA offers high durability, high throughput, and low latency of Amazon S3 Standard, with a low per GB storage price and per GB retrieval fee. This combination of low cost and high performance makes S3 Standard-IA ideal for long-term storage, backups, and as a data store for disaster recovery files. The minimum storage duration charge is 30 days.
+
+- Amazon S3 One Zone-IA is for data that is accessed less frequently but requires rapid access when needed. Unlike other S3 Storage Classes which store data in a minimum of three Availability Zones (AZs), S3 One Zone-IA stores data in a single AZ and costs 20% less than S3 Standard-IA. The minimum storage duration charge is 30 days.
+
 ### S3_Object_Lock
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q64-i1.jpg)
 - Amazon S3 Object Lock is an Amazon S3 feature that allows you to store objects using a write once, read many (WORM) model. You can use WORM protection for scenarios where it is imperative that data is not changed or deleted after it has been written. Whether your business has a requirement to satisfy compliance regulations in the financial or healthcare sector, or you simply want to capture a golden copy of business records for later auditing and reconciliation, Amazon S3 Object Lock is the right tool for you. Object Lock can help prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely.
@@ -828,9 +877,29 @@ After creating an Amazon Cognito user pool, in API Gateway, you must then create
 - Users and applications retrieve secrets with a call to Secrets Manager APIs, eliminating the need to hardcode sensitive information in plain text. 
 - Secrets Manager offers secret rotation with built-in integration for Amazon RDS, Amazon Redshift, and Amazon DocumentDB.
 
+## AWS_Sage_Maker
+- Amazon SageMaker helps data scientists and developers to prepare, build, train, and deploy high-quality machine learning (ML) models quickly by bringing together a broad set of capabilities purpose-built for ML. 
+- 
+
 ## Cloudfront
 - CDN service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment.
 - CloudFront points of presence (POPs) (edge locations) make sure popular content can be served quickly to your viewers.
+### Cloudfront_route_mulitple_origin
+- Can route to **multiple origins based** on the content type
+  - You can configure a single Amazon CloudFront web distribution to serve different types of requests from multiple origins. For example, if you are building a website that serves static content from an Amazon Simple Storage Service (Amazon S3) bucket and dynamic content from a load balancer, you can serve both types of content from a Amazon CloudFront web distribution.
+### Cloudfront_secondary_origin
+- Use an *origin group with primary and secondary origins* to configure Amazon CloudFront for high-availability and failover
+  - ![](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/images/origingroups-overview.png)
+  - You can set up Amazon CloudFront with origin failover for scenarios that require high availability. To get started, you create an origin group with two origins: a primary and a secondary. If the primary origin is unavailable or returns specific HTTP response status codes that indicate a failure, CloudFront automatically switches to the secondary origin.
+### Cloudfront_field_level_encryption
+- Use **field level encryption** in Amazon CloudFront to protect sensitive data for specific content
+  - Field-level encryption allows you to enable your users to securely upload sensitive information to your web servers. The sensitive information provided by your users is encrypted at the edge, close to the user, and remains encrypted throughout your entire application stack. This encryption ensures that only applications that need the data—and have the credentials to decrypt it—are able to do so.
+
+- To use field-level encryption, when you configure your Amazon CloudFront distribution, specify the set of fields in POST requests that you want to be encrypted, and the public key to use to encrypt them. You can encrypt up to 10 data fields in a request. (You can’t encrypt all of the data in a request with field-level encryption; you must specify individual fields to encrypt.)
+
+To set up origin failover, you must have a distribution with at least two origins. Next, you create an origin group for your distribution that includes two origins, setting one as the primary. Finally, you create or update a cache behavior to use the origin group.
+
+
 - CloudFront has regional edge caches that bring more of your content closer to your viewers, even when the content is not popular enough to stay at a POP, to help improve performance for that content.
 - You can use different origins for different types of content on a single site – e.g:
   - Amazon S3 for static objects
@@ -857,10 +926,6 @@ By caching your content in Edge Locations, Amazon CloudFront reduces the load on
 - support your data resiliency needs.
 - If your content is not already cached in an edge location,
   -> CloudFront retrieves it from an origin that you've identified as the source for the definitive version of the content.
-#### 165 Cloudfront with S3
-
-* Origin access
-* Distribution
 
 ## AWS_Global_Accelerator
 ![](https://d1.awsstatic.com/r2018/b/ubiquity/global-accelerator-how-it-works.feb297eb78d8cc55205874a1691e0ea2bc8bdbf1.png)
@@ -935,6 +1000,11 @@ AWS does not copy launch permissions, user-defined tags, or Amazon S3 bucket per
 AMIs Cross-Region copying:
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q5-i1.jpg)
 ## CloudFormation
+- AWS CloudFormation provides a common language for you to model and provision AWS and third-party application resources in your cloud environment. AWS CloudFormation allows you to use programming languages or a simple text file to model and provision, in an automated and secure manner, all the resources needed for your applications across all regions and accounts. This gives you a single source of truth for your AWS and third-party resources.
+
+- AWS CloudFormation allows you to keep your infrastructure as code and re-use the best practices around your company for configuration parameters. Therefore, this is the correct option for the given use-case.
+
+
 
 ### AWS_CloudFormation_Stack
 - AWS CloudFormation stack is a set of AWS resources that are created and managed as a single unit when AWS CloudFormation instantiates a template. A stack cannot be used to deploy the same template across AWS accounts and regions.
@@ -964,10 +1034,12 @@ AWS CloudFormation StackSet extends the functionality of stacks by enabling you 
 - Per the given use-case, the corporate headquarters has an AWS Direct Connect connection to the VPC and the branch offices have Site-to-Site VPN connections to the VPC. Therefore using the AWS VPN CloudHub, branch offices can send and receive data with each other as well as with their corporate headquarters.
 ![](https://docs.aws.amazon.com/vpn/latest/s2svpn/images/AWS_VPN_CloudHub-diagram.png)
 ## AWS Snow Family
+![](##https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q56-i1.jpg)
 
 ### AWS_Snowball
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q56-i1.jpg)
 - A data migration and edge computing device that comes in two options. 
-  1. **Snowball Edge Storage Optimized**:
+#### Snowball_Edge_Storage_Optimized:
     - Devices provide both block storage and Amazon S3-compatible object storage
     - Up to:
       - 40 vCPUs
@@ -975,7 +1047,9 @@ AWS CloudFormation StackSet extends the functionality of stacks by enabling you 
       - 1 TB of SATA SSD storage
       - up to 40 Gigabytes network connectivity to address large scale data transfer and pre-processing use cases. 
     - *-> suited for local storage and large scale data transfer*
-  2. **AWS Snowball Edge Compute Optimized** devices provide 52 vCPUs, block and object storage, and an optional GPU for use cases like advanced machine learning and full-motion video analysis in disconnected environments.
+#### Snowball_Edge_Compute_Optimized
+  - AWS Snowball Edge Compute Optimized devices provide 52 vCPUs, 42 terabytes of usable block or object storage, and an optional GPU for use cases such as advanced machine learning and full-motion video analysis in disconnected environments.
+  - 
 
 ### AWS_Snowmobile
 - 100 petabyte in one location
@@ -1209,6 +1283,16 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 - If your Amazon SNS message deliveries to AWS Lambda contribute to crossing these concurrency quotas, your Amazon SNS message deliveries will be throttled. You need to contact AWS support to raise the account limit
 - Integrates natively with Kinesis Data Streams. The polling, checkpointing, and error handling complexities are abstracted when you use this native integration. The processed data can then be configured to be saved in Amazon DynamoDB.
 
+## Lambda_Layer
+- You can configure your AWS Lambda function to pull in additional code and content in the form of layers. A layer is a ZIP archive that contains libraries, a custom runtime, or other dependencies. With layers, you can use libraries in your function without needing to include them in your deployment package. Layers let you keep your deployment package small, which makes development easier. A function can use up to 5 layers at a time.
+
+- You can create layers, or use layers published by AWS and other AWS customers. Layers support resource-based policies for granting layer usage permissions to specific AWS accounts, AWS Organizations, or all accounts. The total unzipped size of the function and all layers can't exceed the unzipped deployment package size limit of 250 megabytes.
+## Lambda_VPC_Enable
+![](##https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q25-i1.jpg)
+- AWS Lambda functions always operate from an AWS-owned VPC. By default, your function has the full ability to make network requests to any public internet address — this includes access to any of the public AWS APIs. For example, your function can interact with AWS DynamoDB APIs to PutItem or Query for records. You should only enable your functions for VPC access when you need to interact with a private resource located in a private subnet. An Amazon RDS instance is a good example.
+
+- Once your function is VPC-enabled, all network traffic from your function is subject to the routing rules of your VPC/Subnet. If your function needs to interact with a public resource, you will need a route through a NAT gateway in a public subnet.c
+
 ### 219. Lambda SnapStart
 
 * For Java
@@ -1288,6 +1372,8 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 - Time series: AmazonTimestream
 
 ## Disaster_recovery_strategy
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q24-i1.jpg)
+- https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/plan-for-disaster-recovery-dr.html
 - **Pilot Light**
   - The term pilot light is often used to describe a DR scenario in which a minimal version of an environment is always running in the cloud. 
   - The idea of the pilot light is an analogy that comes from the gas heater. In a gas heater, a small flame that’s always on can quickly ignite the entire furnace to heat up a house. This scenario is similar to a backup-and-restore scenario. 
@@ -1306,6 +1392,11 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 - **Multi Site** 
   - A multi-site solution runs in AWS as well as on your existing on-site infrastructure, in an active-active configuration. 
   - The data replication method that you employ will be determined by the recovery point that you choose.
+### RTO vs RPO
+![](https://docs.aws.amazon.com/images/wellarchitected/latest/reliability-pillar/images/business-continuity.png)
+**Recovery Time Objective (RTO)** Defined by the organization. RTO is the maximum acceptable delay between the interruption of service and restoration of service. This determines what is considered an acceptable time window when service is unavailable.
+
+**Recovery Point Objective (RPO)** Defined by the organization. RPO is the maximum acceptable amount of time since the last data recovery point. This determines what is considered an acceptable loss of data between the last recovery point and the interruption of service.
 ## RDS
 - RDS makes it easy to set up, operate, and scale a relational database in the cloud. 
 - It provides cost-efficient and resizable capacity while automating time-consuming administration tasks such as hardware provisioning, database setup, patching, and backups. 
@@ -1330,7 +1421,9 @@ If you have resources in multiple Availability Zones and they share one NAT gate
   - SSL in transit
 - Auotmated Backup with Point in time restore feature(35 days)
 - Manual DB Snapshot for longer-term recoverry
+### IAM_Authetication
 - Support IAM Authentication, integration with Secrets Manager
+- https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html
 ### RDS_SSL
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q31-i1.jpg)
 - You can use Secure Socket Layer / Transport Layer Security (SSL/TLS) connections to encrypt data in transit. Amazon RDS creates an SSL certificate and installs the certificate on the DB instance when the instance is provisioned. 
@@ -1447,6 +1540,7 @@ With an Aurora global database, you can choose from two different approaches to 
 ## Elasticache
 ![](https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/images/ElastiCache-Caching.png)
 
+- Amazon ElastiCache is an ideal front-end for data stores such as Amazon RDS, providing a high-performance middle tier for applications with extremely high request rates and/or low latency requirements. The best part of caching is that it’s minimally invasive to implement and by doing so, your application performance regarding both scale and speed is dramatically improved.
 
 - Amazon ElastiCache allows you to run in-memory data stores in the AWS cloud. Amazon ElastiCache is a popular choice for real-time use cases like Caching, Session Stores, Gaming, Geospatial Services, Real-Time Analytics, and Queuing.
 
@@ -1545,6 +1639,10 @@ With an Aurora global database, you can choose from two different approaches to 
 
 - Using AWS Systems Manager, you can group resources, like Amazon EC2 instances, Amazon S3 buckets, or Amazon RDS instances, by application, view operational data for monitoring and troubleshooting, and take action on your groups of resources
 - 
+## Cloudtrail
+AWS CloudTrail is a service that enables governance, compliance, operational auditing, and risk auditing of your AWS account. With AWS CloudTrail, you can log, continuously monitor, and retain account activity related to actions across your AWS infrastructure. AWS CloudTrail provides event history of your AWS account activity, including actions taken through the AWS Management Console, AWS SDKs, command-line tools, and other AWS services.
+
+In general, to analyze any API calls made within an AWS account, AWS CloudTrail is used. You can record the actions that are taken by users, roles, or AWS services on Amazon S3 resources and maintain log records for auditing and compliance purposes. To do this, you can use server access logging, AWS CloudTrail logging, or a combination of both. AWS recommends that you use AWS CloudTrail for logging bucket and object-level actions for your Amazon S3 resources.
 ## Cloudwatch
 - [Link](https://aws.amazon.com/cloudwatch/faqs/)
 - Monitoring and observability service built for DevOps engineers, developers, site reliability engineers (SREs), and IT managers. 
@@ -1716,11 +1814,23 @@ AWS Directory Service provides multiple ways to use **Amazon Cloud Directory** a
   - Reserverd
   - Spot Intances
 
+## AWS_Beanstalk
+- AWS Elastic Beanstalk is an easy-to-use service for deploying and scaling web applications and services developed with Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker on familiar servers such as Apache, Nginx, Passenger, and IIS.
+
+- You can simply upload your code and Elastic Beanstalk automatically handles the deployment, from capacity provisioning, load balancing, auto-scaling to application health monitoring. At the same time, you retain full control over the AWS resources powering your application and can access the underlying resources at any time.
+- When you create an AWS Elastic Beanstalk environment, you can specify an Amazon Machine Image (AMI) to use instead of the standard Elastic Beanstalk AMI included in your platform version. A custom AMI can improve provisioning times when instances are launched in your environment if you need to install a lot of software that isn't included in the standard AMIs.
 ## DMS
 ![](https://d1.awsstatic.com/product-marketing/DMS/product-page-diagram-AWS-DMS_continuous-data-replication.a0e3bd328d2a4bd9b40a83e767199dcc13cf678f.png)
+- AWS DMS enables you to seamlessly migrate data from supported sources to relational databases, data warehouses, streaming platforms, and other data stores in AWS cloud.
+- The given requirement needs the functionality to be implemented in the least possible time. You can use AWS DMS for such data-processing requirements. AWS DMS lets you expand the existing application to stream data from Amazon S3 into Amazon Kinesis Data Streams for real-time analytics without writing and maintaining new code. AWS DMS supports specifying Amazon S3 as the source and streaming services like Kinesis and Amazon Managed Streaming of Kafka (Amazon MSK) as the target. AWS DMS allows migration of full and change data capture (CDC) files to these services. AWS DMS performs this task out of box without any complex configuration or code development. You can also configure an AWS DMS replication instance to scale up or down depending on the workload.
+### DMS_S3
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q27-i1.jpg)
+- AWS DMS supports Amazon S3 as the source and Kinesis as the target, so data stored in an S3 bucket is streamed to Kinesis. Several consumers, such as AWS Lambda, Amazon Kinesis Data Firehose, Amazon Kinesis Data Analytics, and the Kinesis Consumer Library (KCL), can consume the data concurrently to perform real-time analytics on the dataset. Each AWS service in this architecture can scale independently as needed.
+  
 - **AWS Database Migration Service** helps you migrate databases to AWS quickly and securely. 
 - The source database remains fully operational during the migration, minimizing downtime to applications that rely on the database. 
 - Continuously replicate your data with high availability and consolidate databases into a petabyte-scale data warehouse by streaming data to *Amazon Redshift* and *Amazon S3*.
+
 ### heterogeneous_migrations
 ![](https://d1.awsstatic.com/product-marketing/DMS/product-page-diagram_AWS-DMS_heterogeneous-database-migrations-2.3616bac30ab86d4310ddadfdec5d6e6ba4d8b81d.png)
 

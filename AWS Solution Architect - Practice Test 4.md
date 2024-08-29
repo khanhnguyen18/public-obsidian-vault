@@ -645,3 +645,660 @@ What could be the reason the instances are being marked as unhealthy? (Select tw
   - There is no connection between a web app runtime and the application load balancer.
 - You need to attach elastic IP address (EIP) to the Amazon EC2 instances
   - This option is a distractor as Elastic IPs do not need to be assigned to Amazon EC2 instances while using an Application Load Balancer.
+
+## Question 36
+- You are working for a software as a service (SaaS) company as a solutions architect and help design solutions for the company's customers.
+- One of the customers is a bank and has a requirement to *whitelist a public IP* when the bank is accessing external services across the internet.
+
+Which architectural choice do you recommend to maintain high availability, support scaling-up to 10 instances and comply with the bank's requirements?
+
+**Solution**
+- Use a [Network Load Balancer](aws-ass-solution-architect.md#nlb) with an Auto Scaling Group
+  - Classic Load Balancers and Application Load Balancers use the private IP addresses associated with their Elastic network interfaces as the source IP address for requests forwarded to your web servers.
+
+  - These IP addresses can be used for various purposes, such as allowing the load balancer traffic on the web servers and for request processing. It's a best practice to use security group referencing on the web servers for whitelisting load balancer traffic from Classic Load Balancers or Application Load Balancers.
+
+  - However, because Network Load Balancers don't support security groups, based on the target group configurations, the IP addresses of the clients or the private IP addresses associated with the Network Load Balancers must be allowed on the web server's security group.
+
+**Wrong**
+
+- Use an Application Load Balancer with an Auto Scaling Group
+  - Application and Classic Load Balancers expose a fixed DNS (=URL) rather than the IP address. So these are incorrect options for the given use-case.
+- Use an Auto Scaling Group with Dynamic Elastic IPs attachment
+  - ASG does not have a dynamic Elastic IPs attachment feature.
+- Use a Classic Load Balancer with an Auto Scaling Group
+  - Classic Load Balancer provides basic load balancing across multiple Amazon EC2 instances and operates at both the request level and connection level. Classic Load Balancer is intended for applications that were built within the Amazon EC2-Classic network.
+
+## 37 
+The engineering team at a leading e-commerce company is anticipating a surge in the traffic because of a flash sale planned for the weekend. 
+- You have estimated the web traffic to be 10x. 
+- The content of your website is highly *dynamic* and changes very often.
+
+As a Solutions Architect, which of the following options would you recommend to make sure your infrastructure scales for that day?
+
+**Solution**
+
+Use an [Auto Scaling Group](../markdown-documents/work/AWS/aws.md#asg)
+
+**Wrong**
+- Use an Amazon CloudFront distribution in front of your website
+  - dymamic above
+- Use an [Amazon Route 53](aws-ass-solution-architect.md#route_53) Multi Value record
+  - Use Multi Value answer routing policy when you want Route 53 to respond to DNS queries with up to eight healthy records selected at random. Amazon Route 53 does not help in scaling your application. This option has been added as a distractor.
+- Deploy the website on Amazon S3
+
+## 38
+The engineering team at an e-commerce company has been tasked with migrating to a *serverless architecture*. The team wants to focus on the key points of consideration when using AWS Lambda as a backbone for this architecture.
+
+As a Solutions Architect, which of the following options would you identify as correct for the given requirement? (Select three)
+
+**Solution**
+
+- By default, AWS Lambda functions always operate from an AWS-owned VPC and hence have access to any public internet address or public AWS APIs. Once an AWS Lambda function is VPC-enabled, it will need a route through a Network Address Translation gateway (NAT gateway) in a public subnet to access public resources
+  - [Lambda_VPC_Enable](aws-ass-solution-architect.md#lambda_vpc_enable)
+- Since AWS Lambda functions can scale extremely quickly, it's a good idea to deploy a Amazon CloudWatch Alarm that notifies your team when function metrics such as ConcurrentExecutions or Invocations exceeds the expected threshold
+- If you intend to reuse code in more than one AWS Lambda function, you should consider creating an AWS Lambda Layer for the reusable code
+  - [Lambda_Layer](aws-ass-solution-architect.md#lambda_layer)
+
+**Wrong**
+
+- AWS Lambda allocates compute power in proportion to the memory you allocate to your function. AWS, thus recommends to over provision your function time out settings for the proper performance of AWS Lambda functions
+- Serverless architecture and containers complement each other but you cannot package and deploy AWS Lambda functions as container images
+- If you intend to reuse code in more than one AWS Lambda function, you should consider creating an AWS Lambda Layer for the reusable code
+- The bigger your deployment package, the slower your AWS Lambda function will cold-start. Hence, AWS suggests packaging dependencies as a separate package from the actual AWS Lambda package
+
+
+## 39
+A Big Data analytics company writes data and log files in *Amazon S3 buckets*. 
+- The company now wants to stream the existing data files as well as any ongoing file updates from Amazon S3 to Amazon Kinesis Data Streams.
+
+As a Solutions Architect, which of the following would you suggest as the fastest possible way of building a solution for this requirement?
+
+**Solution**
+- Leverage AWS Database Migration Service (AWS DMS) as a bridge between Amazon S3 and Amazon Kinesis Data Streams
+  - [DMS](aws-ass-solution-architect.md#dms)
+  - [DMS_S3](aws-ass-solution-architect.md#dms_s3)
+
+**Wrong**
+- Configure Amazon EventBridge events for the bucket actions on Amazon S3. An AWS Lambda function can then be triggered from the Amazon EventBridge event that will send the necessary data to Amazon Kinesis Data Streams
+  - Enable AWS Cloudtrail trail to use object-level actions as a trigger for Amazon EventBridge events 
+  - Also, using AWS Lambda functions would require significant custom development to write the data into Amazon Kinesis Data Streams, so this option is not the right fit.
+- Leverage Amazon S3 event notification to trigger an AWS Lambda function for the file create event. The AWS Lambda function will then send the necessary data to Amazon Kinesis Data Streams
+  - Using AWS Lambda functions would require significant custom development to write the data into Amazon Kinesis Data Streams, so this option is not the right fit.
+- Amazon S3 bucket actions can be directly configured to write data into Amazon Simple Notification Service (Amazon SNS). Amazon SNS can then be used to send the updates to Amazon Kinesis Data Streams
+  - Amazon S3 cannot directly write data into *Amazon SNS*, although it can certainly use *Amazon S3 event notifications* to send an event to Amazon SNS.
+
+## 40
+- Your company is deploying a website running on *AWS Elastic Beanstalk*. 
+- The website takes over 45 minutes for the installation and contains both static as well as dynamic files that must be generated during the installation process.
+
+As a Solutions Architect, you would like to bring the time to create a new instance in your AWS Elastic Beanstalk deployment to be less than 2 minutes. Which of the following options should be combined to build a solution for this requirement? (Select two)
+
+**Options**
+- Use AWS Elastic Beanstalk deployment caching feature
+- Use Amazon EC2 user data to install the application at boot time
+- Store the installation files in Amazon S3 so they can be quickly retrieved
+- Create a Golden Amazon Machine Image (AMI) with the static installation components already setup
+- Use Amazon EC2 user data to customize the dynamic installation parts at boot time
+**Solution**
+- Create a Golden Amazon Machine Image (AMI) with the static installation components already setup
+  - [](aws-ass-solution-architect.md#aws_beanstalk)
+  - A custom AMI can improve provisioning times when instances are launched in your environment if you need to install a lot of software that isn't included in the standard AMIs.
+  - A Golden AMI is an AMI that you standardize through configuration, consistent security patching, and hardening. It also contains agents you approve for logging, security, performance monitoring, etc. For the given use-case, you can have the static installation components already setup via the golden AMI.
+- Use Amazon EC2 user data to customize the dynamic installation parts at boot time
+  - Amazon EC2 instance user data is the data that you specified in the form of a configuration script while launching your instance. You can use Amazon EC2 user data to customize the dynamic installation parts at boot time, rather than installing the application itself at boot time.
+**Wrong**
+- Use AWS Elastic Beanstalk deployment caching feature
+- Use Amazon EC2 user data to install the application at boot time
+- Create a Golden Amazon Machine Image (AMI) with the static installation components already setup
+- Store the installation files in Amazon S3 so they can be quickly retrieved
+  - It cannot be used to run or generate dynamic files since Amazon S3 is not an environment but a storage service.
+- Use Amazon EC2 user data to customize the dynamic installation parts at boot time
+  - User data of an instance can be used to perform common automated configuration tasks or run scripts after the instance starts. User data, cannot, however, be used to install the application since it takes over 45 minutes for the installation which contains static as well as dynamic files that must be generated during the installation process.
+
+## 41
+- A mobile gaming company is experiencing heavy read traffic to its Amazon Relational Database Service (Amazon RDS) database that retrieves player’s scores and stats. 
+- The company is using an Amazon RDS database instance type that is not cost-effective for their budget. 
+- The company would like to implement a strategy to deal with the high volume of read traffic, reduce latency, and also downsize the *instance size to cut costs*.
+
+Which of the following solutions do you recommend?
+
+**Option**
+- Amazon RDS Read Replicas
+- Move to Amazon Redshift
+- Switch application code to AWS Lambda for better performance
+- Setup Amazon ElastiCache in front of Amazon RDS
+
+**Solution**
+- Setup [Amazon ElastiCache](aws-ass-solution-architect.md#elasticache) in front of Amazon RDS
+
+**Wrong**
+- Setup [Amazon RDS Read Replicas](aws-ass-solution-architect.md#rds_read_replicas)
+  - Adding read replicas would further add to the database costs and will not help in reducing latency when compared to a caching solution. So this option is ruled out.
+- Move to Amazon Redshift
+  - Amazon Redshift is optimized for datasets ranging from a few hundred gigabytes to a petabyte or more. If the company is looking at cost-cutting, moving to Amazon Redshift from Amazon RDS is not an option.
+- Switch application code to AWS Lambda for better performance
+
+## 42
+A company runs a popular dating website on the AWS Cloud. 
+- As a Solutions Architect, you've designed the architecture of the website to follow a serverless pattern on the AWS Cloud using Amazon API Gateway and AWS Lambda. 
+- The backend uses an Amazon RDS PostgreSQL database. 
+- Currently, the application uses a username and password combination to connect the AWS Lambda function to the Amazon RDS database.
+
+You would like to improve the security at the authentication level by leveraging short-lived credentials. What will you choose? (Select two)
+
+**Options**
+- Embed a credential rotation logic in the AWS Lambda, retrieving them from SSM
+- Restrict the Amazon RDS database security group to the AWS Lambda's security group
+- Attach an AWS Identity and Access Management (IAM) role to AWS Lambda
+- Deploy AWS Lambda in a VPC
+- Use *IAM authentication* from AWS Lambda to Amazon RDS PostgreSQL
+**Solution**
+- Use *IAM authentication* from AWS Lambda to Amazon RDS PostgreSQL
+  - [AWS_IAM_Authorization](aws-ass-solution-architect.md#AWS_IAM_Authorization)
+- Attach an *AWS Identity and Access Management (IAM)* role to AWS Lambda
+- You can authenticate to your database instance using AWS Identity and Access Management (IAM) database authentication. IAM database authentication works with MySQL and PostgreSQL. With this authentication method, you don't need to use a password when you connect to a database instance. Instead, you use an authentication token.
+
+- An authentication token is a unique string of characters that Amazon RDS generates on request. Authentication tokens are generated using AWS Signature Version 4. Each token has a lifetime of 15 minutes. You don't need to store user credentials in the database, because authentication is managed externally using IAM. You can also still use standard database authentication.
+
+- IAM database authentication provides the following benefits: 1. Network traffic to and from the database is encrypted using Secure Sockets Layer (SSL). 2. You can use IAM to centrally manage access to your database resources, instead of managing access individually on each DB instance. 3. For applications running on Amazon EC2, you can use profile credentials specific to your Amazon EC2 instance to access your database instead of a password, for greater security.
+**Wrong**
+- Embed a credential rotation logic in the AWS Lambda, retrieving them from SSM 
+  - AWS Systems Manager Parameter Store (aka SSM Parameter Store) provides secure, hierarchical storage for configuration data management and secrets management. You can store data such as passwords, database strings, Amazon EC2 instance IDs, Amazon Machine Image (AMI) IDs, and license codes as parameter values. You can store values as plain text or encrypted data.
+  - Retrieving credentials from SSM is overkill for the expected solution and hence this is not a correct option.
+- Deploy AWS Lambda in a VPC
+- Restrict the Amazon RDS database security group to the AWS Lambda's security group
+  - This question is very tricky because all answers do indeed increase security. But the question is related to authentication mechanisms, and as such, deploying an AWS Lambda in a VPC or tightening security groups does not change the authentication layer. IAM authentication to Amazon RDS is supported, which must be achieved by attaching an IAM role the AWS Lambda function
+
+## 43
+- You started a new job as a solutions architect at a company that has both AWS experts and people learning AWS.
+- Recently, a developer misconfigured a newly created Amazon RDS database which resulted in a production outage.
+How can you ensure that Amazon RDS specific best practices are incorporated into a reusable infrastructure template to be used by all your AWS users?
+
+**Options**
+- Attach an IAM policy to interns preventing them from creating an Amazon RDS database
+- Create an AWS Lambda function which sends emails when it finds misconfigured Amazon RDS databases
+- Use AWS CloudFormation to manage Amazon RDS databases
+- Store your recommendations in a custom AWS Trusted Advisor rule
+**Solution**
+- Use [AWS CloudFormation](aws-ass-solution-architect.md#cloudformation) to manage Amazon RDS databases
+
+**Wrong**
+- Attach an IAM policy to interns preventing them from creating an Amazon RDS database
+  - Does not solve the problem of allowing any user to create resources by leveraging reusable infrastructure templates. So, this option is ruled out.
+- Create an AWS Lambda function which sends emails when it finds misconfigured Amazon RDS databases
+  - Using an AWS Lambda function to scan for a misconfigured Amazon RDS database is a reactive mechanism. It does not help in creating reusable infrastructure templates.
+
+- Store your recommendations in a custom AWS Trusted Advisor rule
+  - AWS Trusted Advisor just provides recommendations rather than creating reusable infrastructure templates.
+
+## Question 44
+- A niche social media application allows users to connect with sports athletes.
+-  As a solutions architect, you've designed the architecture of the application to be fully serverless using Amazon API Gateway and AWS Lambda. T
+-  he backend uses an Amazon DynamoDB table. Some of the star athletes using the application are highly popular, and therefore Amazon DynamoDB has increased the read capacity units (RCUs). 
+-  Still, the application is experiencing a hot partition problem.
+
+What can you do to improve the performance of Amazon DynamoDB and eliminate the hot partition problem without a lot of application refactoring?
+
+**Correct answer**
+- Use Amazon DynamoDB DAX
+  - [DynamoDB Accelerator(DAX)](aws-ass-solution-architect.md#dynamodb-acceleratordax)
+
+**Wrong**
+- Use Amazon ElastiCache
+  - ElastiCache could also be a solution, but it will require a lot of refactoring work on the AWS Lambda side.
+- Use Amazon DynamoDB Streams
+- Use Amazon DynamoDB Global Tables
+
+## Question 45
+Skipped
+A company has migrated its application from a monolith architecture to a microservices based architecture. The development team has updated the Amazon Route 53 simple record to point "myapp.mydomain.com" from the old Load Balancer to the new one.
+
+The users are still not redirected to the new Load Balancer. What has gone wrong in the configuration?
+
+**Options**
+- The Alias Record is misconfigured
+  - [](aws-ass-solution-architect.md#route_53)
+- The CNAME Record is misconfigured
+- The Time To Live (TTL) is still in effect
+- The health checks are failing
+  - Simple Records do not have health checks, so this option is incorrect.
+
+**Solution**
+- The Time To Live (TTL) is still in effect
+
+## Question 46
+- An IT company runs a high-performance computing (HPC) workload on AWS. 
+The workload requires high network throughput and low-latency network performance along with tightly coupled node-to-node communications. 
+- The Amazon EC2 instances are properly sized for compute and storage capacity and are launched using default options.
+
+Which of the following solutions can be used to improve the performance of the workload?
+
+**Option**
+- Select dedicated instance tenancy while launching Amazon EC2 instances
+- Select a cluster placement group while launching Amazon EC2 instances
+- Select the appropriate capacity reservation while launching Amazon EC2 instances
+- Select an Elastic Inference accelerator while launching Amazon EC2 instances
+
+**Solution**
+- Select the appropriate capacity reservation while launching Amazon EC2 instances
+  - [ec2_placement_group](aws-ass-solution-architect.md#ec2_placement_group)
+
+**Wrong**
+- Select dedicated instance tenancy while launching Amazon EC2 instances
+- Select the appropriate capacity reservation while launching Amazon EC2 instances
+- Select an Elastic Inference accelerator while launching Amazon EC2 instances
+  - [Elastic Inference accelerator](aws-ass-solution-architect.md#elastic-inference-accelerator) 
+
+
+
+## 47
+A social media company wants the capability to dynamically alter the size of a geographic area from which traffic is routed to a specific server resource.
+
+Which feature of Amazon Route 53 can help achieve this functionality?
+
+**Options**
+Weighted routing
+Geolocation routing
+Geoproximity routing
+Latency-based routing
+
+**Solution**
+- []
+
+**Wrong**
+
+## 48
+
+- You have an Amazon S3 bucket that contains files in two different folders - s3://my-bucket/images and s3://my-bucket/thumbnails. 
+- When an image is first uploaded and new, it is viewed several times. 
+- But after 45 days, analytics prove that image files are on average rarely requested, but the thumbnails still are. 
+- After 180 days, you would like to archive the image files and the thumbnails.
+- Overall you would like the solution to remain highly available to prevent disasters happening against a whole Availability Zone (AZ).
+
+How can you implement an efficient cost strategy for your Amazon S3 bucket? (Select two)
+
+**Option**
+Create a Lifecycle Policy to transition objects to Amazon S3 Standard IA using a prefix after 45 days
+Create a Lifecycle Policy to transition objects to [Amazon S3 One Zone IA](aws-ass-solution-architect.md#s3_ia_onezone) using a prefix after 45 days
+Create a Lifecycle Policy to transition all objects to Amazon S3 Glacier after 180 days
+Create a Lifecycle Policy to transition all objects to Amazon S3 Standard IA after 45 days
+Create a Lifecycle Policy to transition objects to Amazon S3 Glacier using a prefix after 180 days
+**Solution**
+Create a Lifecycle Policy to transition objects to Amazon S3 One Zone IA using a prefix after 45 days
+  - As discussed above, you need to use a prefix while configuring the Lifecycle Policy so that only objects in the *s3://my-bucket/images* are transitioned to Amazon S3 Standard IA and not all the objects in the bucket
+
+**Wrong**
+Create a Lifecycle Policy to transition objects to Amazon S3 Glacier using a prefix after 180 days
+  - Glacier doesn't need prefixes for the given use-case.
+Create a Lifecycle Policy to transition objects to Amazon S3 One Zone IA using a prefix after 45 days
+  - Amazon S3 One Zone IA will not achieve the necessary availability in case an Availability Zone (AZ) goes down.
+
+## 49
+- A retail company is using [AWS Site-to-Site VPN](aws-ass-solution-architect.md#aws_site_to_site_vpn) connections for secure connectivity to its AWS cloud resources from its on-premises data center.
+- Due to a surge in traffic across the VPN connections to the AWS cloud, users are experiencing slower VPN connectivity.
+
+Which of the following options will maximize the VPN throughput? 
+
+**Options**
+Create a virtual private gateway with equal cost multipath routing and multiple channels
+Use AWS Global Accelerator for the VPN connection to maximize the throughput
+Create an AWS Transit Gateway with equal cost multipath routing and add additional VPN tunnels
+Use Transfer Acceleration for the VPN connection to maximize the throughput
+
+**Correct**
+- Create an AWS Transit Gateway with equal cost multipath routing and add additional VPN tunnels
+  - [VPN](aws-ass-solution-architect.md#aws_site_to_site_vpn)
+  - With AWS Transit Gateway, you can simplify the connectivity between multiple VPCs and also connect to any VPC attached to AWS Transit Gateway with a single VPN connection. AWS Transit Gateway also enables you to scale the IPsec VPN throughput with equal cost multi-path (ECMP) routing support over multiple VPN tunnels. A single VPN tunnel still has a maximum throughput of 1.25 Gbps. If you establish multiple VPN tunnels to an ECMP-enabled transit gateway, it can scale beyond the default maximum limit of 1.25 Gbps. You also must enable the dynamic routing option on your transit gateway to be able to take advantage of ECMP for scalability.
+  - ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt3-q18-i1.jpg)
+**Wrong**
+
+## 50
+- A company has built a serverless application using *Amazon API Gateway* and *AWS Lambda*. 
+- The backend is leveraging an *Amazon Aurora MySQL* database. 
+- The web application was initially launched in the Americas and the company would now like to expand it to Europe, where a read-only version will be available to improve latency. 
+- You plan on deploying the Amazon API Gateway and AWS Lambda using AWS CloudFormation, but would like to have a read-only copy of your data in Europe as well.
+
+As a Solutions Architect, what do you recommend?
+**Options**
+- Use Amazon DynamoDB Streams
+- Use Amazon Aurora Read Replicas
+- Create an AWS Lambda function to periodically back up and restore the Amazon Aurora database in another region
+- Use Amazon Aurora Multi-AZ
+**Solution**
+- Use Amazon Aurora Read Replicas
+  - [](../markdown-documents/work/AWS/aws-ass-solution-architect.md#aurora-replica)
+**Wrong**
+
+
+## 51
+
+- A development team has configured Elastic Load Balancing for host-based routing. 
+- The idea is to support multiple subdomains and different top-level domains.
+
+The rule *.example.com matches which of the following?
+
+**Options**
+- test.example.com
+- example.test.com
+- example.com
+- EXAMPLE.COM
+
+**Solution**
+example.test.com
+
+**Wrong**
+
+## 52 
+- As an e-sport tournament hosting company, you have servers that need to scale and be highly available. 
+- Therefore you have deployed an Elastic Load Balancing (ELB) with an Auto Scaling group (ASG) across 3 Availability Zones (AZs). 
+- When e-sport tournaments are running, the servers need to scale quickly. 
+- And when tournaments are done, the servers can be idle. As a general rule, you would like to be highly available, have the capacity to scale and optimize your costs.
+
+What do you recommend? (Select two)
+
+**Options(2)**
+- Use Dedicated hosts for the minimum capacity
+- Set the minimum capacity to 1
+- Set the minimum capacity to 3
+- Use Reserved Instances (RIs) for the minimum capacity
+- Set the minimum capacity to 2
+
+**Solution**
+- Use Reserved Instances (RIs) for the minimum capacity
+- Set the minimum capacity to 2
+**Wrong**
+
+## 53
+- The engineering team at a social media company has recently migrated to AWS Cloud from its on-premises data center.
+- The team is evaluating *Amazon CloudFront* to be used as a CDN for its flagship application. 
+- The team has hired you as an AWS Certified Solutions Architect – Associate to advise on Amazon CloudFront capabilities on routing, security, and high availability.
+
+Which of the following would you identify as correct regarding Amazon CloudFront? (Select three)
+
+- Use geo restriction to configure Amazon CloudFront for high-availability and failover
+- Use field level encryption in Amazon CloudFront to protect sensitive data for specific content
+- Amazon CloudFront can route to multiple origins based on the price class
+- Use AWS Key Management Service (AWS KMS) encryption in Amazon CloudFront to protect sensitive data for specific content
+- Amazon CloudFront can route to multiple origins based on the content type
+- Use an origin group with primary and secondary origins to configure Amazon CloudFront for high-availability and failover
+
+**Solution**
+- Use field level encryption in Amazon CloudFront to protect sensitive data for specific content
+  - [Cloudfront_field_level_encryption](aws-ass-solution-architect.md#cloudfront_field_level_encryption)
+
+- Amazon CloudFront can route to multiple origins based on the content type
+  - [Cloudfront_route_mulitple_origin](aws-ass-solution-architect.md#cloudfront_route_mulitple_origin)
+- Use an origin group with primary and secondary origins to configure Amazon CloudFront for high-availability and failover
+  - [Cloudfront_secondary_origin](aws-ass-solution-architect.md#cloudfront_route_mulitple_origin)
+**Wrong**
+- Use AWS Key Management Service (AWS KMS) encryption in Amazon CloudFront to protect sensitive data for specific content
+
+## 54
+
+- A leading e-commerce company runs its IT infrastructure on AWS Cloud. 
+- The company has a batch job running at 7AM daily on an *Amazon RDS database*. 
+- It processes shipping orders for the past day, and usually gets around 2000 records that need to be processed sequentially in a batch job via a **shell script**. The processing of each record takes about 3 seconds.
+
+What platform do you recommend to run this batch job?
+
+**Options**
+- AWS Glue
+- AWS Lambda
+- Amazon Kinesis Data Streams
+- Amazon Elastic Compute Cloud (Amazon EC2)
+
+**Solutions**
+- EC2
+  - AWS Batch can be used to plan, schedule, and execute your batch computing workloads on Amazon EC2 Instances. Amazon EC2 is the right choice as it can accommodate batch processing and run customized scripts, as is the needed requirement.
+- Glue
+  -  but cannot run custom shell scripts and hence not the right choice here.
+-  KDS
+   - However, Kinesis works great with real-time data, we are looking at batch processing, so Kinesis is not an option.
+- **AWS Lambda** - AWS Lambda lets you run code without provisioning or managing servers. AWS Lambda functions can be configured to run up to 15 minutes per execution. You can set the timeout to any value between 1 second and 15 minutes. The total runtime for the given use-case is 100 minutes (2000*3=6000 seconds = 100 minutes) but the Lambda would time out after 15 minutes, so this option is incorrect.
+
+## 55
+Question 55
+- An IT company has a large number of clients opting to build their application programming interface (API) using Docker containers.
+- To facilitate the hosting of these containers, the company is looking at various orchestration services available with AWS.
+
+As a Solutions Architect, which of the following solutions will you suggest? (Select two)
+
+**Options**
+- Use Amazon EMR for serverless orchestration of the containerized services
+- Use Amazon Elastic Container Service (Amazon ECS) with AWS Fargate for serverless orchestration of the containerized services
+- Use Amazon Elastic Container Service (Amazon ECS) with Amazon EC2 for serverless orchestration of the containerized services
+- Use Amazon Elastic Kubernetes Service (Amazon EKS) with AWS Fargate for serverless orchestration of the containerized services
+- Use Amazon SageMaker for serverless orchestration of the containerized services
+
+**Solution**
+- Use Amazon Elastic Container Service (Amazon ECS) with AWS Fargate for serverless orchestration of the containerized services
+- Use Amazon Elastic Kubernetes Service (Amazon EKS) with AWS Fargate for serverless orchestration of the containerized services
+**Wrong**
+- [EMR](aws-ass-solution-architect.md#emr)
+- [SageMarket](#)
+
+## 56
+- A CRM web application was written as a monolith in PHP and is facing scaling issues because of performance bottlenecks. 
+- The CTO wants to re-engineer towards microservices architecture and expose their application from the same load balancer, linked to different target groups with different URLs: checkout.mycorp.com, www.mycorp.com, yourcorp.com/profile and yourcorp.com/search. The CTO would like to expose all these URLs as HTTPS endpoints for security purposes.
+
+As a solutions architect, which of the following would you recommend as a solution that requires MINIMAL configuration effort?
+
+**Options**
+
+**Option**
+- Change the Elastic Load Balancing (ELB) SSL Security Policy
+- Use an HTTP to HTTPS redirect
+- Use Secure Sockets Layer certificate (SSL certificate) with SNI
+- Use a wildcard Secure Sockets Layer certificate (SSL certificate)
+
+**Solution**
+- Use Secure Sockets Layer certificate (SSL certificate) with SNI
+  - You can host multiple TLS secured applications, each with its own TLS certificate, behind a single load balancer. To use SNI, all you need to do is bind multiple certificates to the same secure listener on your load balancer. ALB will automatically choose the optimal TLS certificate for each client.
+
+  - ALB’s smart certificate selection goes beyond SNI. In addition to containing a list of valid domain names, certificates also describe the type of key exchange and cryptography that the server supports, as well as the signature algorithm (SHA2, SHA1, MD5) used to sign the certificate.
+
+With SNI support AWS makes it easy to use more than one certificate with the same ALB. The most common reason you might want to use multiple certificates is to handle different domains with the same load balancer. It’s always been possible to use wildcard and subject-alternate-name (SAN) certificates with ALB, but these come with limitations. Wildcard certificates only work for related subdomains that match a simple pattern and while SAN certificates can support many different domains, the same certificate authority has to authenticate each one. That means you have to reauthenticate and reprovision your certificate every time you add a new domain.
+
+**Wrong**
+- **Use a wildcard Secure Sockets Layer certificate** (SSL certificate)
+  - As the use case requires different domain names, so you cannot use a wildcard SSL certificate.
+- **Use an HTTP to HTTPS redirect** - This will not provide multiple secure endpoints for different URLs such as checkout.mycorp.com or www.mycorp.com, therefore it is incorrect for the given use-case.
+- **Change the Elastic Load Balancing (ELB) SSL Security Policy** - Elastic Load Balancing (ELB) SSL Security Policy will not provide multiple secure endpoints for different URLs such as checkout.mycorp.com or www.mycorp.com, therefore it is incorrect for the given use-case.
+
+## 57
+
+- A photo hosting service publishes a collection of beautiful mountain images, every month, that aggregate over 50 gigabytes in size and downloaded all around the world. 
+- The content is currently hosted on **Amazon EFS** and distributed by **Elastic Load Balancing (ELB)** and **Amazon EC2 instances**. 
+- The website is experiencing high load each month and very high network costs.
+
+As a Solutions Architect, what can you recommend that won't force an application refactor and reduce network costs and Amazon EC2 load drastically?
+
+**Optional**
+- Host the master pack onto Amazon S3 for faster access
+- Upgrade the Amazon EC2 instances
+- Enable Elastic Load Balancing (ELB) caching
+-Create an Amazon CloudFront distribution
+**Solution**
+-Create an Amazon CloudFront distribution
+**Wrong**
+- Host the master pack onto Amazon S3 for faster access
+- Upgrade the Amazon EC2 instances
+- Enable Elastic Load Balancing (ELB) caching
+  - ELB does not have any caching capability.
+
+## 58
+- You are working as an AWS architect for a weather tracking facility. 
+- You are asked to set up a Disaster Recovery (DR) mechanism with minimum costs. 
+- In case of failure, the facility can only bear data loss of approximately 15 minutes without jeopardizing the forecasting models.
+
+As a Solutions Architect, which DR method will you suggest?
+
+**Options**
+- Multi-Site
+- Backup and Restore
+- Warm Standby
+- Pilot Light
+
+**Solution**
+- [](aws-ass-solution-architect.md#disaster_recovery_strategy)
+
+**Wrong**
+
+ - **Pilot Light:** The term pilot light is often used to describe a DR scenario in which a minimal version of an environment is always running in the cloud. The idea of the pilot light is an analogy that comes from the gas heater. In a gas heater, a small flame that’s always on can quickly ignite the entire furnace to heat up a house. This scenario is similar to a backup-and-restore scenario. For example, with AWS you can maintain a pilot light by configuring and running the most critical core elements of your system in AWS. For the given use-case, a small part of the backup infrastructure is always running simultaneously syncing mutable data (such as databases or documents) so that there is no loss of critical data. When the time comes for recovery, you can rapidly provision a full-scale production environment around the critical core. For Pilot light, RPO/RTO is in 10s of minutes, so this is the correct solution.
+ - *Backup and Restore* - In most traditional environments, data is backed up to tape and sent off-site regularly. If you use this method, it can take a long time to restore your system in the event of a disruption or disaster. Amazon S3 is an ideal destination for backup data that might be needed quickly to perform a restore. Transferring data to and from Amazon S3 is typically done through the network and is therefore accessible from any location. There are many commercial and open-source backup solutions that integrate with Amazon S3. You can use AWS Import/Export to transfer very large data sets by shipping storage devices directly to AWS. For longer-term data storage where retrieval times of several hours are adequate, there is Amazon Glacier, which has the same durability model as Amazon S3. Amazon Glacier is a low-cost alternative starting from $0.01/GB per month. Amazon Glacier and Amazon S3 can be used in conjunction to produce a tiered backup solution. Even though Backup and Restore method is cheaper, it has an RPO in hours, so this option is not the right fit.
+ - Warm Standby - The term warm standby is used to describe a DR scenario in which a scaled-down version of a fully functional environment is always running in the cloud. A warm standby solution extends the pilot light elements and preparation. It further decreases the recovery time because some services are always running. By identifying your business-critical systems, you can fully duplicate these systems on AWS and have them always on. This option is costlier compared to Pilot Light.
+ - Multi-Site - A multi-site solution runs on AWS as well as on your existing on-site infrastructure in an active-active configuration. The data replication method that you employ will be determined by the recovery point that you choose, either Recovery Time Objective (the maximum allowable downtime before degraded operations are restored) or Recovery Point Objective (the maximum allowable time window whereby you will accept the loss of transactions during the DR process). This option is more costly compared to Pilot Light.
+
+
+
+## 59
+A junior developer has downloaded a sample Amazon S3 bucket policy to make changes to it based on new company-wide access policies. He has requested your help in understanding this bucket policy.
+
+As a Solutions Architect, which of the following would you identify as the correct description for the given policy?
+```json
+{
+ "Version": "2012-10-17",
+ "Id": "S3PolicyId1",
+ "Statement": [
+   {
+     "Sid": "IPAllow",
+     "Effect": "Allow",
+     "Principal": "*",
+     "Action": "s3:*",
+     "Resource": "arn:aws:s3:::examplebucket/*",
+     "Condition": {
+        "IpAddress": {"aws:SourceIp": "54.240.143.0/24"},
+        "NotIpAddress": {"aws:SourceIp": "54.240.143.188/32"}
+     }
+   }
+ ]
+}
+```
+
+**Option**
+- It ensures the Amazon S3 bucket is exposing an external IP within the Classless Inter-Domain Routing (CIDR) range specified, except one IP
+- It authorizes an IP address and a Classless Inter-Domain Routing (CIDR) to access the S3 bucket
+- It authorizes an entire Classless Inter-Domain Routing (CIDR) except one IP address to access the Amazon S3 bucket
+- It ensures Amazon EC2 instances that have inherited a security group can access the bucket
+
+**Solution**
+- It authorizes an entire Classless Inter-Domain Routing (CIDR) except one IP address to access the Amazon S3 bucket
+  - 
+
+## 60
+An enterprise has decided to move its secondary workloads such as backups and archives to AWS cloud. The CTO wishes to move the data stored on physical tapes to Cloud, without changing their current tape backup workflows. The company holds petabytes of data on tapes and needs a cost-optimized solution to move this data to cloud.
+
+What is an optimal solution that meets these requirements while keeping the costs to a minimum?
+
+**Option**
+- Use AWS Direct Connect, a cloud service solution that makes it easy to establish a dedicated network connection from on-premises to AWS to transfer data. Once this is done, Amazon S3 can be used to store data at lesser costs
+- Use AWS DataSync, which makes it simple and fast to move large amounts of data online between on-premises storage and AWS Cloud. Data moved to Cloud can then be stored cost-effectively in Amazon S3 archiving storage classes
+- Use AWS VPN connection between the on-premises datacenter and your Amazon VPC. Once this is established, you can use Amazon Elastic File System (Amazon EFS) to get a scalable, fully managed elastic NFS file system for use with AWS Cloud services and on-premises resources
+- Use Tape Gateway, which can be used to move on-premises tape data onto AWS Cloud. Then, Amazon S3 archiving storage classes can be used to store data cost-effectively for years
+
+**Solution**
+- Use Tape Gateway, which can be used to move on-premises tape data onto AWS Cloud. Then, Amazon S3 archiving storage classes can be used to store data cost-effectively for years
+  - [Tape Gateway](##tab-grade)
+**Wrong**
+- Use AWS DataSync, which makes it simple and fast to move large amounts of data online between on-premises storage and AWS Cloud. Data moved to Cloud can then be stored cost-effectively in Amazon S3 archiving storage classes
+  - Only support NFS, SMB
+
+- Use AWS VPN connection between the on-premises datacenter and your Amazon VPC. Once this is established, you can use Amazon Elastic File System (Amazon EFS) to get a scalable, fully managed elastic NFS file system for use with AWS Cloud services and on-premises resources  
+
+- VPN: VPN connection is used when businesses have an on-going requirement for connectivity from the on-premises data center to AWS Cloud. Amazon EFS is a managed file system by AWS and cannot be used for archiving on-premises tape data onto AWS Cloud.
+- Dirrect connect: irect Connect is used when customers need to retain on-premises structure because of compliance reasons and have moved the rest of the architecture to AWS Cloud. These businesses generally have an on-going requirement for low latency access to AWS Cloud and hence are willing to spend on installing the physical lines needed for this connection. The given use-case needs a cost-optimized solution and they do not have an ongoing requirement for high availability bandwidth.
+
+## 61
+
+
+You are working as a Solutions Architect for a photo processing company that has a proprietary algorithm to compress an image without any loss in quality. 
+- Because of the efficiency of the algorithm, your clients are willing to wait for a response that carries their compressed images back. You also want to process these jobs asynchronously and scale quickly, to cater to the high demand. Additionally, you also want the job to be retried in case of failures.
+
+Which combination of choices do you recommend to minimize cost and comply with the requirements? (Select two)
+
+**Options**
+- Amazon Simple Notification Service (Amazon SNS)
+- Amazon Simple Queue Service (Amazon SQS)
+- Amazon EC2 Reserved Instances (RIs)
+- Amazon EC2 On-Demand Instances
+- Amazon EC2 Spot Instances
+
+**Solution**
+- **Spot instance**
+  - To process these jobs, due to the unpredictable nature of their volume, and the desire to save on costs, spot Instances are recommended as compared to on-demand instances. As spot instances are cheaper than reserved instances and do not require long term commitment, spot instances are a better fit for the given use-case
+- SQS
+  - Amazon SQS will allow you to buffer the image compression requests and process them asynchronously. It also has a direct built-in mechanism for retries and scales seamlessly.
+
+Incorrect options:
+- Amazon Simple Notification Service (Amazon SNS) - Amazon Simple Notification Service (Amazon SNS) is a highly available, durable, secure, fully managed pub/sub messaging service that enables you to decouple microservices, distributed systems, and serverless applications. Amazon SNS provides topics for high-throughput, push-based, many-to-many messaging. SNS is not the right fit for this use-case, since its not a queuing mechanism.
+
+
+## 62
+A digital media company needs to manage uploads of around *1 terabyte each* from an application being used by a partner company.
+
+As a Solutions Architect, how will you handle the upload of these files to Amazon S3?
+
+**Solution**
+Use multi-part upload feature of Amazon S3
+**Wrong**
+Use AWS Direct Connect to provide extra bandwidth
+Use AWS Snowball
+Use Amazon S3 Versioning
+
+## 63
+As part of the on-premises data center migration to AWS Cloud, a company is looking at using multiple AWS Snow Family devices to move their on-premises data.
+
+Which AWS Snow Family service offers the feature of storage clustering?
+
+**Solution**
+AWS Snowball Edge Compute Optimized
+  [](aws-ass-solution-architect.md#aws-snow-family)
+**Wrong**
+AWS Snowmobile
+AWS Snowmobile Storage Compute
+AWS Snowcone
+
+## 64
+
+What does this AWS CloudFormation snippet do? (Select three)
+```yaml
+SecurityGroupIngress:
+     - IpProtocol: tcp
+       FromPort: 80
+       ToPort: 80
+       CidrIp: 0.0.0.0/0
+     - IpProtocol: tcp
+       FromPort: 22
+       ToPort: 22
+       CidrIp: 192.168.1.1/32
+```
+**Solution**
+- It configures a security group's inbound rules
+- It allows any IP to pass through on the HTTP port
+- It configures a security group's inbound rules
+  - [Security_Group](aws-ass-solution-architect.md#security_group)
+**Wrong**
+- It only allows the IP 0.0.0.0 to reach HTTP
+- It prevents traffic from reaching on HTTP unless from the IP 192.168.1.1
+- It configures the inbound rules of a network access control list (network ACL)
+- It configures a security group's outbound rules
+
+
+
+
+## 65
+- A company has grown from a small startup to an enterprise employing over 1000 people. As the team size has grown, the company has recently observed some strange behavior, with Amazon S3 buckets settings being changed regularly.
+
+How can you figure out what's happening without restricting the rights of the users?
+
+- Use [Amazon S3 access logs](aws-ass-solution-architect.md#s3) to analyze user access using Athena 
+- Implement a bucket policy requiring AWS Multi-Factor Authentication (AWS MFA) for all operations 
+- Implement an [IAM policy](aws-ass-solution-architect.md#iam_policy_types) to forbid users to change Amazon S3 bucket settings
+- Use AWS CloudTrail to analyze API calls
+
+**Solution**
+- Use [AWS CloudTrail](aws-ass-solution-architect.md#Cloudtrail) to analyze API calls(read)
+
+
+
