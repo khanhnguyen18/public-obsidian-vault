@@ -10,6 +10,8 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - AWS Organizations helps you centrally govern your environment as you grow and scale your workloads on AWS. 
 - You can automate account creation, create groups of accounts to reflect your business needs, and apply policies for these groups for governance. You can also simplify billing by setting up a single payment method for all of your AWS accounts. 
 - Through integrations with other AWS services, you can use Organizations to define central configurations and resource sharing across accounts in your organization.
+### AWS_Firewall_Manager
+- AWS Firewall Manager is a security management service that allows you to centrally configure and manage firewall rules across your accounts and applications in AWS Organization
 ### AWS_Organization_SCP
 - One type of policy that you can use to manage your organization. 
 - SCPs offer central control over the maximum available permissions for all accounts in your organization, allowing you to ensure your accounts stay within your organization’s access control guidelines. 
@@ -93,7 +95,11 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - With the Fargate launch type, you pay for the amount of vCPU and memory resources that your containerized application requests. vCPU and memory resources are calculated from the time your container images are pulled until the Amazon ECS Task terminates, rounded up to the nearest second.
 - With the EC2 launch type, there is no additional charge for the EC2 launch type. You pay for AWS resources (e.g. EC2 instances or EBS volumes) you create to store and run your application.
 
-## Amazon Inspector
+## AWS_Security_Hub
+- AWS Security Hub gives you a comprehensive view of your high-priority security alerts and security posture across your AWS accounts. 
+- With Security Hub, you have a single place that aggregates, organizes, and prioritizes your security alerts, or findings, from multiple AWS services, such as *GuardDuty*, *Inspector*, *Macie*, *IAM* Access Analyzer, and AWS Firewall Manager, as well as from AWS Partner solutions
+
+## Amazon_Inspector
 - security assessments help you check for unintended network accessibility of your EC2s and for vulnerabilities on those EC2 instances.
 -  Amazon Inspector assessments are offered to you as pre-defined rules packages mapped to common security best practices and vulnerability definitions.
 
@@ -273,6 +279,7 @@ A Spot Instance is an unused Amazon EC2 instance that is available for less than
 - You can't use st1 or sc1 EBS volumes as root volumes.
 
 ### Volume Type
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt5-q22-i1.jpg)
 - Provisioned *IOPS SSD (io1)* volumes are designed to meet the needs of I/O-intensive workloads, particularly database workloads, that are sensitive to storage performance and consistency
 - Unlike *gp2*, which uses a bucket and credit model to calculate performance, an io1 volume allows you to specify a consistent IOPS rate when you create the volume, and Amazon EBS delivers the provisioned performance 99.9 percent of the time.
 
@@ -358,9 +365,10 @@ This is because each load balancer node can route its 50% of the client traffic 
 - The maximum timeout value can be set between 1 and 3,600 seconds (the default is 300 seconds). When the maximum time limit is reached, the load balancer forcibly closes connections to the de-registering instance.
 
 ### NLB
-- Network Load Balancer is best suited for use-cases involving low latency and high throughput workloads that involve scaling to millions of requests per second. Network Load Balancer operates at the connection level (Layer 4), routing connections to targets - Amazon EC2 instances, microservices, and containers – within Amazon Virtual Private Cloud (Amazon VPC) based on IP protocol data
+- Network Load Balancer is best suited for use-cases involving low latency and high throughput workloads that involve scaling to millions of requests per second. Network Load Balancer operates at the **connection level** (Layer 4), routing connections to targets - Amazon EC2 instances, microservices, and containers – within Amazon Virtual Private Cloud (Amazon VPC) based on IP protocol data
 - A Network Load Balancer functions at the fourth layer of the Open Systems Interconnection (OSI) model. 
-- It can handle millions of requests per second. After the load balancer receives a connection request, it selects a target from the target group for the default rule. 
+- It can handle millions of requests per second. 
+- After the load balancer receives a connection request, it selects a target from the target group for the default rule. 
 - It attempts to open a TCP connection to the selected target on the port specified in the listener configuration.
 - Using a single Network Load Balancer is not possible across AWS regions since an Network Load Balancer is Region bound. Multiple Network Load Balancers have to be registered for the on-premises firewall.
 #### NLB_Request_Routing_and_IP_Addresses:
@@ -369,7 +377,7 @@ This is because each load balancer node can route its 50% of the client traffic 
 - Network Load Balancers expose a *fixed IP* to the *public web*, therefore allowing your application to be predictably reached using this IP, while allowing you to scale your application behind the Network Load Balancer using an ASG.
 ### ALB
 
-- n Application Load Balancer functions at the application layer, the seventh layer of the Open Systems Interconnection (OSI) model. 
+- Application Load Balancer functions at the application layer, the seventh layer of the Open Systems Interconnection (OSI) model. 
 - After the load balancer receives a request, it evaluates the listener rules in priority order to determine which rule to apply, and then selects a target from the target group for the rule action. 
 - You can configure listener rules to route requests to different target groups based on the content of the application traffic. 
   
@@ -401,6 +409,11 @@ Application Load Balancer Configuration for Security Groups and Health Check Rou
 #### ALB_with_Cognito_User_Pools
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q17-i1.jpg)
 - Application Load Balancer can be used to securely authenticate users for accessing your applications. This enables you to offload the work of authenticating users to your load balancer so that your applications can focus on their business logic. You can use Cognito User Pools to authenticate users through well-known social IdPs, such as Amazon, Facebook, or Google, through the user pools supported by Amazon Cognito or through corporate identities, using SAML, LDAP, or Microsoft AD, through the user pools supported by Amazon Cognito
+
+#### ALB_Routing
+If your application is composed of several individual services, an Application Load Balancer can route a request to a service based on the content of the request.
+- **Host-based Routing**: You can route a client request based on the Host field of the HTTP header allowing you to route to multiple domains from the same load balancer. You can use host conditions to define rules that route requests based on the hostname in the host header (also known as host-based routing). This enables you to support multiple domains using a single load balancer. Example hostnames: example.com test.example.com *.example.com The rule *.example.com matches test.example.com but doesn't match example.com.
+- **Path-based Routing**: You can route a client request based on the URL path of the HTTP header. You can use path conditions to define rules that route requests based on the URL in the request (also known as path-based routing). Example path patterns: /img/* /img//pics The path pattern is used to route requests but does not alter them. For example, if a rule has a path pattern of /img/, the rule would forward a request for /img/picture.jpg to the specified target group as a request for /img/picture.jpg. The path pattern is applied only to the path of the URL, not to its query parameters.
 
 #### Content-Based Routing
 - ALB has access to HTTP headers and allows you to route requests to different backend services accordingly.
@@ -599,7 +612,7 @@ Features of Aurora
 
 #### DNS_Alias_Records
 - Alias records provide Amazon Route 53–specific extension to DNS functionality. Alias records let you **route traffic to selected AWS resources**, such as Amazon CloudFront distributions and Amazon S3 buckets.
-- *You can create an alias record at the top node of a DNS namespace*, also known as the zone apex, however, you cannot create a CNAME record for the top node of the DNS namespace. So, if you register the DNS name covid19survey.com, the zone apex is covid19survey.com. You can't create a CNAME record for covid19survey.com, but you can create an alias record for covid19survey.com that routes traffic to www.covid19survey.com.
+- You can create an alias record at the *top node of a DNS namespace*, also known as the zone apex, however, you cannot create a CNAME record for the top node of the DNS namespace. So, if you register the DNS name covid19survey.com, the zone apex is covid19survey.com. You can't create a CNAME record for covid19survey.com, but you can create an alias record for covid19survey.com that routes traffic to www.covid19survey.com.
 - You should also note that Amazon Route 53 doesn't charge for alias queries to AWS resources but Route 53 does charge for CNAME queries. Additionally, an alias record can only redirect queries to selected AWS resources such as Amazon S3 buckets, Amazon CloudFront distributions, and another record in the same Amazon Route 53 hosted zone; however a CNAME record can redirect DNS queries to any DNS record. So, you can create a CNAME record that redirects queries from app.covid19survey.com to app.covid19survey.net.
 ### Routing_Policy
 ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q6-i1.jpg)
@@ -660,6 +673,7 @@ To shrink the size of the geographic region from which Amazon Route 53 routes tr
 - AWS Trusted Advisor checks for Amazon EC2 Reserved Instances that are scheduled to expire within the next 30 days or have expired in the preceding 30 days.
 - Reserved Instances do not renew automatically; you can continue using an Amazon EC2 instance covered by the reservation without interruption, but you will be charged On-Demand rates. 
 - AWS Trusted advisor does not have a feature to auto-renew Reserved Instances.
+
 ## S3
 - It is an object storage service that offers industry-leading scalability, data availability, security, and performance.
 -  Your applications can easily achieve thousands of transactions per second in request performance when uploading and retrieving storage from Amazon S3.
@@ -674,6 +688,11 @@ To shrink the size of the geographic region from which Amazon Route 53 routes tr
 * Default encrytiokn
   * SSE-S3
   * KMS
+### S3_Intelligent_Tiering
+- The Amazon S3 Intelligent-Tiering storage class is designed to optimize costs by automatically moving data to the most cost-effective access tier, without performance impact or operational overhead. It works by storing objects in two access tiers: one tier that is optimized for frequent access and another lower-cost tier that is optimized for infrequent access.
+- For a small monthly monitoring and automation fee per object, Amazon S3 monitors *access patterns* of the objects in Amazon S3 Intelligent-Tiering and moves the ones that have not been accessed for 30 consecutive days to the infrequent access tier. If an object in the infrequent access tier is accessed, it is automatically moved back to the frequent access tier. There are no retrieval fees when using the Amazon S3 Intelligent-Tiering storage class, and no additional tiering fees when objects are moved between access tiers. It is the ideal storage class for long-lived data with access patterns that are unknown or unpredictable.
+- Amazon S3 Storage Classes can be configured at the object level and a single bucket can contain objects stored in Amazon S3 Standard, Amazon S3 Intelligent-Tiering, Amazon S3 Standard-IA, and Amazon S3 One Zone-IA. 
+- You can upload objects directly to Amazon S3 Intelligent-Tiering, or use S3 Lifecycle policies to transfer objects from Amazon S3 Standard and Amazon S3 Standard-IA to Amazon S3 Intelligent-Tiering. You can also archive objects from Amazon S3 Intelligent-Tiering to Amazon S3 Glacier. 
 ### S3_IA_OneZone 
 - Amazon S3 Standard-IA is for data that is accessed less frequently but requires rapid access when needed. Amazon S3 Standard-IA offers high durability, high throughput, and low latency of Amazon S3 Standard, with a low per GB storage price and per GB retrieval fee. This combination of low cost and high performance makes S3 Standard-IA ideal for long-term storage, backups, and as a data store for disaster recovery files. The minimum storage duration charge is 30 days.
 
@@ -1499,6 +1518,12 @@ If you have resources in multiple Availability Zones and they share one NAT gate
 - Store in 6 replica - 3 AZ
 - Cluster: Customer endopint for writer and reader DB instaces
 - Aurora Machine Learning: Perfrm ML using SageMaker & Comprehend on Aurora
+### Aurora_Cloning
+You can quickly create clones of an Aurora DB by using the database cloning feature. In addition, database cloning uses a copy-on-write protocol, in which data is copied only at the time the data changes, either on the source database or the clone database. Cloning is much faster than a manual snapshot of the DB cluster.
+
+For the given use case, the most optimal solution is to clone the DB cluster. This would allow the performance testing team to have quick access to the production data in an isolated way. The team can iterate over the various test phases by deleting existing test databases and then cloning the production DB to create new test databases.
+
+You cannot clone databases across AWS regions. The clone databases must be created in the same region as the source databases. Currently, you are limited to 15 clones based on a copy, including clones based on other clones. After that, only copies can be created. However, each copy can also have up to 15 clones.
 ### Aurora_Serverless
 - Amazon Aurora Serverless is an on-demand, auto-scaling configuration for Amazon Aurora (MySQL-compatible and PostgreSQL-compatible editions), where the database will automatically start-up, shut down, and scale capacity up or down based on your application's needs. 
 - It enables you to run your database in the cloud without managing any database instances. 
@@ -1889,3 +1914,4 @@ AWS Directory Service provides multiple ways to use **Amazon Cloud Directory** a
 
   ## Task
   - Review cloudfront, Global Accelerator
+  
