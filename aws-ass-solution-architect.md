@@ -122,6 +122,11 @@ open "/Users/P836088/project/markdown-documents/work/AWS/AWS-Certified-Solutions
 - They are for workloads that need deep learning. 
 - Also, AWS PrivateLink VPC Endpoints are needed for Elastic Inference accelerators, which makes it unsuitable for the current scenario.
 
+## AWS_Transcribe
+![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt5-q58-i1.jpg)
+- Amazon Transcribe is an automatic speech recognition (ASR) service that makes it easy to convert audio to text. One key feature of the service is called speaker identification, which you can use to label each individual speaker when transcribing multi-speaker audio files. You can specify Amazon Transcribe to identify 2–10 speakers in the audio clip.
+- 
+
 ## EC2
 ### elastic-fabric-adapter-efa
 ![](https://d1.awsstatic.com/Product-Page-Diagram_Elastic-Fabric-Adapter_How-it-Works_updated.2a51303e17a203eb094ab098ebc31a61dab66365.png)
@@ -200,6 +205,7 @@ Amazon EC2 provides three options for the tenancy of your EC2 instances:
     ![Partition](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q12-i2.jpg)
   - Spead: 
     - Strictly place small group of intances accross distince underlying harware to reduce correlated failures.
+    - seven partitions per AZ
   ![](https://assets-pt.media.datacumulus.com/aws-saa-pt/assets/pt2-q12-i3.jpg)
 - More information: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html
 
@@ -480,6 +486,7 @@ If your application is composed of several individual services, an Application L
 You can share Amazon VPCs to leverage the implicit routing within a VPC for applications that require a high degree of interconnectivity and are within the same trust boundaries. This reduces the number of VPCs that you create and manage while using separate accounts for billing and access control.
 
 ## AWS_DataSync
+![](https://d1.awsstatic.com/cloud-storage/Storage/aws-datasync-how-it-works-diagram-s3-efs-fsx.c26c66393dc4e433369ee9947f39e9c54cd338bb.png)
 ![DataSync](https://d1.awsstatic.com/Digital%20Marketing/House/Editorial/products/DataSync/Product-Page-Diagram_AWS-DataSync_On-Premises-to-AWS%402x.8769b9dea1615c18ee0597b236946cbe0103b2da.png)
 - Online data transfer service that simplifies, automates, and accelerates copying large amounts of data between:
   - on-premises storage systems and AWS Storage services
@@ -1257,13 +1264,23 @@ AWS Config is a service that enables you to assess, audit, and evaluate the conf
 
 - To create a NAT gateway, you must specify the public subnet in which the NAT gateway should reside. 
 - You must also specify an Elastic IP address to associate with the NAT gateway when you create it.
--  The Elastic IP address cannot be changed after you associate it with the NAT Gateway. 
--  After you've created a NAT gateway, you must update the route table associated with one or more of your private subnets to point internet-bound traffic to the NAT gateway. 
+- The Elastic IP address cannot be changed after you associate it with the NAT Gateway. 
+- After you've created a NAT gateway, you must update the route table associated with one or more of your private subnets to point internet-bound traffic to the NAT gateway. 
 -  This enables instances in your private subnets to communicate with the internet.
 
 Each NAT gateway is created in a specific Availability Zone and implemented with redundancy in that zone.
 
 If you have resources in multiple Availability Zones and they share one NAT gateway, and if the NAT gateway’s Availability Zone is down, resources in the other Availability Zones lose internet access. To create an Availability Zone-independent architecture, create a NAT gateway in each Availability Zone and configure your routing to ensure that resources use the NAT gateway in the same Availability Zone.
+- A NAT gateway has the following characteristics and limitations:
+  - A NAT gateway supports 5 Gbps of bandwidth and automatically scales up to 45 Gbps.
+  - You can associate exactly one Elastic IP address with a NAT gateway.
+  - A NAT gateway supports the following protocols: TCP, UDP, and ICMP.
+  - You cannot associate a security group with a NAT gateway.
+  - You can use a network access control list (network ACL) to control the traffic to and from the subnet in which the NAT gateway is located.
+  - A NAT gateway can support up to 55,000 simultaneous connections to each unique destination.
+  - Therefore you must use a NAT Gateway in your public subnet in order to provide internet access to your instances in your private subnets. You are charged for creating and using a NAT gateway in your account. NAT gateway hourly usage and data processing rates apply.
+
+
 
 ### Elastic Network Adapter (ENA)
 - Elastic Network Adapter (ENA) devices support enhanced networking via single root I/O virtualization (SR-IOV) to provide high-performance networking capabilities. 
