@@ -33,15 +33,34 @@ References:
 - https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-enter-exit-standby.html
 - https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-suspend-resume-processes.html
 - https://docs.aws.amazon.com/autoscaling/ec2/userguide/health-checks-overview.html
+## Question 2
+- A gaming company is looking at improving the availability and performance of its global flagship application which utilizes User Datagram Protocol and needs to support fast regional failover in case an AWS Region goes down.
+- The company wants to continue using its own custom Domain Name System (DNS) service.
+Which of the following AWS services represents the best solution for this use-case?
+**Options**
+- Amazon CloudFront
+- AWS Elastic Load Balancing (ELB)
+- Amazon Route 53
+- AWS Global Accelerator
+**Solution**
+*AWS Global Accelerator* #global_accelerator
+- AWS Global Accelerator utilizes the Amazon global network, allowing you to improve the performance of your applications by lowering first-byte latency (the round trip time for a packet to go from a client to your endpoint and back again) and jitter (the variation of latency), and increasing throughput (the amount of time it takes to transfer data) as compared to the public internet.
+- AWS Global Accelerator improves performance for a wide range of applications over TCP or UDP by proxying packets at the edge to applications running in one or more AWS Regions. Global Accelerator is a good fit for non-HTTP use cases, such as gaming (UDP), IoT (MQTT), or Voice over IP, as well as for HTTP use cases that specifically require static IP addresses or deterministic, fast regional failover.
+**Wrong**
+*Amazon CloudFront* - Amazon CloudFront is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment. #cloundfront
 
-## 2. UDP Protocol -> Fast Regional Failover
-- Continue use DNS service
-- Solution
-  - [AWS Global Accelerator](aws-ass-solution-architect.md#aws_global_accelerator)
-	  - [[aws-ass-solution-architect#170. Global Accelerator|AWS Global Accelerator]]
-- Out of scope:
-  - [ELB](aws-ass-solution-architect.md#70-elastic-load-balancing-elb) [[aws-ass-solution-architect#70. Elastic Load Balancing (ELB)|ELB]] Single Region
-  - Route 53:
+AWS Global Accelerator and Amazon CloudFront are separate services that use the AWS global network and its edge locations around the world. CloudFront improves performance for both cacheable content (such as images and videos) and dynamic content (such as API acceleration and dynamic site delivery), while Global Accelerator improves performance for a wide range of applications over TCP or UDP. #cloundfront #global_accelerator
+
+*AWS Elastic Load Balancing (ELB)* - Both of the services, ELB and Global Accelerator solve the challenge of routing user requests to healthy application endpoints. AWS Global Accelerator relies on ELB to provide the traditional load balancing features such as support for internal and non-AWS endpoints, pre-warming, and Layer 7 routing. However, while ELB provides load balancing within one Region, AWS Global Accelerator provides traffic management across multiple Regions. #elb
+
+A regional ELB load balancer is an ideal target for AWS Global Accelerator. By using a regional ELB load balancer, you can precisely distribute incoming application traffic across backends, such as Amazon EC2 instances or Amazon ECS tasks, within an AWS Region.
+
+If you have workloads that cater to a global client base, AWS recommends that you use AWS Global Accelerator. If you have workloads hosted in a single AWS Region and used by clients in and around the same Region, you can use an Application Load Balancer or Network Load Balancer to manage your resources.
+
+*Amazon Route 53* - Amazon Route 53 is a highly available and scalable cloud Domain Name System (DNS) web service. It is designed to give developers and businesses an extremely reliable and cost-effective way to route end users to Internet applications by translating names like www.example.com into the numeric IP addresses like 192.0.2.1 that computers use to connect to each other. Route 53 is ruled out as the company wants to continue using its own custom DNS service. #route53
+
+**Reference**:
+https://aws.amazon.com/global-accelerator/faqs/
 
 ## 3. RDS Multi-AZ vs Read-Replica
 *Solution*:

@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ASG.md",
+                "file": "AWS Solution Architect - Practice Test 1.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ASG"
+              "title": "AWS Solution Architect - Practice Test 1"
             }
           },
           {
@@ -209,8 +209,8 @@
   },
   "active": "77d9ad760c5dae36",
   "lastOpenFiles": [
-    "AWS Solution Architect - Practice Test 1.md",
     "ASG.md",
+    "AWS Solution Architect - Practice Test 1.md",
     "aws-ass-solution-architect.md",
     "EC2.md",
     "AWS",
