@@ -17,6 +17,7 @@
 ## Scaling Cooldows
 
 ## Suspend-resume processes
+#suspend-resume-processes
 - Types of processes
     + **ReplaceUnhealthy** – Terminates instances that are marked as unhealthy and then creates new instances to replace them. For more information, see Health checks for instances in an Auto Scaling group.
 
