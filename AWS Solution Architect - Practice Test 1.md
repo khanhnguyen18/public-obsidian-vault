@@ -1,17 +1,42 @@
 # Practice Test 1
+- https://nab.udemy.com/course/practice-exams-aws-certified-solutions-architect-associate/learn/quiz/4726080/result/1225323700#overview
+## Question 1
+- The DevOps team at an e-commerce company wants to perform some maintenance work on a specific Amazon EC2 instance that is part of an Auto Scaling group using a step scaling policy.
+- The team is facing a maintenance challenge - every time the team deploys a maintenance patch, the instance health check status shows as out of service for a few minutes.
+- This causes the Auto Scaling group to provision another replacement instance immediately.
 
-## 1 Mainternance EC2 -> Auto Scaling
-- Auto Scaling group to provision another replacement instance immediately.
-- Solution
-  1. Put intance in standby state:
-  2. Suspend ReplaceUnhealthy: EC2 Auto Scaling stop replaces intances
-- Out Of Scope
-  - Take Snapshot on AMI: is not time/resource optimal
-  - Delete the Auto Scaling group: It's not recommended
+As a solutions architect, which are the MOST time/resource efficient steps that you would recommend so that the maintenance work can be completed at the earliest? (Select two)
+
+**Options**
+- Suspend the ScheduledActions process type for the Auto Scaling group and apply the maintenance patch to the instance. Once the instance is ready, you can you can manually set the instance's health status back to healthy and activate the ScheduledActions process type again
+- Put the instance into the Standby state and then update the instance by applying the maintenance patch. Once the instance is ready, you can exit the Standby state and then return the instance to service
+- Your selection is incorrect
+- Delete the Auto Scaling group and apply the maintenance fix to the given instance. Create a new Auto Scaling group and add all the instances again using the manual scaling policy
+- Your selection is correct
+- Suspend the ReplaceUnhealthy process type for the Auto Scaling group and apply the maintenance patch to the instance. Once the instance is ready, you can manually set the instance's health status back to healthy and activate the ReplaceUnhealthy process type again
+- Take a snapshot of the instance, create a new Amazon Machine Image (AMI) and then launch a new instance using this AMI. Apply the maintenance patch to this new instance and then add it back to the Auto Scaling Group by using the manual scaling policy. Terminate the earlier instance that had the maintenance issue
+
+
+**Solution**
+- **Put the instance into the Standby state and then update the instance by applying the maintenance patch. Once the instance is ready, you can exit the Standby state and then return the instance to service**. You can put an instance that is in the InService state into the *Standby state*, update some software or troubleshoot the instance, and then return the instance to service. Instances that are on standby are still part of the Auto Scaling group, but they do not actively handle application traffic.
+- **Suspend the ReplaceUnhealthy process type for the Auto Scaling group and apply the maintenance patch to the instance. Once the instance is ready, you can manually set the instance's health status back to healthy and activate the ReplaceUnhealthy process type again** - The *ReplaceUnhealthy* process terminates instances that are marked as unhealthy and then creates new instances to replace them. Amazon EC2 Auto Scaling stops replacing instances that are marked as unhealthy. Instances that fail EC2 or Elastic Load Balancing health checks are still marked as unhealthy. As soon as you resume the ReplaceUnhealthly process, Amazon EC2 Auto Scaling replaces instances that were marked unhealthy while this process was suspended.
+	* [Suspend-resume processes](ASG.md#Suspend-resume%20processes)
+**Wrong**
+**Take a snapshot of the instance, create a new Amazon Machine Image (AMI) and then launch a new instance using this AMI. Apply the maintenance patch to this new instance and then add it back to the Auto Scaling Group by using the manual scaling policy. Terminate the earlier instance that had the maintenance issue** - Taking the snapshot of the existing instance to create a new AMI and then creating a new instance in order to apply the maintenance patch is not time/resource optimal, hence this option is ruled out.
+
+**Delete the Auto Scaling group and apply the maintenance fix to the given instance. Create a new Auto Scaling group and add all the instances again using the manual scaling policy** - It's not recommended to delete the Auto Scaling group just to apply a maintenance patch on a specific instance.
+
+**Suspend the ScheduledActions process type for the Auto Scaling group and apply the maintenance patch to the instance. Once the instance is ready, you can you can manually set the instance's health status back to healthy and activate the ScheduledActions process type again** - Amazon EC2 Auto Scaling does not execute scaling actions that are scheduled to run during the suspension period. This option is not relevant to the given use-case.
+
+References:
+- https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-enter-exit-standby.html
+- https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-suspend-resume-processes.html
+- https://docs.aws.amazon.com/autoscaling/ec2/userguide/health-checks-overview.html
+
 ## 2. UDP Protocol -> Fast Regional Failover
 - Continue use DNS service
 - Solution
-  - [AWS Global Accelerator](aws-ass-solution-architect.md#170-global-accelator)
+  - [AWS Global Accelerator](aws-ass-solution-architect.md#aws_global_accelerator)
 	  - [[aws-ass-solution-architect#170. Global Accelerator|AWS Global Accelerator]]
 - Out of scope:
   - [ELB](aws-ass-solution-architect.md#70-elastic-load-balancing-elb) [[aws-ass-solution-architect#70. Elastic Load Balancing (ELB)|ELB]] Single Region
@@ -51,7 +76,7 @@
 - APP stateful and stateless client-server communications via API
 - Solution:
   - API Gateway for create stateful API that enable stateless and create Websocket APIS enable stateless
-  - [api-gateway](aws-ass-solution-architect.md#api-gateway)
+  - [api-gateway](aws-ass-solution-architect.md#api_gateway)
   * [[aws-ass-solution-architect#API GATEWAY|API GATEWAY Wiki]]
 - Domain: Design High-Performing Architectures
 ## 9 EC2 AMI Region
