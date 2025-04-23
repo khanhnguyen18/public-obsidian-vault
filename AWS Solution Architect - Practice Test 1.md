@@ -62,19 +62,62 @@ If you have workloads that cater to a global client base, AWS recommends that yo
 **Reference**:
 https://aws.amazon.com/global-accelerator/faqs/
 
-## 3. RDS Multi-AZ vs Read-Replica
-*Solution*:
-- Multi-az atleast 2 AZs: Sync + Read-Replica winthin an AZ, Cross AZ, Or Cross-Region: Async
+**Solution**
+- Multi-AZ follows synchronous replication and spans at least two Availability Zones (AZs) within a single region. Read replicas follow asynchronous replication and can be within an Availability Zone (AZ), Cross-AZ, or Cross-Region  #multi-az #read-replica
 
-## 4 RDS Customize
-- Specialized customizations to the underlying Oracle database as well as its host operating system (OS)
-- Improve the availability of the Oracle database layer
-- Solution :
-  + multi-AZ configuration of Amazon RDS Custom for Oracle that allows DBA to access and customize the database environment and the underlying operating system
+**Wrong**
 
-## 5
-- Enforce compliance and regulatory guidelines for objects stored in Amazon S3
-- Key requirements is to provide adequate protection against accidental deletion of objects.
+## Question 4
+- A healthcare company uses its on-premises infrastructure to run legacy applications that require specialized customizations to the underlying Oracle database as well as its host operating system (OS).
+- The company also wants to improve the availability of the Oracle database layer.
+- Meets these requirements while minimizing the underlying infrastructure maintenance effort.
+
+Which of the following options represents the best solution for this use case?
+
+
+**Options**
+- Leverage multi-AZ configuration of Amazon RDS Custom for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system
+- Leverage multi-AZ configuration of Amazon RDS for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system
+- Deploy the Oracle database layer on multiple Amazon EC2 instances spread across two Availability Zones (AZs). This deployment configuration guarantees high availability and also allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system
+- Leverage cross AZ read-replica configuration of Amazon RDS for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system
+
+
+**Solution**
+- Leverage multi-AZ configuration of **Amazon RDS Custom** for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system #multi-az #rds-custome
+  - For the given use-case, you need to use Amazon RDS Custom for Oracle as it allows you to access and customize your database server host and operating system, for example by applying special patches and changing the database software settings to support third-party applications that require privileged access. Amazon RDS Custom for Oracle facilitates these functionalities with minimum infrastructure maintenance effort. You need to set up the RDS Custom for Oracle in multi-AZ configuration for high availability.
+
+**Wrong**
+- Leverage multi-AZ configuration of Amazon RDS for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system
+
+- Leverage cross AZ read-replica configuration of Amazon RDS for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system
+
+  - Amazon RDS for Oracle does not allow you to access and customize your database server host and operating system. Therefore, both these options are incorrect.
+
+- **Deploy the Oracle database layer on multiple Amazon EC2 instances spread across two Availability Zones (AZs)**. This deployment configuration guarantees high availability and also allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system - The use case requires that the best solution should involve minimum infrastructure maintenance effort. When you use Amazon EC2 instances to host the databases, you need to manage the server health, server maintenance, server patching, and database maintenance tasks yourself. In addition, you will also need to manage the multi-AZ configuration by deploying Amazon EC2 instances across two Availability Zones (AZs), perhaps by using an Auto Scaling group. These steps entail significant maintenance effort. Hence this option is incorrect.
+
+## Question 5
+- A healthcare startup needs to enforce compliance and regulatory guidelines for objects stored in Amazon S3.
+- One of the key requirements is to provide adequate protection against accidental deletion of objects.
+
+As a solutions architect, what are your recommendations to address these guidelines? (Select two) ?
+
+**Options**
+- Enable multi-factor authentication (MFA) delete on the Amazon S3 bucket
+- Change the configuration on Amazon S3 console so that the user needs to provide additional confirmation while deleting any Amazon S3 object
+- Create an event trigger on deleting any Amazon S3 object. The event invokes an Amazon Simple Notification Service (Amazon SNS) notification via email to the IT manager
+- Establish a process to get managerial approval for deleting Amazon S3 objects
+- Enable versioning on the Amazon S3 bucket
+
+**Solution**
+- Enable multi-factor authentication (MFA) delete on the Amazon S3 bucket #s3-mfa
+- Enable versioning on the Amazon S3 bucket. #s3-versioning
+
+**Wrong**
+**Create an event trigger on deleting any Amazon S3 object**. The event invokes an Amazon Simple Notification Service (Amazon SNS) notification via email to the IT manager - Sending an event trigger after object deletion does not meet the objective of preventing object deletion by mistake because the object has already been deleted. So, this option is incorrect.
+
+**Establish a process to get managerial approval for deleting Amazon S3 objects** - This option for getting managerial approval is just a distractor.
+
+**Change the configuration on Amazon S3 console so that the user needs to provide additional confirmation while deleting any Amazon S3 object** - There is no provision to set up Amazon S3 configuration to ask for additional confirmation before deleting an object. This option is incorrect.
 
 #### ⭐ Solution
 - MFA delete for S3
