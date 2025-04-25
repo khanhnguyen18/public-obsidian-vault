@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "aws-ass-solution-architect.md",
+                "file": "Awaken/Question.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "aws-ass-solution-architect"
+              "title": "Question"
             }
           },
           {
@@ -49,8 +49,7 @@
               "title": "ASG"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -103,8 +102,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -193,12 +191,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "87ac7f5b04702b00",
+  "active": "13934681e2a5b8a8",
   "lastOpenFiles": [
+    "aws-ass-solution-architect.md",
+    "Awaken/Question.md",
+    "Awaken",
+    "GlobalNetwork.md",
     "AWS Solution Architect - Practice Test 1.md",
     "ASG.md",
-    "aws-ass-solution-architect.md",
-    "GlobalNetwork.md",
     "EC2.md",
     "AWS",
     "AWS Index.md",
