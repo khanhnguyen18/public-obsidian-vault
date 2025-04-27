@@ -14,9 +14,7 @@ As a solutions architect, which are the MOST time/resource efficient steps that 
 **Options**
 - Suspend the ScheduledActions process type for the Auto Scaling group and apply the maintenance patch to the instance. Once the instance is ready, you can you can manually set the instance's health status back to healthy and activate the ScheduledActions process type again
 - Put the instance into the Standby state and then update the instance by applying the maintenance patch. Once the instance is ready, you can exit the Standby state and then return the instance to service
-- Your selection is incorrect
 - Delete the Auto Scaling group and apply the maintenance fix to the given instance. Create a new Auto Scaling group and add all the instances again using the manual scaling policy
-- Your selection is correct
 - Suspend the ReplaceUnhealthy process type for the Auto Scaling group and apply the maintenance patch to the instance. Once the instance is ready, you can manually set the instance's health status back to healthy and activate the ReplaceUnhealthy process type again
 - Take a snapshot of the instance, create a new Amazon Machine Image (AMI) and then launch a new instance using this AMI. Apply the maintenance patch to this new instance and then add it back to the Auto Scaling Group by using the manual scaling policy. Terminate the earlier instance that had the maintenance issue
 
@@ -24,7 +22,7 @@ As a solutions architect, which are the MOST time/resource efficient steps that 
 **Solution**
 - **Put the instance into the Standby state and then update the instance by applying the maintenance patch. Once the instance is ready, you can exit the Standby state and then return the instance to service**. You can put an instance that is in the InService state into the *Standby state*, update some software or troubleshoot the instance, and then return the instance to service. Instances that are on standby are still part of the Auto Scaling group, but they do not actively handle application traffic.
 - **Suspend the ReplaceUnhealthy process type for the Auto Scaling group and apply the maintenance patch to the instance. Once the instance is ready, you can manually set the instance's health status back to healthy and activate the ReplaceUnhealthy process type again** - The *ReplaceUnhealthy* process terminates instances that are marked as unhealthy and then creates new instances to replace them. Amazon EC2 Auto Scaling stops replacing instances that are marked as unhealthy. Instances that fail EC2 or Elastic Load Balancing health checks are still marked as unhealthy. As soon as you resume the ReplaceUnhealthly process, Amazon EC2 Auto Scaling replaces instances that were marked unhealthy while this process was suspended.
-    - #suspend-resume-processes
+  - #suspend-resume-processes
 
 **Wrong**
 **Take a snapshot of the instance, create a new Amazon Machine Image (AMI) and then launch a new instance using this AMI. Apply the maintenance patch to this new instance and then add it back to the Auto Scaling Group by using the manual scaling policy. Terminate the earlier instance that had the maintenance issue** - Taking the snapshot of the existing instance to create a new AMI and then creating a new instance in order to apply the maintenance patch is not time/resource optimal, hence this option is ruled out.
@@ -100,14 +98,14 @@ Which of the following options represents the best solution for this use case?
 
 **Solution**
 - Leverage multi-AZ configuration of **Amazon RDS Custom** for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system #multi-az #rds-custome
-    - For the given use-case, you need to use Amazon RDS Custom for Oracle as it allows you to access and customize your database server host and operating system, for example by applying special patches and changing the database software settings to support third-party applications that require privileged access. Amazon RDS Custom for Oracle facilitates these functionalities with minimum infrastructure maintenance effort. You need to set up the RDS Custom for Oracle in multi-AZ configuration for high availability.
+  - For the given use-case, you need to use Amazon RDS Custom for Oracle as it allows you to access and customize your database server host and operating system, for example by applying special patches and changing the database software settings to support third-party applications that require privileged access. Amazon RDS Custom for Oracle facilitates these functionalities with minimum infrastructure maintenance effort. You need to set up the RDS Custom for Oracle in multi-AZ configuration for high availability.
 
 **Wrong**
 - Leverage multi-AZ configuration of Amazon RDS for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system
 
 - Leverage cross AZ read-replica configuration of Amazon RDS for Oracle that allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system
 
-    - Amazon RDS for Oracle does not allow you to access and customize your database server host and operating system. Therefore, both these options are incorrect.
+  - Amazon RDS for Oracle does not allow you to access and customize your database server host and operating system. Therefore, both these options are incorrect.
 
 - **Deploy the Oracle database layer on multiple Amazon EC2 instances spread across two Availability Zones (AZs)**. This deployment configuration guarantees high availability and also allows the Database Administrator (DBA) to access and customize the database environment and the underlying operating system - The use case requires that the best solution should involve minimum infrastructure maintenance effort. When you use Amazon EC2 instances to host the databases, you need to manage the server health, server maintenance, server patching, and database maintenance tasks yourself. In addition, you will also need to manage the multi-AZ configuration by deploying Amazon EC2 instances across two Availability Zones (AZs), perhaps by using an Auto Scaling group. These steps entail significant maintenance effort. Hence this option is incorrect.
 
@@ -126,7 +124,8 @@ As a solutions architect, what are your recommendations to address these guideli
 
 **Solution**
 - Enable multi-factor authentication (MFA) delete on the Amazon S3 bucket #s3-mfa
-- Enable versioning on the Amazon S3 bucket. #s3-versioning
+- Enable versioning on the Amazon S3 bucket. #sthree-versioning
+
 
 **Wrong**
 **Create an event trigger on deleting any Amazon S3 object**. The event invokes an Amazon SNS notification via email to the IT manager - Sending an event trigger after object deletion does not meet the objective of preventing object deletion by mistake because the object has already been deleted. So, this option is incorrect.
@@ -149,7 +148,7 @@ Which of the following would you identify as *data sources* supported by Amazon 
 
 **Solution**
 - VPC Flow Logs, Domain Name System (DNS) logs, AWS CloudTrail events
-    - #guard-duty
+  - #guard-duty
 
 **Wrong**
 
@@ -214,7 +213,7 @@ At this point in time,   what entities exist in Region B?
 
 **Solution**
 - 1 Amazon EC2 instance, 1 AMI and 1 snapshot exist in Region B #ami
-    - When copied from Region A into Region B, it automatically creates a snapshot in Region B because AMIs are **based on the underlying snapshots**. Further, an instance is created from this AMI in Region B.  #ebs-snapshot
+  - When copied from Region A into Region B, it automatically creates a snapshot in Region B because AMIs are **based on the underlying snapshots**. Further, an instance is created from this AMI in Region B.  #ebs-snapshot
 
 
 **Wrong**
@@ -237,8 +236,8 @@ What is the correct order of the storage charges incurred for the test file on t
 
 **Solution**
 - Cost of test file storage on Amazon S3 Standard < Cost of test file storage on Amazon EFS < Cost of test file storage on Amazon EBS
-    - EFS Standard Storage pricing is $0.30 per GB per month. Therefore the cost for storing the test file on EFS is $0.30 for the month.#efs
-    - EBS General Purpose SSD (gp2) volumes, the charges are $0.10 per GB-month of provisioned storage. Therefore, for a provisioned storage of **100GB for this use-case**, the monthly cost on EBS is $0.10*100 = $10. This cost is irrespective of how much storage is actually consumed by the test file. #ebs
-    - S3 Standard storage, the pricing is $0.023 per GB per month. Therefore, the monthly storage cost on S3 for the test file is $0.023. #s3
+  - EFS Standard Storage pricing is $0.30 per GB per month. Therefore the cost for storing the test file on EFS is $0.30 for the month.#efs
+  - EBS General Purpose SSD (gp2) volumes, the charges are $0.10 per GB-month of provisioned storage. Therefore, for a provisioned storage of **100GB for this use-case**, the monthly cost on EBS is $0.10*100 = $10. This cost is irrespective of how much storage is actually consumed by the test file. #ebs
+  - S3 Standard storage, the pricing is $0.023 per GB per month. Therefore, the monthly storage cost on S3 for the test file is $0.023. #s3
 
 **Wrong**

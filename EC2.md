@@ -40,6 +40,10 @@
   - EFS Scale
   - Performance Mode
   - Throughput Mode
+- Amazon EFS is a regional service storing data within and across multiple Availability Zones (AZs) for high availability and durability. Amazon EC2 instances can access your file system across AZs, regions, and VPCs, while on-premises servers can access using AWS Direct Connect or AWS VPN.
+- You can connect to Amazon EFS file systems from EC2 instances 
+  - in other AWS regions using an inter-region VPC peering connection
+  - from on-premises servers using an AWS VPN connection
 
 ### EBS
 #ebs
@@ -69,6 +73,12 @@
     - Specific retention(1 day to 1 year)
   - 3. Fast  snapshot restore
     - No latency on the first use(More money)
+#### EBS Multi-attach
+- Attach EBS Volume multiple EC2 in same AZ(io1/io2 famimly)
+- Use case:
+  - manage concurrent write
+  - high application available Clusterd
+- Up to 16 intance at a time
 
 #### EBS Volume type
 - https://nab.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/26098296#overview

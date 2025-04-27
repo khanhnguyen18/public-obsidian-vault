@@ -27,9 +27,13 @@
 
 ### IAM Role
 #iam-role
-
 - Allow you to delegate access to users or services that normally don't have access to your organization's AWS resources.
 - IAM users or AWS services can assume a role to obtain temporary security credentials that can be used to make AWS API calls.
 - Consequently, you don't have to share long-term credentials for access to a resource. Using IAM roles, it is possible to access cross-account resources.
-
 https://aws.amazon.com/iam/features/manage-roles/
+
+
+## AWS Shield
+#shield
+
+- Managed Distributed Denial of Service (DDoS) protection service that safeguards applications running on AWS. AWS Shield provides always-on detection and automatic inline mitigations that minimize application downtime and latency. There are two tiers of AWS Shield - Standard and Advanced. AWS Shield cannot be used to improve application resiliency to handle spikes in traffic.
